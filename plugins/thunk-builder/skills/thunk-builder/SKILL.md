@@ -56,6 +56,17 @@ outline of its tools), then fill it in one step at a time. See
 upgrade of an existing thunk follows [`analyzing.md`](analyzing.md). See
 [Analyzing a thunk](#analyzing-a-thunk).
 
+## Start a session first
+
+If the Builder MCP has a `create_session` tool, call it before anything else
+with a short `title` and a `description` of what you are building. Read the
+instructions it returns and pass the returned `sessionId` to every other
+Builder tool. Where the server requires sessions, a call without a valid
+`sessionId` is refused with `session_required` or `session_not_found`: call
+`create_session` again and carry on. Over HTTP the id travels in the
+`X-Builder-Session` header instead. Sessions are yours alone and show up under
+Account → Builder → Sessions.
+
 ## Build order
 
 The user is watching the thunk while you build: in the thunk card in Claude,
