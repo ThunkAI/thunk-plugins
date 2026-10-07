@@ -3,7 +3,7 @@ name: thunk-builder
 description: >-
   How to build and analyze thunks with the Thunk.AI Builder MCP (tools such as
   create_thunk, get_definition, batch_steps, run_work_item, get_help_article —
-  connected as thunk-builder, Thunk.AI, Thunk Prod or another name): which help
+  connected as thunk-builder, Thunk.AI or another name): which help
   articles to read before designing or editing a thunk, writing step AI
   instructions, schema, tools and connections, running and testing work items,
   diagnosing a run, MCP export or chat apps; the order to build in (steps and
@@ -21,12 +21,11 @@ The help center (info.thunk.ai) is the source of truth for how to build good
 thunks.
 
 The tools below belong to the **Thunk.AI Builder MCP**
-(`https://postern.thunk.ai/api/builder/mcp` on the public tenant). Its name
-depends on how it was connected: `thunk-builder` as a local MCP server, a
-claude.ai connector such as Thunk.AI or Thunk Prod, a Claude Code plugin
-per tenant, whose tools appear as `mcp__plugin_thunk-prod_thunk-builder__*`
-(`thunk-<tenant>` for other tenants), or a Codex plugin per tenant, whose
-server is named `thunk-prod` (or `thunk-<tenant>`). This skill names tools by their bare
+(`/api/builder/mcp` on your Thunk.AI tenant). Its name depends on how it was
+connected: `thunk-builder` as a local MCP server, a claude.ai connector such
+as Thunk.AI, a Claude Code plugin per tenant, whose tools appear as
+`mcp__plugin_thunk-<tenant>_thunk-builder__*`, or a Codex plugin per tenant,
+whose server is named `thunk-<tenant>`. This skill names tools by their bare
 names (`get_definition`, `batch_steps`); use them from whichever of those
 servers this session has. This skill tells you **which articles to read** for
 the task in front of you. Read them before you act; do not work from memory.
@@ -320,7 +319,7 @@ connected to. The team uses one name, **Thunk.AI**.
   appear as `mcp__claude_ai_<Name>__get_definition`, with spaces in the name
   turned into underscores), use that connector's name.
 - Otherwise, for example when the Builder MCP is the local `thunk-builder`
-  server or comes from a `thunk-<tenant>` plugin such as `thunk-prod`, use
+  server or comes from a `thunk-<tenant>` plugin, use
   **Thunk.AI**.
 - The card loads live data only when the thunk exists on the instance the
   viewer's connector is connected to. A thunk you built or read through the

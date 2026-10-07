@@ -9,7 +9,7 @@
     {
       "name": "thunk-builder",
       "source": "./plugins/thunk-builder",
-      "description": "The thunk-builder skill: how to build, test and analyze thunks with the Thunk.AI Builder MCP. Installed with a tenant plugin such as thunk-prod."
+      "description": "The thunk-builder skill: how to build, test and analyze thunks with the Thunk.AI Builder MCP. Installed with a tenant plugin."
     },
     {
       "name": "thunk-prod",
