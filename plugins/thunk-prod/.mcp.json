@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "thunk-builder": {
+      "type": "http",
+      "url": "https://postern.thunk.ai/api/builder/mcp"
+    }
+  }
+}

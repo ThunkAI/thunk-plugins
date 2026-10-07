@@ -1,0 +1,9 @@
+{
+  "name": "thunk-prod",
+  "displayName": "Thunk.AI Builder (prod)",
+  "description": "The Thunk.AI Builder MCP on the public production tenant (postern.thunk.ai), plus the thunk-builder skill.",
+  "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
+  "homepage": "https://info.thunk.ai",
+  "keywords": ["thunk", "workflow", "mcp"],
+  "dependencies": ["thunk-builder"]
+}

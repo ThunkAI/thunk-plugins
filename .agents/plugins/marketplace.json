@@ -1,0 +1,32 @@
+{
+  "name": "thunk-ai",
+  "interface": {
+    "displayName": "Thunk.AI"
+  },
+  "plugins": [
+    {
+      "name": "thunk-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/thunk-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "thunk-prod",
+      "source": {
+        "source": "local",
+        "path": "./plugins/thunk-prod"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "thunk-builder",
+  "description": "How to build, test and analyze thunks with the Thunk.AI Builder MCP. Install a tenant plugin such as thunk-prod too, for the tools.",
+  "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
+  "homepage": "https://info.thunk.ai",
+  "keywords": ["thunk", "workflow", "mcp"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Thunk.AI Builder",
+        "shortDescription": "Build, test and analyze Thunk.AI thunks",
+        "longDescription": "The thunk-builder skill: which Thunk.AI help articles to read, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. Install a tenant plugin such as thunk-prod too, for the Builder MCP tools.",
+        "developerName": "Thunk.AI",
+        "category": "Productivity",
+        "websiteURL": "https://info.thunk.ai",
+        "defaultPrompt": ["Analyze my thunk and tell me why its work items are failing"]
+      }
+    }
+  }
+}

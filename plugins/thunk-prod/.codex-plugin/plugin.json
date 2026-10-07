@@ -1,0 +1,23 @@
+{
+  "name": "thunk-prod",
+  "description": "The Thunk.AI Builder MCP on the public production tenant (postern.thunk.ai). Install thunk-builder too, for the skill.",
+  "author": {
+    "name": "Thunk.AI",
+    "url": "https://thunk.ai"
+  },
+  "homepage": "https://info.thunk.ai",
+  "keywords": [
+    "thunk",
+    "workflow",
+    "mcp"
+  ],
+  "mcpServers": "./mcp.json",
+  "interface": {
+    "displayName": "Thunk.AI Builder (prod)",
+    "shortDescription": "Thunk.AI Builder MCP on postern.thunk.ai",
+    "longDescription": "Tools to create, edit, run and inspect thunks on the public production tenant (postern.thunk.ai), as your own Thunk.AI account. Install thunk-builder too, for the skill that says how to use them.",
+    "developerName": "Thunk.AI",
+    "category": "Productivity",
+    "websiteURL": "https://info.thunk.ai"
+  }
+}

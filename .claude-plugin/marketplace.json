@@ -1,0 +1,20 @@
+{
+  "name": "thunk-ai",
+  "owner": {
+    "name": "Thunk.AI",
+    "url": "https://thunk.ai"
+  },
+  "description": "Build, test and analyze Thunk.AI thunks from Claude and Codex: the thunk-builder skill and the Thunk.AI Builder MCP.",
+  "plugins": [
+    {
+      "name": "thunk-builder",
+      "source": "./plugins/thunk-builder",
+      "description": "The thunk-builder skill: how to build, test and analyze thunks with the Thunk.AI Builder MCP. Installed with a tenant plugin such as thunk-prod."
+    },
+    {
+      "name": "thunk-prod",
+      "source": "./plugins/thunk-prod",
+      "description": "Thunk.AI Builder MCP on the public production tenant (postern.thunk.ai), with the thunk-builder skill."
+    }
+  ]
+}
