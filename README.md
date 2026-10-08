@@ -18,11 +18,17 @@ claude plugin install thunk-prod@thunk-ai
 Installing `thunk-prod` installs `thunk-builder` too. In a session that is already open, run
 `/reload-plugins`.
 
-Then sign in once: run `/mcp`, select `plugin:thunk-prod:thunk-builder`, choose
-**Authenticate** and sign in with your Thunk.AI account.
+Then, once:
 
-To get updates, run `/plugin marketplace update thunk-ai`, or turn on auto-update for
-`thunk-ai` under **Marketplaces** in `/plugin`.
+1. **Sign in.** Run `/mcp`, select `plugin:thunk-prod:thunk-builder`, choose
+   **Authenticate** and sign in with your Thunk.AI account.
+2. **Turn on auto-update.** Run `/plugin`, open **Marketplaces**, select `thunk-ai` and
+   choose **Enable auto-update**. Claude Code keeps auto-update off for marketplaces outside
+   Anthropic's own, and we publish changes to these plugins often. With it on, Claude Code
+   fetches updates in the background and tells you to run `/reload-plugins`.
+
+Without auto-update, get updates by hand with `/plugin marketplace update thunk-ai`, then
+`/reload-plugins`.
 
 ## Codex
 

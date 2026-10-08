@@ -2,7 +2,7 @@
 
 Part of the `thunk-builder` skill. `SKILL.md` says which help articles to read
 before each kind of work (directions, schema, tools, tests, diagnosis) and
-how to publish the thunk card. This file is the procedure for analyzing a
+how to open the thunk beside the conversation. This file is the procedure for analyzing a
 thunk through the Builder MCP; the help articles hold the method itself (what
 to look for and why) and are the reference. Read the articles a step names
 when you reach it — do not work from memory. Each pointer below carries a

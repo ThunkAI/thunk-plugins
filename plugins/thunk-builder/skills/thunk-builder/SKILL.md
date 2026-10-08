@@ -7,8 +7,10 @@ description: >-
   articles to read before designing or editing a thunk, writing step AI
   instructions, schema, tools and connections, running and testing work items,
   diagnosing a run, MCP export or chat apps; the order to build in (steps and
-  tool outlines first); in Claude, publishing the thunk as a live Claude
-  Artifact card as early as possible. Also analyzing a thunk, often a
+  tool outlines first); opening the thunk in the side-panel browser (the Claude
+  desktop app's browser pane, or Codex's) as soon as its url comes back, so the
+  user can watch it being built (driving the UI only when asked to show it).
+  Also analyzing a thunk, often a
   customer's production thunk you must not edit: troubleshoot one work item or step, run a health
   check, or clean it up / upgrade it in a mocked copy with tests from real data
   and a .docx report. Use whenever you are about to build, change, test,
@@ -38,18 +40,23 @@ call, ask if it isn't clear, and keep every call for that thunk on that
 server. Never copy a design or data from one tenant to another unless the user
 asks for exactly that.
 
-**In Claude, publish the thunk card first.** Whenever you create, copy, edit
-or analyze a thunk, publish its [thunk card](#show-the-thunk-as-a-card) as
-early as possible, before the rest of the work, and give the user the link.
-Don't wait until the thunk is finished, and don't wait to be asked to publish
-it: a card that is only shown in the conversation cannot read live data. The
-card is a Claude Artifact, so it exists only in Claude. In Codex, Cursor or
-any other agent, give the user the thunk's link in the Thunk.AI app instead
-(see [Without Claude Artifacts](#without-claude-artifacts)).
+**Open the thunk beside the conversation first.** Whenever you create, copy,
+edit or analyze a thunk, give the user its link in the Thunk.AI app and, where
+the session has a side-panel browser, open the thunk there as soon as you have
+its `url`, before the rest of the work. See
+[Open the thunk in the browser pane](#open-the-thunk-in-the-browser-pane).
 
-**Build outside-in.** Lay out the whole thunk early (its steps, and an
-outline of its tools), then fill it in one step at a time. See
-[Build order](#build-order).
+**At the start of a session in the Claude desktop app**, open the tenant's
+Thunk.AI app in the browser pane and complete steps 3–5 of
+[Open the thunk in the browser pane](#open-the-thunk-in-the-browser-pane)
+(site approval, sign-in, a visible pane) before building, so the user approves
+and signs in once, up front. The tenant's app is the site of any thunk `url`
+the Builder MCP returns (for example from `list_thunks`).
+
+**Build skeleton first, then test it right away.** Lay out the whole thunk
+early (its steps, and an outline of its tools), breadth first, then fill it
+in one step at a time. Stand in mocks for external systems, and as soon as
+it is built, create test data and run it. See [Build order](#build-order).
 
 **Analyzing a thunk?** Troubleshooting, a health check, or a cleanup /
 upgrade of an existing thunk follows [`analyzing.md`](analyzing.md). See
@@ -68,24 +75,39 @@ Account → Builder → Sessions.
 
 ## Build order
 
-The user is watching the thunk while you build: in the thunk card in Claude,
-or in the Thunk.AI app elsewhere. Make the shape of the thunk appear first,
-then fill it in one step at a time. Don't build it layer by layer (every
-property, then every tool in full detail, then finally the steps): that leaves
-an empty Workflow Plan on screen for most of the build, and the user can't
-tell what you are making.
+The user is watching the thunk while you build, in the Thunk.AI app (in the
+side-panel browser, or from the link you gave). Build **skeleton first** (breadth first):
+make the shape of the whole thunk appear, then fill it in one step at a time.
+Don't build it layer by layer (every property, then every tool in full
+detail, then finally the steps): that leaves an empty Workflow Plan on screen
+for most of the build, and the user can't tell what you are making.
 
 For a new workflow or chat-app thunk:
 
-1. **Create it and publish the card.** `create_thunk`, then the
-   [thunk card](#show-the-thunk-as-a-card) (in Claude) or the thunk's link
-   in the app (elsewhere).
-2. **Lay out every step.** One `batch_steps` call that adds all the steps in
-   order, chained by status (`New` → … → the last step's final status). Give
-   each step its real title and a short paragraph of directions saying what the
-   step is for. Leave out `inputProperties`, `outputProperties` and
-   `toolConfig` for now: none of them is required, and the properties and
-   tools don't exist yet.
+1. **Create it with every step laid out, then open it.** If
+   `create_thunk` accepts `steps` (check its input schema), pass them all in
+   the create call, in order and chained by status (`New` → … → the last
+   step's final status), plus any `properties` the design already fixes.
+   Otherwise `create_thunk`, then one `batch_steps` call that adds the same
+   steps. Give each step its real title and a short paragraph of directions
+   saying what the step is for. Leave out `toolConfig`, and any binding to a
+   property that doesn't exist yet. Check the `results` the response gives
+   for its `steps` and `properties` (or the batch's `results`) and fix any
+   `error` entry with the batch tools. Then
+   [open the thunk in the browser pane](#open-the-thunk-in-the-browser-pane)
+   and give its link.
+2. **Decide real or mock for each external system.** For every outside
+   system the workflow reads or changes (a CRM, email, a ticketing system, a
+   database), look in `get_definition` for an account connection that
+   already reaches it. If there is a suitable one, **ask the user** whether
+   to use it or a mock; never wire a live connection into a new thunk
+   without asking. Otherwise, and whenever the user prefers, build a
+   **mock**: an MCP-server thunk (`create_thunk kind:"mcpServer"`) of
+   deterministic code tools with the real system's tool names and realistic
+   answers, published with `set_export` and added to this thunk with
+   `add_thunk_connection`. The rules for good stand-ins are in
+   `improve-a-live-thunk-safely` and in [`analyzing.md`](analyzing.md) (C3).
+   Tell the user which systems are mocked.
 3. **Outline the tools.** One `batch_tools` call that adds each custom tool
    the design needs, with its final name, description, `intent` and input
    schema, and a stub implementation: a short `code` body that returns a
@@ -104,14 +126,33 @@ For a new workflow or chat-app thunk:
 
    Finish a step before starting the next. When a step is done, you can run a
    test work item through it before moving on.
-5. **Test the whole thunk** once every step is filled in.
+5. **Test it as soon as it is built**, without waiting to be asked. Create
+   test data: a few realistic work items covering the main path, plus one or
+   two edge cases (a missing field, a value that should be rejected), with
+   `create_work_item` and `tests` so each is a test work item with
+   assertions on its expected outputs. Run them, read the results
+   (`get_work_item_state`, `get_step_history`), and fix what fails. Where
+   the user chose a real connection over a mock, a test run reads and
+   changes that real system: say what it will do and get their go-ahead
+   first. Then tell the user what you tested and what passed.
 
 Don't run work items through a step whose tools are still stubs.
 
+**Files from the user** (for a FILE or IMAGE input, or a content folder):
+never send a file's contents as base64. If the file is at a public URL,
+pass it to `upload_files`. If it is on the user's computer or attached in
+this chat, call `create_upload_link`, show the user its `url` as a link, and
+ask them to open it, pick the files, and tell you when they are done. They
+must be signed in to Thunk.AI as the account this MCP is connected to. Then
+call `get_upload_link`; while its status is `pending`, ask again rather than
+polling. Use the returned `files[].url` in `create_work_item` data or in
+`batch_content_folders` `add_files`. A link lasts 30 minutes, takes up to 5
+files, and works once.
+
 For an MCP-server thunk, the interface is the outline: create it with its
 tool signatures (`create_thunk` with `kind: "mcpServer"` and an `interface`,
-or one `batch_tools` call of stubs), publish the card (or, outside Claude,
-give the thunk's link), then implement and
+or one `batch_tools` call of stubs), open the thunk and give its link, then
+implement and
 `run_tool`-check one tool at a time, and publish the export (`set_export`)
 when they work.
 
@@ -194,6 +235,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | --- | --- |
 | Create / run / rerun work items | `workflow-orchestration`, `manual-testing` |
 | Automated tests (`batch_work_item_tests`) | `evals-automated-tests`, `building-a-test-plan` |
+| Mock external systems for testing | `improve-a-live-thunk-safely`, `evals-automated-tests` |
 | Production readiness | `shipping-enterprise-thunks-testing-and-quality-principles` |
 | Design review (`run_review`, `get_review`) | `workflow-review` |
 | Switch AI model (`set_options`, model definitions) | `move-a-thunk-to-a-new-ai-model`, `supported-ai-models-and-what-happens-when-they-change` |
@@ -218,144 +260,121 @@ Each of the bold articles opens with a **Concepts** section (how to think
 about it) followed by **Details** (specific rules and cases). Read Concepts
 first; go to Details for the specific case you're dealing with.
 
-## Show the thunk as a card
+## Open the thunk in the browser pane
 
-**Claude only.** This section needs Claude's Artifact tool, which publishes a
-page at a `claude.ai/artifact/...` link and lets it read Thunk.AI through the
-viewer's claude.ai connector. Codex, Cursor and other agents have neither: skip
-this section and follow [Without Claude Artifacts](#without-claude-artifacts).
+As soon as `create_thunk` or `copy_thunk` returns a `url` (or, when working on
+an existing thunk, as soon as `get_thunk` returns one), open that URL beside
+the conversation so the user can watch the thunk while you build it. Do this
+once per thunk, before designing steps, and always put the clickable link in
+your message too. Never let it hold up the build. The panel is mainly for the
+user to watch. Make changes through the Builder MCP tools by default: they are
+faster and more reliable than the UI, and their results can be checked.
 
-Publish a **thunk card** as early as possible whenever you work on a thunk: a
-Claude Artifact that shows the thunk live, styled like the Thunk.AI app, with
-links into the app. The card type follows the thunk's kind:
+**When the user asks to see it done in the UI.** If the user explicitly asks to
+see how to do something in the Thunk.AI app (for example "show me how to add a
+step in the UI" or "walk me through connecting Gmail"), you may drive the app in
+the side-panel browser: navigate, click and type there, and say what you are
+doing at each step so they can follow along and do it themselves next time.
+Where the session has no tools that can drive that browser, describe the clicks
+for them to follow instead.
 
-- **Workflow thunks:** the Workflow Plan, inputs and outputs, plug-ins,
-  connections and workflow state, plus the **work items** (regular and test)
-  with their workflow status, what each one is doing now (working, waiting on a
-  person, finished) and test results. Opening a work item shows its data (input,
-  result and working values; sensitive values stay hidden until the viewer asks)
-  and the steps it has run.
-- **Chat apps:** the same, plus an **Open chat** button for the hosted end-user
-  chat, for testing the conversation.
-- **MCP-server thunks:** the **exported interface** (server name, version, MCP
-  URL, published or not), each tool's parameters, the tool's **call history**
-  (input, output, status and which step made each call), and a **Try it** form
-  built from the tool's input schema. Try it runs the tool through `run_tool`
-  only after the viewer confirms in the page, never by itself, and is off for
-  thunks in Production.
+- Do only what they asked to see, then go back to the Builder MCP for the rest
+  of the work, and check the result with `get_definition`.
+- A general request such as "build it" or "fix it" is not a request to use the
+  UI. Neither is an MCP call that failed or seems slow.
+- Never sign in for the user, and ask before anything in the UI that deletes,
+  publishes, shares or touches a live external system.
 
-When the page opens it reads the live design, work items and call history
-through the viewer's own claude.ai connector, refreshing every 30–60 seconds.
-The design falls back to a snapshot embedded at build time. Work items, call
-history and run results are live only and never embedded, because they are
-people's data and run data.
+### Show each change in the pane
 
-When to publish it:
+Once the pane is open, keep it on what you're working on. Whenever you change
+the thunk through the Builder MCP, or fetch specific information from it,
+navigate the pane to the view that shows it: before the call, so the user
+watches the change land, or after it, to show what you changed or found.
+If the page doesn't show the change after the call, navigate to the same URL
+again to reload it.
 
-- **Creating a thunk** (`create_thunk`, `copy_thunk`): publish the card as soon
-  as the call returns the thunk id, before you add steps, properties, bindings
-  or tools. It starts nearly empty and fills in by itself as you build,
-  because the page refreshes the live design.
-- **Editing, testing or analyzing an existing thunk**: publish the card right
-  after you first read the thunk (`get_thunk` / `get_definition`), before you
-  change, run or diagnose anything. If this session already published a card
-  for it, give that link again rather than making a new one.
+Do this by **changing the URL only**: `navigate` the same tab (Claude desktop)
+or call `open_in_codex` again (Codex). Never click through the app to get
+there. Navigate once per view, not once per call, and skip it if the pane is
+already there. Prefer a `url` the tool returned; otherwise build one on the
+thunk URL's host (`<host>` below):
 
-**Publish it, don't just show it.** Only a published artifact (a
-`claude.ai/artifact/...` link) can read Thunk.AI live. In Claude chat, an
-artifact that is only displayed in the conversation gets no connector access:
-it shows the snapshot of the design taken at build time, and its live sections
-stay empty with a message that it cannot read Thunk.AI live. So publish the
-card as an artifact immediately, without waiting for the user to ask, and give
-the user the published link. The user can then follow the thunk in the card
-while you work.
+| What you changed or fetched | URL to show |
+|---|---|
+| The thunk as a whole (`get_thunk`, `get_definition`) | the thunk's `url` |
+| A step (`batch_steps`) | that step's `url` from `get_definition` |
+| A work item (`create_work_item`, `run_work_item`, `get_work_item_state`) | the work item's `url` |
+| One step's run on a work item (`get_step_history`, or a step in `get_work_item_state`) | that step run's `url` |
+| Test work items / test results (`batch_work_item_tests`, `query_work_items`) | `<host>/thunk/<thunkId>/testing?testingTab=rows` / `?testingTab=results` |
+| Connections and their tools (`add_thunk_connection`, `batch_connections`, `refresh_connection_tools`) | `<host>/thunk/<thunkId>/tools` |
+| Errors (`get_errors`) | an error's `runUrl`, or `<host>/thunk/<thunkId>/monitor?tab=errors` |
+| Review (`run_review`, `get_review`) | the review's `url` |
+| Reports (`batch_reports`, `run_report`) | `<host>/thunk/<thunkId>/monitor/reporting` |
+| Files and folders (`batch_content_folders`, `upload_files`) | `<host>/thunk/<thunkId>/files` |
+| MCP export (`set_export`) | `<host>/thunk/<thunkId>/deployment?deployTab=export` |
+| Thunk options (`set_options`) | `<host>/thunk/<thunkId>/settings` |
+| Members (`add_thunk_members`) | `<host>/thunk/<thunkId>/team` |
 
-The page and its build script live in the `thunk-card/` folder inside this
-skill's folder (the folder that holds this `SKILL.md`). Paths below are relative
-to this skill's folder, wherever the skill is installed. Write the JSON and the
-page to your scratchpad or another working folder, not into the skill's folder.
+For anything not listed, show the thunk's `url`. If the pane isn't open (no
+side-panel browser, or it couldn't be reached), give the URL as a link
+instead. This doesn't apply to work you do on a thunk that is not the one in
+the pane, such as reading a source thunk while building a copy.
 
-1. Read the design: `get_thunk`, then `get_definition` with these `sections`:
-   - workflow and chat-app thunks:
-     `["properties", "steps", "planBindings", "connections", "plugIns", "tools"]`
-   - MCP-server thunks: `["tools", "export"]`
+### In the Claude desktop app
 
-   Write each result to a JSON file in your working folder. If `get_definition`
-   was too large and was saved to a tool-results file, that file is already
-   the JSON; pass its path.
-2. Pick the connector name the page will use (see
-   [Connector name](#connector-name) below). It is **Thunk.AI** unless this
-   session shows otherwise.
-3. Build the page:
-   `python3 <this skill's folder>/thunk-card/build.py thunk.json definition.json <working folder>/thunk-cards/<thunk-name>.html --server "<connector name>"`
-   Add `build.py --no-run` for an MCP-server thunk you are analyzing for someone else,
-   or whenever the user should not run its tools from the card: the page then
-   can only read. Use the same output path for the same thunk for the rest of
-   the session.
-4. Publish it with the Artifact tool. The first time, pass `icon: "workflow"`,
-   this `description`, with the thunk's kind filled in (workflow, chat app or MCP
-   server): "A Thunk.AI <kind> thunk, shown live from Thunk.AI, where it is built
-   and hosted." It is the subtitle on the gallery card, so it must say the page
-   is a thunk on Thunk.AI. Also pass **exactly** the `capabilities` value the
-   build printed (its last line). It lists only the connector tools that card
-   type calls: read-only tools, plus `run_tool` for an MCP-server card built
-   without `build.py --no-run`. The publish result states the display name it resolved
-   for the server. If it differs from the name you built with, rebuild with the
-   resolved name and publish again. To update later, publish the same file path
-   again with the same `description`, and omit `icon` and `capabilities`.
-5. In a later session, find the existing card with Artifact `action: "list"`
-   (its title is the thunk name, followed by "· Thunk.AI" on cards built since
-   that suffix was added), `read` it, then publish with its `url` and the
-   `description` above, so the link stays the same.
+The browser pane's tools are named `mcp__Claude_Browser__*` in a desktop
+session and `mcp__remote-devices__Claude_Browser__*` in a cloud session linked
+to the user's computer. Below they are named by the part after that prefix.
 
-### Connector name
+1. **Load the tools in one call.** If the browser-pane tools are deferred, load
+   them all with one ToolSearch whose query is the full prefix, with
+   `max_results: 64`. If the only tool present is
+   `enable__mcp__remote-devices__Claude_Browser`, call it first.
+2. **Reuse an existing tab.** Call `tabs_context`. If a tab is already on the
+   thunk URL's site, `navigate` that tab (its `tabId`) to the thunk URL.
+   Otherwise call `preview_start` with the thunk URL.
+3. **Handle site approval.** If the call says the site isn't allowed yet and
+   the session has `request_access`, call it with the site's URL (such as
+   `https://<the thunk URL's host>`) and scope `"site"`, so it isn't asked
+   again in later sessions. Wait for the answer, then retry once. If it is
+   declined, or there is no `request_access`, say so in one line and carry on.
+4. **Check the page.** Use `read_page`, or take one small screenshot
+   (`computer`, scale 0.5).
+   - If a cookie banner shows, choose the most privacy-preserving option
+     ("Only Essential").
+   - If the Thunk.AI sign-in screen shows, never sign in on the user's
+     behalf. Tell them to sign in with Google or Microsoft in the pane. The
+     pane keeps its own sign-ins, separate from their regular browser, so this
+     is needed once.
+5. **Make sure they can see it.** If `tabs_context` reports the pane as
+   hidden, tell the user to press Cmd+Shift+B (Mac) or Ctrl+Shift+B
+   (Windows), or to close what's in the side panel and click the globe icon.
+   Opening a page does not bring a hidden pane forward on its own.
+6. **If the pane can't be reached** (no browser tools after the load, or calls
+   error or time out), tell the user in one line that the Claude app's browser
+   isn't reachable and that they can open the thunk link themselves. Don't
+   retry, and don't switch to Claude in Chrome unless they ask.
+7. **Keep it current.** Navigate the same tab as you work, following
+   [Show each change in the pane](#show-each-change-in-the-pane). Don't open
+   a new tab for each view.
 
-A published page reaches the Builder MCP through the viewer's own claude.ai
-connector, which it names by display name. The page holds only that name and
-the thunk id: it reaches whatever Thunk.AI instance the viewer's connector is
-connected to. The team uses one name, **Thunk.AI**.
+### In the Codex desktop app
 
-- If this session has the Builder MCP as a claude.ai connector (its tools
-  appear as `mcp__claude_ai_<Name>__get_definition`, with spaces in the name
-  turned into underscores), use that connector's name.
-- Otherwise, for example when the Builder MCP is the local `thunk-builder`
-  server or comes from a `thunk-<tenant>` plugin, use
-  **Thunk.AI**.
-- The card loads live data only when the thunk exists on the instance the
-  viewer's connector is connected to. A thunk you built or read through the
-  same connector always does.
+Call `mcp__codex_app__open_in_codex` with
+`target: { type: "browser", url: "<the thunk's url>" }` and
+`placement: "right"`. If the panel opens asynchronously, the app shows it when
+it is ready; carry on building.
 
-Rules for cards:
+### Elsewhere
 
-- Never add tools to the page's `capabilities` beyond what the build printed.
-  The only write tool a card may have is `run_tool`, on an MCP-server card.
-- An older card that lists fewer tools than the build now prints is missing
-  live sections (they report that live data is turned off). To upgrade it,
-  rebuild it and publish with the printed `capabilities`; omitting
-  `capabilities` keeps the old list.
-- The live page updates itself, so republish only after a round of design
-  edits, to keep the snapshot current. Don't republish after every tool call.
-- The card embeds the thunk's design and is private to the user who publishes
-  it. When the thunk belongs to someone else, such as a customer's production
-  thunk, don't share the card beyond the people working on it with the user.
-- Someone a card is shared with sees live data only if they have their own
-  connector with the same name and access to the thunk; everyone else sees
-  the snapshot. Running a tool from the card runs it as the viewer.
-- After changing the card's template or build script, run
-  `python3 <this skill's folder>/thunk-card/test_build.py`.
+In the Claude Code terminal, Cursor, Claude chat without the desktop app, or
+any agent with no side-panel browser, give the thunk's link (`url` in the
+`get_thunk` result) and carry on. Don't build a page of the thunk or write one
+to a file for the user to open.
 
-### Without Claude Artifacts
-
-In Codex, Cursor or any agent without Claude's Artifact tool, there is no card.
-Don't build `thunk-card/` pages or write them to a file for the user to open: a
-page opened from a file cannot read Thunk.AI live and shows only the design
-snapshot. Instead:
-
-- Give the user the thunk's link in the Thunk.AI app (`url` in the `get_thunk`
-  result) at the moment you would have published the card, so they can watch
-  the thunk in the app while you build.
-- Give step links (each step's `url` in `get_definition`) when you discuss a
-  specific step.
+In every case, give step links (each step's `url` in `get_definition`) when
+you discuss a specific step.
 
 ## Analyzing a thunk
 
