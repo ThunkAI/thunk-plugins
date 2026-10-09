@@ -2,22 +2,25 @@
 name: thunk-builder
 description: >-
   How to build and analyze thunks with the Thunk.AI Builder MCP (tools such as
-  create_thunk, get_definition, batch_steps, run_work_item, get_help_article —
-  connected as thunk-builder, Thunk.AI or another name): which help
-  articles to read before designing or editing a thunk, writing step AI
-  instructions, schema, tools and connections, running and testing work items,
-  diagnosing a run, MCP export or chat apps; the order to build in (steps and
-  tool outlines first); opening the thunk in the side-panel browser (the Claude
-  desktop app's browser pane, or Codex's) as soon as its url comes back, so the
-  user can watch it being built (driving the UI only when asked to show it).
-  Also analyzing a thunk, often a
-  customer's production thunk you must not edit: troubleshoot one work item or step, run a health
-  check, or clean it up / upgrade it in a mocked copy with tests from real data
-  and a .docx report. Use whenever you are about to build, change, test,
-  analyze, troubleshoot, review or debug a thunk through the Builder MCP.
+  create_thunk, get_definition, batch_steps, run_work_item, get_help_article — connected
+  as thunk-builder, Thunk.AI or another name): which help articles to read before
+  designing or editing a thunk, writing step AI instructions, schema, tools and
+  connections, running and testing work items, diagnosing a run, MCP export or chat apps;
+  the order to build in (steps and tool outlines first); opening the thunk in the
+  side-panel browser (the Claude desktop app's browser pane, or Codex's) as soon as its
+  url comes back, so the user can watch it being built (driving the UI only when asked to
+  show it). Also analyzing a thunk, often a customer's production thunk you must not edit:
+  troubleshoot one work item or step, run a health check, or clean it up / upgrade it in a
+  mocked copy with tests from real data and a .docx report. Use whenever you are about to
+  build, change, test, analyze, troubleshoot, review or debug a thunk through the Builder
+  MCP.
 ---
 
-# thunk-builder
+<!-- GENERATED, DO NOT EDIT: built from the Thunk.AI help article `build-thunks-with-the-builder-mcp`. Edits here are overwritten and never committed; change the article in the source repository instead. -->
+
+> Help articles bundled in this skill's folder: `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`.
+
+This guide is for AI agents (such as Claude or Codex) that build and analyze thunks through the **Thunk.AI Builder MCP**. People who want to set one up should start with Build thunks from Claude Code or Codex (help article `build-thunks-from-claude-code-or-codex`).
 
 The help center (info.thunk.ai) is the source of truth for how to build good
 thunks.
@@ -27,9 +30,9 @@ The tools below belong to the **Thunk.AI Builder MCP**
 connected: `thunk-builder` as a local MCP server, a claude.ai connector such
 as Thunk.AI, a Claude Code plugin per tenant, whose tools appear as
 `mcp__plugin_thunk-<tenant>_thunk-builder__*`, or a Codex plugin per tenant,
-whose server is named `thunk-<tenant>`. This skill names tools by their bare
+whose server is named `thunk-<tenant>`. This guide names tools by their bare
 names (`get_definition`, `batch_steps`); use them from whichever of those
-servers this session has. This skill tells you **which articles to read** for
+servers this session has. This guide tells you **which articles to read** for
 the task in front of you. Read them before you act; do not work from memory.
 
 **More than one tenant connected?** Each Thunk.AI tenant (such as the public
@@ -40,15 +43,23 @@ call, ask if it isn't clear, and keep every call for that thunk on that
 server. Never copy a design or data from one tenant to another unless the user
 asks for exactly that.
 
-**Open the thunk beside the conversation first.** Whenever you create, copy,
-edit or analyze a thunk, give the user its link in the Thunk.AI app and, where
-the session has a side-panel browser, open the thunk there as soon as you have
-its `url`, before the rest of the work. See
-[Open the thunk in the browser pane](#open-the-thunk-in-the-browser-pane).
+**Mandatory: open and link every thunk.** This is required for every thunk
+task. Whenever you build, copy, edit, inspect, analyze, troubleshoot, review
+or report on a thunk, open that thunk's URL in the side-panel browser as soon
+as a relevant thunk URL is available (from `create_thunk`, `copy_thunk`,
+`get_thunk` or `list_thunks`), before continuing with other work. In Codex,
+call `mcp__codex_app__open_in_codex` with
+`target: { type: "browser", url: "<thunk URL>" }` and `placement: "right"`; in
+the Claude desktop app, use its browser pane. Reuse the current browser tab
+when possible. Also include the thunk URL as a clickable link in your
+response. If opening fails or no browser pane is available, say so and give
+the link anyway. Do not treat this as optional because the user did not
+explicitly ask to see the UI. See
+**Open the thunk in the browser pane** below.
 
 **At the start of a session in the Claude desktop app**, open the tenant's
 Thunk.AI app in the browser pane and complete steps 3–5 of
-[Open the thunk in the browser pane](#open-the-thunk-in-the-browser-pane)
+**Open the thunk in the browser pane** below
 (site approval, sign-in, a visible pane) before building, so the user approves
 and signs in once, up front. The tenant's app is the site of any thunk `url`
 the Builder MCP returns (for example from `list_thunks`).
@@ -56,11 +67,11 @@ the Builder MCP returns (for example from `list_thunks`).
 **Build skeleton first, then test it right away.** Lay out the whole thunk
 early (its steps, and an outline of its tools), breadth first, then fill it
 in one step at a time. Stand in mocks for external systems, and as soon as
-it is built, create test data and run it. See [Build order](#build-order).
+it is built, create test data and run it. See **Build order** below.
 
 **Analyzing a thunk?** Troubleshooting, a health check, or a cleanup /
-upgrade of an existing thunk follows [`analyzing.md`](analyzing.md). See
-[Analyzing a thunk](#analyzing-a-thunk).
+upgrade of an existing thunk follows the `analyze-a-thunk-with-the-builder-mcp` article. See
+**Analyzing a thunk** below.
 
 ## Start a session first
 
@@ -94,7 +105,7 @@ For a new workflow or chat-app thunk:
    property that doesn't exist yet. Check the `results` the response gives
    for its `steps` and `properties` (or the batch's `results`) and fix any
    `error` entry with the batch tools. Then
-   [open the thunk in the browser pane](#open-the-thunk-in-the-browser-pane)
+   open the thunk in the browser pane (below)
    and give its link.
 2. **Decide real or mock for each external system.** For every outside
    system the workflow reads or changes (a CRM, email, a ticketing system, a
@@ -106,7 +117,7 @@ For a new workflow or chat-app thunk:
    deterministic code tools with the real system's tool names and realistic
    answers, published with `set_export` and added to this thunk with
    `add_thunk_connection`. The rules for good stand-ins are in
-   `improve-a-live-thunk-safely` and in [`analyzing.md`](analyzing.md) (C3).
+   `improve-a-live-thunk-safely` and in `analyze-a-thunk-with-the-builder-mcp` (C3).
    Tell the user which systems are mocked.
 3. **Outline the tools.** One `batch_tools` call that adds each custom tool
    the design needs, with its final name, description, `intent` and input
@@ -262,11 +273,13 @@ first; go to Details for the specific case you're dealing with.
 
 ## Open the thunk in the browser pane
 
-As soon as `create_thunk` or `copy_thunk` returns a `url` (or, when working on
-an existing thunk, as soon as `get_thunk` returns one), open that URL beside
-the conversation so the user can watch the thunk while you build it. Do this
-once per thunk, before designing steps, and always put the clickable link in
-your message too. Never let it hold up the build. The panel is mainly for the
+This is mandatory, not optional. As soon as `create_thunk` or `copy_thunk`
+returns a `url` (or, when working on an existing thunk, as soon as `get_thunk`
+or `list_thunks` returns one), open that URL beside the conversation so the
+user can watch the thunk while you work on it. Do this for every thunk you
+build, copy, edit, inspect, analyze, troubleshoot, review or report on,
+before continuing with other work, and always put the clickable link in your
+message too. Never let it hold up the build. The panel is mainly for the
 user to watch. Make changes through the Builder MCP tools by default: they are
 faster and more reliable than the UI, and their results can be checked.
 
@@ -356,15 +369,18 @@ to the user's computer. Below they are named by the part after that prefix.
    isn't reachable and that they can open the thunk link themselves. Don't
    retry, and don't switch to Claude in Chrome unless they ask.
 7. **Keep it current.** Navigate the same tab as you work, following
-   [Show each change in the pane](#show-each-change-in-the-pane). Don't open
+   **Show each change in the pane** above. Don't open
    a new tab for each view.
 
 ### In the Codex desktop app
 
 Call `mcp__codex_app__open_in_codex` with
 `target: { type: "browser", url: "<the thunk's url>" }` and
-`placement: "right"`. If the panel opens asynchronously, the app shows it when
-it is ready; carry on building.
+`placement: "right"`. Do this as soon as the thunk's URL is available, for
+every thunk task (not only builds), and reuse the current browser tab when
+possible. If the panel opens asynchronously, the app shows it when it is
+ready; carry on with the work. If the call fails or no browser pane is
+available, say so in one line and give the clickable link anyway.
 
 ### Elsewhere
 
@@ -379,7 +395,7 @@ you discuss a specific step.
 ## Analyzing a thunk
 
 To analyze a thunk — often a customer's production thunk you must not edit —
-read [`analyzing.md`](analyzing.md) in this skill's folder before you start,
+read the `analyze-a-thunk-with-the-builder-mcp` article (`get_help_article`) before you start,
 and follow it. It covers three scenarios: (A) troubleshooting one work item
 or step, (B) a health check, and (C) a cleanup / upgrade done in a mocked
 copy with tests from real data, a hand-over to the owner and a .docx report.
@@ -389,9 +405,13 @@ files feedback and has the user raise a support ticket.
 ## Rules
 
 - Never guess a slug. If one above returns not-found, `search_help_center`
-  for its title instead. A newly committed article only becomes readable after
-  the next help-center deploy.
+  for its title instead. A new article becomes readable only after the
+  next Thunk.AI release.
 - Don't paste article text back into a thunk's instructions. Apply the
   guidance in your own words for that thunk.
 - If an article is wrong or missing something you needed, report it with
   `submit_feedback`.
+
+## Before finishing
+
+Did I open the relevant thunk in the in-app browser and include its link?
