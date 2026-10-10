@@ -550,10 +550,11 @@ a controlled live trial. Build it as you go (C4.6), not from memory.
 
 Then:
 
-- Add the original thunk's owner (from `get_thunk`) as an admin on the mock
-  thunk, and on the copy if they are not already its owner:
-  `add_thunk_members` with `role: "Admin"`. It sends them the thunk's welcome
-  email, so add only the owner (and anyone else the user names).
+- The original thunk's owner (from `get_thunk`) should be an admin on the
+  mock thunk, and on the copy if they are not already its owner. Builder
+  cannot add people: call `add_thunk_members` with `role: "Admin"` and give
+  the user the returned `shareUrl` so they add the owner there (propose only
+  the owner and anyone else the user names).
 - Delete the copied clutter, keeping the test items: `delete_work_items` in
   batches of 100 (soft delete).
 - Report builder bugs and doc gaps with `submit_feedback`.
