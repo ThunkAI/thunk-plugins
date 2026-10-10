@@ -19,12 +19,35 @@ description: >-
 
 > Help articles bundled in this skill's folder: `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`.
 
-This guide is for AI agents (such as Claude or Codex) that build and analyze thunks through the **Thunk.AI Builder MCP**. People who want to set one up should start with Build thunks from Claude Code or Codex (help article `build-thunks-from-claude-code-or-codex`).
+This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
+few different kinds of task, and each one has its own instructions.
+
+## Pick your path
+
+| The user asks you to | Path | Its instructions |
+| --- | --- | --- |
+| Build a new thunk, or change, copy or test one | Build or change | **Build or change a thunk** |
+| Explain what a thunk does, or teach the platform through one | Explain | **Explain a thunk** |
+| Find out why a work item or step failed or did the wrong thing | Troubleshoot | **Troubleshoot or analyze a thunk**: `analyzing.md`, Scenario A |
+| Check a thunk over, or clean it up, review or upgrade it | Analyze | **Troubleshoot or analyze a thunk**: `analyzing.md`, Scenarios B and C |
+
+If you can't tell which path the user wants, ask, with the paths as numbered choices. Paths
+chain (a health check often ends in a troubleshoot or a cleanup, and a troubleshoot in a
+change), so say when you switch.
+
+Every path follows the **Common instructions** first. The help articles to read for each task
+are listed at the end, under **Help articles for each task**.
+
+## Common instructions
+
+These apply to every path.
+
+### The Builder MCP and its tools
 
 The help center (info.thunk.ai) is the source of truth for how to build good
 thunks.
 
-The tools below belong to the **Thunk.AI Builder MCP**
+The tools this guide names belong to the **Thunk.AI Builder MCP**
 (`/api/builder/mcp` on your Thunk.AI tenant). Its name depends on how it was
 connected: `thunk-builder` as a local MCP server, a claude.ai connector such
 as Thunk.AI, a Claude Code plugin per tenant, whose tools appear as
@@ -34,68 +57,7 @@ names (`get_definition`, `batch_steps`); use them from whichever of those
 servers this session has. This guide tells you **which articles to read** for
 the task in front of you. Read them before you act; do not work from memory.
 
-**More than one tenant connected?** Each Thunk.AI tenant (such as the public
-one and a dedicated customer tenant) is a separate server with its own thunks and accounts, and a
-thunk id exists on only one of them. If this session has the Builder MCP for
-more than one tenant, find out which tenant the user means before the first
-call, ask if it isn't clear, and keep every call for that thunk on that
-server. Never copy a design or data from one tenant to another unless the user
-asks for exactly that.
-
-**Mandatory: open and link every thunk.** This is required for every thunk
-task. Whenever you build, copy, edit, inspect, analyze, troubleshoot, review
-or report on a thunk, open that thunk's URL in the side-panel browser as soon
-as a relevant thunk URL is available (from `create_thunk`, `copy_thunk`,
-`get_thunk` or `list_thunks`), before continuing with other work. In Codex,
-call `mcp__codex_app__open_in_codex` with
-`target: { type: "browser", url: "<thunk URL>" }` and `placement: "right"`; in
-the Claude desktop app, use its browser pane. Reuse the current browser tab
-when possible. Also include the thunk URL as a clickable link in your
-response. If opening fails or no browser pane is available, say so and give
-the link anyway. Do not treat this as optional because the user did not
-explicitly ask to see the UI. See
-**Open the thunk in the browser pane** below.
-
-**The browser pane shows; the Builder MCP informs.** Treat the browser pane
-(the in-app browser) as a presentation vehicle for the user, not as an
-information source for your work or your explanation. Get thunk facts and
-configuration from the Builder MCP, especially `get_definition` and
-`get_thunk`. Use the pane to navigate to and display the relevant part of the
-app for the user; do not rely on its page text, screenshots or controls to
-learn how the thunk is configured. If the UI appears to differ from what the
-Builder MCP returns, tell the user about the difference and verify it through
-the Builder MCP.
-
-**Offer numbered choices whenever you stop for the user.** Whenever you pause
-for the user's input (a question, a decision, a proposal to approve, the end
-of a stage), end your message with a few sensible next steps as a numbered
-list, the one you recommend first, so the user can reply with just a number.
-They can still answer in their own words.
-
-**At the start of a session in the Claude desktop app**, open the tenant's
-Thunk.AI app in the browser pane and complete steps 3–5 of
-**Open the thunk in the browser pane** below
-(site approval, sign-in, a visible pane) before building, so the user approves
-and signs in once, up front. The tenant's app is the site of any thunk `url`
-the Builder MCP returns (for example from `list_thunks`).
-
-**Build skeleton first, then test it right away.** Lay out the whole thunk
-early (its steps, and an outline of its tools), breadth first, then fill it
-in one step at a time. Stand in mocks for external systems, and as soon as
-it is built, create realistic test data for the main path and run it. Edge
-cases, failure cases and the design review come later, when you harden the
-nearly finished design. See **Build order** below.
-
-**Analyzing a thunk?** Troubleshooting, a health check, or a cleanup /
-upgrade of an existing thunk follows the `analyze-a-thunk-with-the-builder-mcp` article. See
-**Analyzing a thunk** below.
-
-**Explaining a thunk?** Explaining what a thunk does, or teaching the Thunk.AI
-platform through a thunk, is a guided tour: read the thunk through the Builder
-MCP, then show and explain one part at a time in the browser pane, and wait
-for the user after each. See **Explaining a thunk** below.
-
-## Start a session first
+### Start a session first
 
 If the Builder MCP has a `create_session` tool, call it before anything else
 with a short `title` and a `description` of what you are building. Read the
@@ -106,7 +68,226 @@ Builder tool. Where the server requires sessions, a call without a valid
 `X-Builder-Session` header instead. Sessions are yours alone and show up under
 Account → Builder → Sessions.
 
-## Build order
+### More than one tenant
+
+Each Thunk.AI tenant (such as the public one and a dedicated customer tenant)
+is a separate server with its own thunks and accounts, and a thunk id exists
+on only one of them. If this session has the Builder MCP for more than one
+tenant, find out which tenant the user means before the first call, ask if it
+isn't clear, and keep every call for that thunk on that server. Never copy a
+design or data from one tenant to another unless the user asks for exactly
+that.
+
+### The Builder MCP informs; the browser pane shows
+
+Treat the browser pane (the in-app browser) as a presentation vehicle for the
+user, not as an information source for your work or your explanation. Get
+thunk facts and configuration from the Builder MCP, especially
+`get_definition` and `get_thunk`. Use the pane to navigate to and display the
+relevant part of the app for the user; do not rely on its page text,
+screenshots or controls to learn how the thunk is configured. If the UI
+appears to differ from what the Builder MCP returns, tell the user about the
+difference and verify it through the Builder MCP.
+
+### Open the thunk in the browser pane
+
+This is mandatory, not optional. As soon as `create_thunk` or `copy_thunk`
+returns a `url` (or, when working on an existing thunk, as soon as `get_thunk`
+or `list_thunks` returns one), open that URL beside the conversation so the
+user can watch the thunk while you work on it. Do this for every thunk you
+build, copy, edit, inspect, analyze, troubleshoot, review or report on,
+before continuing with other work, and always put the clickable link in your
+message too. Reuse the current browser tab when possible. If opening fails or
+no browser pane is available, say so and give the link anyway. Do not treat
+this as optional because the user did not explicitly ask to see the UI.
+Never let it hold up the build. The panel is mainly for the
+user to watch. Make changes through the Builder MCP tools by default: they are
+faster and more reliable than the UI, and their results can be checked.
+
+**At the start of a session in the Claude desktop app**, open the tenant's
+Thunk.AI app in the browser pane and complete steps 3–5 of
+**In the Claude desktop app** (site approval, sign-in, a visible pane) before
+building, so the user approves and signs in once, up front. The tenant's app
+is the site of any thunk `url` the Builder MCP returns (for example from
+`list_thunks`).
+
+**When the user asks to see it done in the UI.** If the user explicitly asks to
+see how to do something in the Thunk.AI app (for example "show me how to add a
+step in the UI" or "walk me through connecting Gmail"), you may drive the app in
+the side-panel browser: navigate, click and type there, and say what you are
+doing at each step so they can follow along and do it themselves next time.
+Where the session has no tools that can drive that browser, describe the clicks
+for them to follow instead.
+
+- Do only what they asked to see, then go back to the Builder MCP for the rest
+  of the work, and check the result with `get_definition`.
+- A general request such as "build it" or "fix it" is not a request to use the
+  UI. Neither is an MCP call that failed or seems slow.
+- Never sign in for the user, and ask before anything in the UI that deletes,
+  publishes, shares or touches a live external system.
+
+#### Show each change in the pane
+
+Once the pane is open, keep it on what you're working on. Whenever you change
+the thunk through the Builder MCP, or fetch specific information from it,
+navigate the pane to the view that shows it: before the call, so the user
+watches the change land, or after it, to show what you changed or found.
+If the page doesn't show the change after the call, navigate to the same URL
+again to reload it.
+
+Do this by **changing the URL only**: `navigate` the same tab (Claude desktop)
+or call `open_in_codex` again (Codex). Never click through the app to get
+there. Navigate once per view, not once per call, and skip it if the pane is
+already there. Prefer a `url` the tool returned; otherwise build one on the
+thunk URL's host (`<host>` in the table):
+
+| What you changed or fetched | URL to show |
+|---|---|
+| The thunk as a whole (`get_thunk`, `get_definition`) | the thunk's `url` |
+| A step (`batch_steps`) | that step's `url` from `get_definition` |
+| A work item (`create_work_item`, `run_work_item`, `get_work_item_state`) | the work item's `url` |
+| One step's run on a work item (`get_step_history`, or a step in `get_work_item_state`) | that step run's `url` |
+| Test work items / test results (`batch_work_item_tests`, `query_work_items`) | `<host>/thunk/<thunkId>/testing?testingTab=rows` / `?testingTab=results` |
+| Connections and their tools (`add_thunk_connection`, `batch_connections`, `refresh_connection_tools`) | `<host>/thunk/<thunkId>/tools` |
+| Errors (`get_errors`) | an error's `runUrl`, or `<host>/thunk/<thunkId>/monitor?tab=errors` |
+| Review (`run_review`, `get_review`) | the review's `url` |
+| Reports (`batch_reports`, `run_report`) | `<host>/thunk/<thunkId>/monitor/reporting` |
+| Files and folders (`batch_content_folders`, `upload_files`) | `<host>/thunk/<thunkId>/files` |
+| MCP export (`set_export`) | `<host>/thunk/<thunkId>/deployment?deployTab=export` |
+| Thunk options (`set_options`) | `<host>/thunk/<thunkId>/settings` |
+| Members (`add_thunk_members`) | `<host>/thunk/<thunkId>/team` |
+
+For anything not listed, show the thunk's `url`. If the pane isn't open (no
+side-panel browser, or it couldn't be reached), give the URL as a link
+instead. This doesn't apply to work you do on a thunk that is not the one in
+the pane, such as reading a source thunk while building a copy.
+
+#### In the Claude desktop app
+
+The browser pane's tools are named `mcp__Claude_Browser__*` in a desktop
+session and `mcp__remote-devices__Claude_Browser__*` in a cloud session linked
+to the user's computer. Below they are named by the part after that prefix.
+
+1. **Load the tools in one call.** If the browser-pane tools are deferred, load
+   them all with one ToolSearch whose query is the full prefix, with
+   `max_results: 64`. If the only tool present is
+   `enable__mcp__remote-devices__Claude_Browser`, call it first.
+2. **Reuse an existing tab.** Call `tabs_context`. If a tab is already on the
+   thunk URL's site, `navigate` that tab (its `tabId`) to the thunk URL.
+   Otherwise call `preview_start` with the thunk URL.
+3. **Handle site approval.** If the call says the site isn't allowed yet and
+   the session has `request_access`, call it with the site's URL (such as
+   `https://<the thunk URL's host>`) and scope `"site"`, so it isn't asked
+   again in later sessions. Wait for the answer, then retry once. If it is
+   declined, or there is no `request_access`, say so in one line and carry on.
+4. **Check the page.** Use `read_page`, or take one small screenshot
+   (`computer`, scale 0.5). This checks the state of the pane (a banner, the
+   sign-in screen), not how the thunk is configured.
+   - If a cookie banner shows, choose the most privacy-preserving option
+     ("Only Essential").
+   - If the Thunk.AI sign-in screen shows, never sign in on the user's
+     behalf. Tell them to sign in with Google or Microsoft in the pane. The
+     pane keeps its own sign-ins, separate from their regular browser, so this
+     is needed once.
+5. **Make sure they can see it.** If `tabs_context` reports the pane as
+   hidden, tell the user to press Cmd+Shift+B (Mac) or Ctrl+Shift+B
+   (Windows), or to close what's in the side panel and click the globe icon.
+   Opening a page does not bring a hidden pane forward on its own.
+6. **If the pane can't be reached** (no browser tools after the load, or calls
+   error or time out), tell the user in one line that the Claude app's browser
+   isn't reachable and that they can open the thunk link themselves. Don't
+   retry, and don't switch to Claude in Chrome unless they ask.
+7. **Keep it current.** Navigate the same tab as you work, following
+   **Show each change in the pane**. Don't open
+   a new tab for each view.
+
+#### In the Codex desktop app
+
+Call `mcp__codex_app__open_in_codex` with
+`target: { type: "browser", url: "<the thunk's url>" }` and
+`placement: "right"`. Do this as soon as the thunk's URL is available, for
+every thunk task (not only builds), and reuse the current browser tab when
+possible. If the panel opens asynchronously, the app shows it when it is
+ready; carry on with the work. If the call fails or no browser pane is
+available, say so in one line and give the clickable link anyway.
+
+#### Elsewhere
+
+In the Claude Code terminal, Cursor, Claude chat without the desktop app, or
+any agent with no side-panel browser, give the thunk's link (`url` in the
+`get_thunk` result) and carry on. Don't build a page of the thunk or write one
+to a file for the user to open.
+
+In every case, give step links (each step's `url` in `get_definition`) when
+you discuss a specific step.
+
+### Files
+
+For a FILE or IMAGE input, or a content folder, never send a file's
+contents as base64 in a tool argument. If the file is at a public URL, pass it to `upload_files`. If it is on your machine (one you made, or one the
+user gave you), call `create_upload_link` and send the file from your shell.
+It returns an `uploadUrl` and an `uploadToken`. PUT each file's raw bytes to
+`uploadUrl`, one file per request, with the token in the `X-Upload-Token`
+header and the file name in the `name` query parameter:
+
+```
+curl -T invoice.pdf -H "X-Upload-Token: <uploadToken>" \
+  -H "Content-Type: application/pdf" "<uploadUrl>?name=invoice.pdf"
+```
+
+You need no other sign-in. Each response lists the files stored so far; use
+their `files[].url` in `create_work_item` data or in `batch_content_folders`
+`add_files`, or read them again later with `get_upload_link`. A link lasts 30
+minutes and takes up to 5 files of up to 16 MB each. The token is returned
+only once: keep it to yourself and don't show it in your replies. If you
+can't run commands that reach the network, ask the user to put the file at a
+public URL for `upload_files`.
+
+### Offer numbered choices when you stop
+
+Whenever you pause for the user's input (a question, a decision, a proposal
+to approve, the end of a stage), end your message with a few sensible next
+steps as a numbered list, the one you recommend first, so the user can reply
+with just a number. They can still answer in their own words.
+
+### How to read an article
+
+- Call `get_help_article` with the article's **slug** (the slugs for
+  each task are under **Which articles for which task**).
+- Not sure which slug? `search_help_center` with a short query.
+- Every Builder tool description also ends with
+  `Help articles (get_help_article slugs): …` — those are the articles for that
+  specific tool. Read them the first time you use the tool in a session.
+- Read 1–3 articles per task, not all of them. Where articles disagree,
+  the more specific one wins.
+
+### Rules
+
+- Never guess a slug. If one this guide names returns not-found, `search_help_center`
+  for its title instead. A new article becomes readable only after the
+  next Thunk.AI release.
+- Don't paste article text back into a thunk's instructions. Apply the
+  guidance in your own words for that thunk.
+- If an article is wrong or missing something you needed, report it with
+  `submit_feedback`.
+
+### Before finishing
+
+- Did I open the relevant thunk in the in-app browser and include its link?
+- Did every fact I gave about the thunk come from the Builder MCP, not from
+  the browser pane?
+- If I'm waiting for the user, did I end with numbered choices?
+
+## Build or change a thunk
+
+### Build order
+
+**Build skeleton first, then test it right away.** Lay out the whole thunk
+early (its steps, and an outline of its tools), breadth first, then fill it
+in one step at a time. Stand in mocks for external systems, and as soon as
+it is built, create realistic test data for the main path and run it. Edge
+cases, failure cases and the design review come later, when you harden the
+nearly finished design.
 
 The user is watching the thunk while you build, in the Thunk.AI app (in the
 side-panel browser, or from the link you gave). Build **skeleton first** (breadth first):
@@ -127,7 +308,8 @@ For a new workflow or chat-app thunk:
    property that doesn't exist yet. Check the `results` the response gives
    for its `steps` and `properties` (or the batch's `results`) and fix any
    `error` entry with the batch tools. Then
-   open the thunk in the browser pane (below)
+   open the thunk in the browser pane (see **Open the thunk in the browser
+   pane**)
    and give its link.
 2. **Decide real or mock for each external system.** For every outside
    system the workflow reads or changes (a CRM, email, a ticketing system, a
@@ -176,7 +358,7 @@ For a new workflow or chat-app thunk:
    placeholder: fetch one from a public URL with `upload_files`, or build
    one locally for the test (for example a PDF invoice laid out the way real
    ones are, or a scanned-looking image of a receipt) and upload it with
-   `create_upload_link` (see **Files** below). Tidy inputs
+   `create_upload_link` (see **Files**). Tidy inputs
    pass tests that real ones fail (`building-a-test-plan`).
 6. **Harden it when the design is nearly complete.** Once the main path
    passes and the steps and tools have stopped changing, add test work items
@@ -191,27 +373,6 @@ For a new workflow or chat-app thunk:
 
 Don't run work items through a step whose tools are still stubs.
 
-**Files** (for a FILE or IMAGE input, or a content folder): never send a
-file's contents as base64 in a tool argument. If the file is at a public URL,
-pass it to `upload_files`. If it is on your machine (one you made, or one the
-user gave you), call `create_upload_link` and send the file from your shell.
-It returns an `uploadUrl` and an `uploadToken`. PUT each file's raw bytes to
-`uploadUrl`, one file per request, with the token in the `X-Upload-Token`
-header and the file name in the `name` query parameter:
-
-```
-curl -T invoice.pdf -H "X-Upload-Token: <uploadToken>" \
-  -H "Content-Type: application/pdf" "<uploadUrl>?name=invoice.pdf"
-```
-
-You need no other sign-in. Each response lists the files stored so far; use
-their `files[].url` in `create_work_item` data or in `batch_content_folders`
-`add_files`, or read them again later with `get_upload_link`. A link lasts 30
-minutes and takes up to 5 files of up to 16 MB each. The token is returned
-only once: keep it to yourself and don't show it in your replies. If you
-can't run commands that reach the network, ask the user to put the file at a
-public URL for `upload_files`.
-
 For an MCP-server thunk, the interface is the outline: create it with its
 tool signatures (`create_thunk` with `kind: "mcpServer"` and an `interface`,
 or one `batch_tools` call of stubs), open the thunk and give its link, then
@@ -222,17 +383,68 @@ when they work.
 When you change an existing thunk, apply the same idea: add any new steps and
 tool outlines first, then fill them in one at a time.
 
-## How to read an article
+## Explain a thunk
 
-- Call `get_help_article` with the **slug** shown below.
-- Not sure which slug? `search_help_center` with a short query.
-- Every Builder tool description also ends with
-  `Help articles (get_help_article slugs): …` — those are the articles for that
-  specific tool. Read them the first time you use the tool in a session.
-- Read 1–3 articles per task, not all of them. Where articles disagree,
-  the more specific one wins.
+When the user asks for an explanation, first tell which of two asks it is:
 
-## Which articles for which task
+1. **Explain this thunk**: the thunk's purpose, workflow, data, tools and
+   features. Assume the user knows the platform, and explain how this thunk
+   uses it.
+2. **Explain the platform through this thunk**: use the thunk as a teaching
+   example and guide the user through the Thunk.AI app, explaining each
+   platform concept as well as how this thunk uses it.
+
+Both follow the same flow; the only difference is whether you also explain
+the platform. If you can't tell which one the user wants, ask, with the two as
+numbered choices.
+
+1. **Read the thunk through the Builder MCP first**, with `get_thunk` and
+   `get_definition`, so that you explain its actual design. Read the help
+   articles for the parts you will explain (see **Which articles for which
+   task**), especially for the second ask.
+2. **Open the thunk in the browser pane** and give its link (see **Open the
+   thunk in the browser pane**). Tell the user the sections of the tour
+   in a short list. A usual order is: the thunk's purpose, the Workflow Plan
+   and its steps, the work item's data (properties), tools and connections,
+   files and content folders, tests, and options such as approval gates.
+   Leave out the sections this thunk doesn't use.
+3. **Show and explain one section at a time.** Navigate the pane to the view
+   for that section (the URLs in **Show each change in the pane**), then
+   explain it, mapping the platform concept to this thunk's configuration.
+   Keep the UI read-only: navigate and show, but never save, run, delete,
+   publish or share anything there. With no browser pane, give the link to
+   each section's view instead.
+4. **Stop after each section** and wait for the user to choose what to see
+   next. Don't advance the tour until they choose to continue. End each
+   section with numbered choices: **1. Continue the tour** (naming the next
+   section), then two or three deeper dives into the section just shown. The
+   user can reply with a number.
+5. **After a deep dive, stay at the same place in the tour** and offer
+   numbered choices again, with **1. Continue the tour** first.
+
+Don't claim that a feature works just because a description or a step's
+directions mention it. Check its configuration through the Builder MCP (for
+example, that the tool is enabled on the step, that the connection exists,
+that the property is bound), and say plainly when you couldn't verify
+something.
+
+An explanation changes nothing and runs nothing. If the user asks for a
+change along the way, say so, and make it through the Builder MCP as for any
+other edit.
+
+## Troubleshoot or analyze a thunk
+
+To analyze a thunk — often a customer's production thunk you must not edit —
+read the `analyze-a-thunk-with-the-builder-mcp` article (`get_help_article`) before you start,
+and follow it. It covers three scenarios: (A) troubleshooting one work item
+or step, (B) a health check, and (C) a cleanup / upgrade done in a mocked
+copy with tests from real data, a hand-over to the owner and a .docx report.
+It works only through this Builder MCP; when the cause is the platform, it
+files feedback and has the user raise a support ticket.
+
+In this skill that article is `analyzing.md`, in this folder: read it there. Troubleshooting is its Scenario A; a health check is B; a cleanup, review or upgrade is C.
+
+## Help articles for each task
 
 ### Start here (first thunk in a session)
 
@@ -322,201 +534,3 @@ restate it) and gives the guidelines for the logic that is left. Then:
 Each of the bold articles opens with a **Concepts** section (how to think
 about it) followed by **Details** (specific rules and cases). Read Concepts
 first; go to Details for the specific case you're dealing with.
-
-## Open the thunk in the browser pane
-
-This is mandatory, not optional. As soon as `create_thunk` or `copy_thunk`
-returns a `url` (or, when working on an existing thunk, as soon as `get_thunk`
-or `list_thunks` returns one), open that URL beside the conversation so the
-user can watch the thunk while you work on it. Do this for every thunk you
-build, copy, edit, inspect, analyze, troubleshoot, review or report on,
-before continuing with other work, and always put the clickable link in your
-message too. Never let it hold up the build. The panel is mainly for the
-user to watch. Make changes through the Builder MCP tools by default: they are
-faster and more reliable than the UI, and their results can be checked.
-
-**When the user asks to see it done in the UI.** If the user explicitly asks to
-see how to do something in the Thunk.AI app (for example "show me how to add a
-step in the UI" or "walk me through connecting Gmail"), you may drive the app in
-the side-panel browser: navigate, click and type there, and say what you are
-doing at each step so they can follow along and do it themselves next time.
-Where the session has no tools that can drive that browser, describe the clicks
-for them to follow instead.
-
-- Do only what they asked to see, then go back to the Builder MCP for the rest
-  of the work, and check the result with `get_definition`.
-- A general request such as "build it" or "fix it" is not a request to use the
-  UI. Neither is an MCP call that failed or seems slow.
-- Never sign in for the user, and ask before anything in the UI that deletes,
-  publishes, shares or touches a live external system.
-
-### Show each change in the pane
-
-Once the pane is open, keep it on what you're working on. Whenever you change
-the thunk through the Builder MCP, or fetch specific information from it,
-navigate the pane to the view that shows it: before the call, so the user
-watches the change land, or after it, to show what you changed or found.
-If the page doesn't show the change after the call, navigate to the same URL
-again to reload it.
-
-Do this by **changing the URL only**: `navigate` the same tab (Claude desktop)
-or call `open_in_codex` again (Codex). Never click through the app to get
-there. Navigate once per view, not once per call, and skip it if the pane is
-already there. Prefer a `url` the tool returned; otherwise build one on the
-thunk URL's host (`<host>` below):
-
-| What you changed or fetched | URL to show |
-|---|---|
-| The thunk as a whole (`get_thunk`, `get_definition`) | the thunk's `url` |
-| A step (`batch_steps`) | that step's `url` from `get_definition` |
-| A work item (`create_work_item`, `run_work_item`, `get_work_item_state`) | the work item's `url` |
-| One step's run on a work item (`get_step_history`, or a step in `get_work_item_state`) | that step run's `url` |
-| Test work items / test results (`batch_work_item_tests`, `query_work_items`) | `<host>/thunk/<thunkId>/testing?testingTab=rows` / `?testingTab=results` |
-| Connections and their tools (`add_thunk_connection`, `batch_connections`, `refresh_connection_tools`) | `<host>/thunk/<thunkId>/tools` |
-| Errors (`get_errors`) | an error's `runUrl`, or `<host>/thunk/<thunkId>/monitor?tab=errors` |
-| Review (`run_review`, `get_review`) | the review's `url` |
-| Reports (`batch_reports`, `run_report`) | `<host>/thunk/<thunkId>/monitor/reporting` |
-| Files and folders (`batch_content_folders`, `upload_files`) | `<host>/thunk/<thunkId>/files` |
-| MCP export (`set_export`) | `<host>/thunk/<thunkId>/deployment?deployTab=export` |
-| Thunk options (`set_options`) | `<host>/thunk/<thunkId>/settings` |
-| Members (`add_thunk_members`) | `<host>/thunk/<thunkId>/team` |
-
-For anything not listed, show the thunk's `url`. If the pane isn't open (no
-side-panel browser, or it couldn't be reached), give the URL as a link
-instead. This doesn't apply to work you do on a thunk that is not the one in
-the pane, such as reading a source thunk while building a copy.
-
-### In the Claude desktop app
-
-The browser pane's tools are named `mcp__Claude_Browser__*` in a desktop
-session and `mcp__remote-devices__Claude_Browser__*` in a cloud session linked
-to the user's computer. Below they are named by the part after that prefix.
-
-1. **Load the tools in one call.** If the browser-pane tools are deferred, load
-   them all with one ToolSearch whose query is the full prefix, with
-   `max_results: 64`. If the only tool present is
-   `enable__mcp__remote-devices__Claude_Browser`, call it first.
-2. **Reuse an existing tab.** Call `tabs_context`. If a tab is already on the
-   thunk URL's site, `navigate` that tab (its `tabId`) to the thunk URL.
-   Otherwise call `preview_start` with the thunk URL.
-3. **Handle site approval.** If the call says the site isn't allowed yet and
-   the session has `request_access`, call it with the site's URL (such as
-   `https://<the thunk URL's host>`) and scope `"site"`, so it isn't asked
-   again in later sessions. Wait for the answer, then retry once. If it is
-   declined, or there is no `request_access`, say so in one line and carry on.
-4. **Check the page.** Use `read_page`, or take one small screenshot
-   (`computer`, scale 0.5). This checks the state of the pane (a banner, the
-   sign-in screen), not how the thunk is configured.
-   - If a cookie banner shows, choose the most privacy-preserving option
-     ("Only Essential").
-   - If the Thunk.AI sign-in screen shows, never sign in on the user's
-     behalf. Tell them to sign in with Google or Microsoft in the pane. The
-     pane keeps its own sign-ins, separate from their regular browser, so this
-     is needed once.
-5. **Make sure they can see it.** If `tabs_context` reports the pane as
-   hidden, tell the user to press Cmd+Shift+B (Mac) or Ctrl+Shift+B
-   (Windows), or to close what's in the side panel and click the globe icon.
-   Opening a page does not bring a hidden pane forward on its own.
-6. **If the pane can't be reached** (no browser tools after the load, or calls
-   error or time out), tell the user in one line that the Claude app's browser
-   isn't reachable and that they can open the thunk link themselves. Don't
-   retry, and don't switch to Claude in Chrome unless they ask.
-7. **Keep it current.** Navigate the same tab as you work, following
-   **Show each change in the pane** above. Don't open
-   a new tab for each view.
-
-### In the Codex desktop app
-
-Call `mcp__codex_app__open_in_codex` with
-`target: { type: "browser", url: "<the thunk's url>" }` and
-`placement: "right"`. Do this as soon as the thunk's URL is available, for
-every thunk task (not only builds), and reuse the current browser tab when
-possible. If the panel opens asynchronously, the app shows it when it is
-ready; carry on with the work. If the call fails or no browser pane is
-available, say so in one line and give the clickable link anyway.
-
-### Elsewhere
-
-In the Claude Code terminal, Cursor, Claude chat without the desktop app, or
-any agent with no side-panel browser, give the thunk's link (`url` in the
-`get_thunk` result) and carry on. Don't build a page of the thunk or write one
-to a file for the user to open.
-
-In every case, give step links (each step's `url` in `get_definition`) when
-you discuss a specific step.
-
-## Analyzing a thunk
-
-To analyze a thunk — often a customer's production thunk you must not edit —
-read the `analyze-a-thunk-with-the-builder-mcp` article (`get_help_article`) before you start,
-and follow it. It covers three scenarios: (A) troubleshooting one work item
-or step, (B) a health check, and (C) a cleanup / upgrade done in a mocked
-copy with tests from real data, a hand-over to the owner and a .docx report.
-It works only through this Builder MCP; when the cause is the platform, it
-files feedback and has the user raise a support ticket.
-
-## Explaining a thunk
-
-When the user asks for an explanation, first tell which of two asks it is:
-
-1. **Explain this thunk**: the thunk's purpose, workflow, data, tools and
-   features. Assume the user knows the platform, and explain how this thunk
-   uses it.
-2. **Explain the platform through this thunk**: use the thunk as a teaching
-   example and guide the user through the Thunk.AI app, explaining each
-   platform concept as well as how this thunk uses it.
-
-Both follow the same flow; the only difference is whether you also explain
-the platform. If you can't tell which one the user wants, ask, with the two as
-numbered choices.
-
-1. **Read the thunk through the Builder MCP first**, with `get_thunk` and
-   `get_definition`, so that you explain its actual design. Read the help
-   articles for the parts you will explain (see **Which articles for which
-   task** above), especially for the second ask.
-2. **Open the thunk in the browser pane** and give its link (see **Open the
-   thunk in the browser pane** below). Tell the user the sections of the tour
-   in a short list. A usual order is: the thunk's purpose, the Workflow Plan
-   and its steps, the work item's data (properties), tools and connections,
-   files and content folders, tests, and options such as approval gates.
-   Leave out the sections this thunk doesn't use.
-3. **Show and explain one section at a time.** Navigate the pane to the view
-   for that section (the URLs in **Show each change in the pane** below), then
-   explain it, mapping the platform concept to this thunk's configuration.
-   Keep the UI read-only: navigate and show, but never save, run, delete,
-   publish or share anything there. With no browser pane, give the link to
-   each section's view instead.
-4. **Stop after each section** and wait for the user to choose what to see
-   next. Don't advance the tour until they choose to continue. End each
-   section with numbered choices: **1. Continue the tour** (naming the next
-   section), then two or three deeper dives into the section just shown. The
-   user can reply with a number.
-5. **After a deep dive, stay at the same place in the tour** and offer
-   numbered choices again, with **1. Continue the tour** first.
-
-Don't claim that a feature works just because a description or a step's
-directions mention it. Check its configuration through the Builder MCP (for
-example, that the tool is enabled on the step, that the connection exists,
-that the property is bound), and say plainly when you couldn't verify
-something.
-
-An explanation changes nothing and runs nothing. If the user asks for a
-change along the way, say so, and make it through the Builder MCP as for any
-other edit.
-
-## Rules
-
-- Never guess a slug. If one above returns not-found, `search_help_center`
-  for its title instead. A new article becomes readable only after the
-  next Thunk.AI release.
-- Don't paste article text back into a thunk's instructions. Apply the
-  guidance in your own words for that thunk.
-- If an article is wrong or missing something you needed, report it with
-  `submit_feedback`.
-
-## Before finishing
-
-- Did I open the relevant thunk in the in-app browser and include its link?
-- Did every fact I gave about the thunk come from the Builder MCP, not from
-  the browser pane?
-- If I'm waiting for the user, did I end with numbered choices?

@@ -6,21 +6,13 @@ This guide is for AI agents (such as Claude or Codex) that analyze thunks throug
 
 It follows on from `build-thunks-with-the-builder-mcp`, which says which help articles to read
 before each kind of work (directions, schema, tools, tests, diagnosis) and
-how to open the thunk beside the conversation. This guide is the procedure for analyzing a
+how to open the thunk beside the conversation; those instructions apply here too. This guide is the procedure for analyzing a
 thunk through the Builder MCP; the help articles hold the method itself (what
 to look for and why) and are the reference. Read the articles a step names
-when you reach it — do not work from memory. Each pointer below carries a
+when you reach it — do not work from memory. Each pointer in this guide carries a
 one-line summary so the procedure still works if an article is not yet
 readable (a new article becomes readable only after the next
 Thunk.AI release).
-
-The method articles:
-
-| Scenario | Read |
-|---|---|
-| A | `reading-a-failed-run` (especially Details → Confirm the fix), `step-diagnostics`, `troubleshooting-ai-reliability-issues` |
-| B | `check-a-thunks-health-where-to-start` (the order, the sampling rule, the design checklist, the security check) |
-| C | `improve-a-live-thunk-safely` (fixes vs. owner decisions, the owner checklist, stand-ins, tests, the undo list, the hand-over), `how-to-copy-a-thunk` |
 
 ## Pick the scenario first
 
@@ -59,7 +51,7 @@ a cleanup starts from a health check's findings. Say when you switch.
 `get_thunk`, then `get_definition` with `includeToolImpl`. The result is
 usually too large to read inline — save it and slice it with
 `python3`/`jq`. For A read only what the problem step touches; for B and C
-read all of it with the design checklist below.
+read all of it with the **Design checklist**.
 
 ### Design checklist
 
@@ -104,7 +96,7 @@ plus:
   tool call inside a workflow run, the args and a cut-off result are in
   `get_step_history` `full`; the complete input and output are in
   `get_tool_call_history` (every call to one tool, across workitems), or in
-  the next turn's LLM exchange (below).
+  the next turn's LLM exchange (`get_chat_message_llm_exchange`).
 - `get_chat_message_llm_exchange` — the exact LLM request and response,
   including every earlier tool result in full. This is how you tell "the
   directions were ambiguous" from "the model ignored them" from "the tool
@@ -202,7 +194,7 @@ quoted); the blast radius; the fix, and whether it was verified.
 
 Go broad over a recent window, in the order of
 `check-a-thunks-health-where-to-start` — the most harmful problems first,
-time and cost last. Read the whole design first (checklist above); it is
+time and cost last. Read the whole design first (**Design checklist**); it is
 context for every check.
 
 ### B1. Operational metrics
@@ -331,7 +323,7 @@ retry) is a business-logic change: it goes to the owner as a design question
 
 - A health check (Scenario B) first, unless one was just done: its counts
   decide what is worth fixing. On a large history, sample (see Counting).
-- The full design checklist above, step by step.
+- The full **Design checklist**, step by step.
 - **Upgrade opportunities** — platform features the thunk predates or doesn't
   use: `pattern`/`enum` on properties instead of format rules in directions,
   a gate (classification property + `runCondition` + human-approval step)
@@ -606,3 +598,13 @@ Lead with the result in one sentence; tables over prose.
   add, `set_options` resetting the inactivity timeout, `testRunModel` on
   re-runs, captured mocks letting a live call through) are known platform
   issues. Drop each one when it is fixed.
+
+## The method articles
+
+Read these for each scenario:
+
+| Scenario | Read |
+|---|---|
+| A | `reading-a-failed-run` (especially Details → Confirm the fix), `step-diagnostics`, `troubleshooting-ai-reliability-issues` |
+| B | `check-a-thunks-health-where-to-start` (the order, the sampling rule, the design checklist, the security check) |
+| C | `improve-a-live-thunk-safely` (fixes vs. owner decisions, the owner checklist, stand-ins, tests, the undo list, the hand-over), `how-to-copy-a-thunk` |
