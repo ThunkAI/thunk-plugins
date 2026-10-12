@@ -316,7 +316,21 @@ For a new workflow or chat-app thunk:
    database), look in `get_definition` for an account connection that
    already reaches it. If there is a suitable one, **ask the user** whether
    to use it or a mock; never wire a live connection into a new thunk
-   without asking. Otherwise, and whenever the user prefers, build a
+   without asking. If the user wants a real system that has no connection
+   yet, `batch_connections` can create one on their account: a REST API
+   (`Generic API`), an MCP server (`MCP service`) or an OAuth connection
+   that uses the client-credentials grant (`Generic OAuth`). Do not ask
+   the user to paste a client secret or API key into the chat, for any
+   connection type: OAuth and MCP connections take no secret, and a REST
+   connection can be created without its key. Create the connection; if
+   it comes back with `secretPending` true, ask the user to enter the
+   secret on that connection on their Thunk.AI Account page, then call
+   `refresh_connection_tools` for an MCP connection. Add the connection
+   to the thunk with `add_thunk_connection`. These are the user's personal
+   connections; a thunk assigned to a resource environment uses that
+   environment's connections instead. An OAuth connection that needs
+   a person to sign in is created on the Account page, not with
+   `batch_connections`. Otherwise, and whenever the user prefers, build a
    **mock**: an MCP-server thunk (`create_thunk kind:"mcpServer"`) of
    deterministic code tools with the real system's tool names and realistic
    answers, published with `set_export` and added to this thunk with

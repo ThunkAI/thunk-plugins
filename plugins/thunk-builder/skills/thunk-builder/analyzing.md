@@ -425,7 +425,10 @@ has been seen to let one through. Remove the live tool from the copy instead.
    (`get_definition` with `includeToolImpl: true`, search the output).
 5. `copyWorkItems` copies only the **oldest** 500 items, inputs only, as
    Draft — usually not the ones you need. Create test items from the specific
-   originals instead, and delete the copied ones afterwards.
+   originals instead, and delete the copied ones afterwards. Copying work
+   items or content folders also needs you to be the original's Owner or an
+   Admin, and an Execute grant on the original that the user adds in Account
+   Settings; the error gives the link.
 6. **Start the pre-production checklist now** (see C8): every test-only change
    you make from here on — the mock connection, a removed live tool, a
    test-only line in directions, a test model override — gets a line on it
