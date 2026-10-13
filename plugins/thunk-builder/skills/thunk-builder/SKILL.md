@@ -126,6 +126,26 @@ for them to follow instead.
 - Never sign in for the user, and ask before anything in the UI that deletes,
   publishes, shares or touches a live external system.
 
+#### Open every app URL in agent mode
+
+Add `agentMode=true` to every Thunk.AI app URL you open in the pane, navigate
+to, or give the user as a link: the `url` values the Builder MCP returns and
+the URLs you build from the table in **Show each change in the pane**. Add it
+as a query parameter: after `?` when the URL has no query yet, otherwise after
+`&`, and always before any `#`. For example, `<host>/thunk/<thunkId>` becomes
+`<host>/thunk/<thunkId>?agentMode=true`, and
+`<host>/thunk/<thunkId>/testing?testingTab=rows` becomes
+`<host>/thunk/<thunkId>/testing?testingTab=rows&agentMode=true`.
+
+Agent mode is the app as it is shown to a user who is watching you work. You
+are editing the thunk, so the planning agent chat and the Tool Builder AI
+chat start hidden, which leaves more room for the thunk itself. The user can
+bring either back with **Show AI**. Agent mode lasts for that browser tab,
+including after they click around in the app; `agentMode=false` turns it off.
+
+Add it only to links into the Thunk.AI app. Leave help-center articles,
+upload links and `short.thunk.ai` links as they are.
+
 #### Show each change in the pane
 
 Once the pane is open, keep it on what you're working on. Whenever you change
@@ -135,11 +155,13 @@ watches the change land, or after it, to show what you changed or found.
 If the page doesn't show the change after the call, navigate to the same URL
 again to reload it.
 
-Do this by **changing the URL only**: `navigate` the same tab (Claude desktop)
-or call `open_in_codex` again (Codex). Never click through the app to get
+Do this by **changing the URL only**: `navigate` the same tab (Claude desktop),
+or move the existing tab as described in **In the Codex desktop app** (never a
+new `open_in_codex` call for each view). Never click through the app to get
 there. Navigate once per view, not once per call, and skip it if the pane is
 already there. Prefer a `url` the tool returned; otherwise build one on the
-thunk URL's host (`<host>` in the table):
+thunk URL's host (`<host>` in the table). Either way, add `agentMode=true`
+(see **Open every app URL in agent mode**):
 
 | What you changed or fetched | URL to show |
 |---|---|
@@ -203,13 +225,29 @@ to the user's computer. Below they are named by the part after that prefix.
 
 #### In the Codex desktop app
 
-Call `mcp__codex_app__open_in_codex` with
-`target: { type: "browser", url: "<the thunk's url>" }` and
-`placement: "right"`. Do this as soon as the thunk's URL is available, for
-every thunk task (not only builds), and reuse the current browser tab when
-possible. If the panel opens asynchronously, the app shows it when it is
-ready; carry on with the work. If the call fails or no browser pane is
-available, say so in one line and give the clickable link anyway.
+**Every `open_in_codex` call opens a new tab.** It takes no tab to reuse and
+returns none, so calling it for each view fills the panel with tabs. Call it
+**once per session** to open the thunk, then move that same tab:
+
+1. **Open the thunk once.** Call `mcp__codex_app__open_in_codex` with
+   `target: { type: "browser", url: "<the thunk's url>" }` and
+   `placement: "right"`, as soon as the thunk's URL is available, for every
+   thunk task (not only builds). The panel opens asynchronously; carry on with
+   the work. If the call fails or no browser panel is available, say so in one
+   line and give the clickable link anyway.
+2. **Change the view by moving that tab, when Computer Use is available.** If
+   the session has Computer Use (`cua_repl`), navigate the existing in-app
+   browser tab instead of opening another one. Call
+   `cua.listTabs({ browser: "iab" })`, pick the tab whose `url` is on the
+   thunk URL's site, bind it with `cua.getTab(tab.id, { browser: tab.browserId })`,
+   and call `goto("<the new url>")` on it. Only change its URL; don't click or
+   type there. Use the tab `id` and `browserId` that `listTabs` returns, not a
+   URL: binding a tab by URL can fail with "Tab not found".
+3. **Without Computer Use, don't call `open_in_codex` again** for each view.
+   Give the link to the new view in your message instead, and let the user
+   open it. Call `open_in_codex` again only when the user asks to see it in
+   the panel, or says they closed the tab. With Computer Use, also call it
+   again when `listTabs` shows no tab on the thunk URL's site.
 
 #### Elsewhere
 
@@ -274,6 +312,8 @@ with just a number. They can still answer in their own words.
 ### Before finishing
 
 - Did I open the relevant thunk in the in-app browser and include its link?
+- Is every thunk I created filed in the project's folder?
+- Did every Thunk.AI app URL I opened or gave carry `agentMode=true`?
 - Did every fact I gave about the thunk come from the Builder MCP, not from
   the browser pane?
 - If I'm waiting for the user, did I end with numbered choices?
@@ -295,6 +335,26 @@ make the shape of the whole thunk appear, then fill it in one step at a time.
 Don't build it layer by layer (every property, then every tool in full
 detail, then finally the steps): that leaves an empty Workflow Plan on screen
 for most of the build, and the user can't tell what you are making.
+
+**Keep each project's thunks in one folder.** The user's home page in the
+Thunk.AI app sorts thunks into folders, and a session that makes several
+thunks (the thunk, its mock services, copies for testing) otherwise leaves
+them scattered among everything else the user owns. At the start of a
+project, choose one folder path for it, such as
+`/invoice-intake` or `/claims/fraud-review`, and tell the user which one.
+Use a short name for the project, not for the session or the date. Before
+choosing, check `list_thunks` with `folder` set to `/` and
+`includeSubfolders` true to see the folders the user already has, and reuse
+one that fits (each summary's `folderPath` shows where a thunk is filed).
+Then file **every** thunk you create for the project there: pass `folderPath`
+to `create_thunk` and to `copy_thunk` (a copy of a thunk the user owns
+otherwise stays in the source's folder, and a copy of someone else's lands
+at the top level). Mock services and test copies go in the same folder, or
+in a subfolder such as `/invoice-intake/mocks`. To file a thunk you didn't
+create there, or move one, use `set_options` with `folderPath`; only the
+thunk's owner or an admin can move it, and the move is refused in
+Production. List the project's thunks with `list_thunks` `folder`. A folder
+needs no creating: filing a thunk in it is enough.
 
 For a new workflow or chat-app thunk:
 
@@ -358,7 +418,17 @@ For a new workflow or chat-app thunk:
 5. **Test the main path as soon as it is built**, without waiting to be
    asked. Create test data: a few work items for the typical cases the
    thunk will see most, with `create_work_item` and `tests` so each is a
-   test work item with assertions on its expected outputs. Leave edge cases
+   test work item with assertions on its expected outputs. If the thunk
+   holds a conversation (a chat app, or a step that emails someone and waits
+   for the reply), give each test work item a simulated user
+   (`batch_work_item_tests` `setSimulatedUser`) so the run does not stop to
+   wait for a person; read `test-a-conversation-with-a-simulated-user`.
+   To turn a finished work item into a test, `batch_work_item_tests` `set`
+   makes that work item a test work item and gives each conversation it
+   holds a simulated user that replays the conversation. Re-running it
+   replays the conversation in the same thread and replaces the recorded
+   messages and outputs; to keep the original, use `copyAsTest` instead.
+   Leave edge cases
    and failure cases for hardening (step 6): while the design is still
    changing, they cost runs and fixes on behavior that may not last. Run
    them, read the results (`get_work_item_state`, `get_step_history`), and
@@ -524,6 +594,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | --- | --- |
 | Create / run / rerun work items | `workflow-orchestration`, `manual-testing` |
 | Automated tests (`batch_work_item_tests`) | `evals-automated-tests`, `building-a-test-plan` |
+| Test a conversation: a test work item whose end user is a simulated user, with assertions (`batch_work_item_tests` `setSimulatedUser` / `copyAsTest`, then `rerun_work_item`) | `test-a-conversation-with-a-simulated-user`, `evals-automated-tests` |
 | Mock external systems for testing | `improve-a-live-thunk-safely`, `evals-automated-tests` |
 | Production readiness | `shipping-enterprise-thunks-testing-and-quality-principles` |
 | Design review (`run_review`, `get_review`) | `workflow-review` |

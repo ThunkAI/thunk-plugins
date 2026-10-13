@@ -410,7 +410,9 @@ has been seen to let one through. Remove the live tool from the copy instead.
    copy's owner (`get_thunk`)
    before testing anything that uses a connection. Add yourself as an admin
    on it so you can keep working.
-2. `copy_thunk` (name it `<original> (mock test)`). `copy_thunk` makes a
+2. `copy_thunk` (name it `<original> (mock test)`, and pass a `folderPath`
+   that keeps the copy and its mocks together, such as the original's folder
+   plus `/mock-test`). `copy_thunk` makes a
    copy of a Production thunk in Testing, so it stays editable (a copy made
    in the app keeps Production). `set_paused` it at once, and confirm its
    phase with `get_thunk`.
@@ -453,8 +455,13 @@ has been seen to let one through. Remove the live tool from the copy instead.
   reason noted.
 - Tests check the work item's fields, not the live state of outside systems,
   which drifts. Say so in the report.
+- **A thunk that converses.** Where the original talks to a person, give the
+  item a simulated user (`batch_work_item_tests` `setSimulatedUser`, or
+  `copyAsTest` from a real conversation) and `rerun_work_item` it, so the
+  run does not wait for a reply; `test-a-conversation-with-a-simulated-user`.
 - Run one item first as a smoke test (file access, mock wiring), then the
-  rest. Test items start in Draft: `run_work_item` each.
+  rest. Test items start in Draft: `run_work_item` each (`rerun_work_item`
+  for an item with a simulated user opener).
 
 ### C6. Fix in the copy
 
