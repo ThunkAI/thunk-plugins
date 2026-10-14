@@ -316,6 +316,8 @@ with just a number. They can still answer in their own words.
 - Did every Thunk.AI app URL I opened or gave carry `agentMode=true`?
 - Did every fact I gave about the thunk come from the Builder MCP, not from
   the browser pane?
+- Do the directions and AI tool instructions I wrote open with an objective
+  and a numbered process, and is every code tool I wrote readable source?
 - If I'm waiting for the user, did I end with numbered choices?
 
 ## Build or change a thunk
@@ -364,8 +366,9 @@ For a new workflow or chat-app thunk:
    step's final status), plus any `properties` the design already fixes.
    Otherwise `create_thunk`, then one `batch_steps` call that adds the same
    steps. Give each step its real title and a short paragraph of directions
-   saying what the step is for. Leave out `toolConfig`, and any binding to a
-   property that doesn't exist yet. Check the `results` the response gives
+   saying what the step is for (step 4 replaces it with full directions).
+   Leave out `toolConfig`, and any binding to a property that doesn't exist
+   yet. Check the `results` the response gives
    for its `steps` and `properties` (or the batch's `results`) and fix any
    `error` entry with the batch tools. Then
    open the thunk in the browser pane (see **Open the thunk in the browser
@@ -406,9 +409,18 @@ For a new workflow or chat-app thunk:
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
    - add the properties it reads and writes (`batch_properties`) and bind them
      on the step (`batch_steps` update `inputProperties` / `outputProperties`);
-   - write its full directions;
+   - mark the outputs the step must produce with `requiredOutputProperties`
+     on the same update (and inputs it cannot start without with
+     `requiredInputProperties`). This, not the property's own
+     `constraints.required`, is what stops the step finishing without the
+     value: `constraints.required` is checked only when a work item is
+     created. For a value needed only in some cases, use `finishCondition`
+     instead (`schematized-state`, "Choosing which outputs are required");
+   - write its full directions, in the shape **Write readable directions
+     and code** gives, replacing the skeleton paragraph;
    - replace the stubs of the tools it uses with real implementations
-     (`batch_tools` update, with the full definition), check each with
+     (`batch_tools` update, with the full definition, written as **Write
+     readable directions and code** says), check each with
      `run_tool`, and enable them on the step (`toolConfig`);
    - set the plan's input bindings while doing the first step and its output
      bindings while doing the last (`batch_plan_bindings`).
@@ -466,6 +478,38 @@ when they work.
 
 When you change an existing thunk, apply the same idea: add any new steps and
 tool outlines first, then fill them in one at a time.
+
+### Write readable directions and code
+
+The thunk's owners read and maintain what you write: step directions, an AI
+tool's `userGuidance` and a code tool's script. Write them so a person can
+review them, and so they look like what the rest of the platform produces.
+
+**Directions and AI tool instructions.** Write a step's `directions`,
+`scheduledDirections` and a custom AI tool's `userGuidance` by the
+guidelines in `how-to-write-effective-directions`. These are the guidelines
+the **Rewrite** button in the app applies, so text written by them survives
+a Rewrite with few changes. Give every full set of instructions the same
+shape:
+
+- An **Objective**: one or two sentences on what the step or tool is for.
+- A **Process**: a numbered list in the order the work happens, one action
+  per item, with any detail as indented bullets under its item.
+- Markdown with real line breaks between the objective, the list and each
+  item. Never write the whole text as one paragraph, and never send `\n`
+  as two literal characters in place of a line break.
+
+After you save them, read the instructions back with `get_definition` and
+check them against the article's quick checklist, as an author would before
+pressing **Rewrite**. Fix what fails.
+
+**Code tools.** Write a code tool's `code` (and any `responseParser`) as
+readable source, by the **Write code people can read** section of
+`how-custom-code-tools-work`: one statement per line with two-space
+indents, a short opening comment on what the tool does and returns, fixed
+values as named constants at the top, descriptive names, small helper
+functions, comments on business rules, and named fields for a result of
+more than one value. Never send minified code or a script on one line.
 
 ## Explain a thunk
 
