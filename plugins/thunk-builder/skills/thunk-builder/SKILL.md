@@ -17,7 +17,7 @@ description: >-
 
 <!-- GENERATED, DO NOT EDIT: built from the Thunk.AI help article `build-thunks-with-the-builder-mcp`. Edits here are overwritten and never committed; change the article in the source repository instead. -->
 
-> Help articles bundled in this skill's folder: `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`.
+> Help articles bundled in this skill's folder: `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`; `show-a-thunk-in-the-codex-desktop-app` is `codex-desktop-app.md`.
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -60,7 +60,11 @@ the task in front of you. Read them before you act; do not work from memory.
 ### Start a session first
 
 If the Builder MCP has a `create_session` tool, call it before anything else
-with a short `title` and a `description` of what you are building. Read the
+with a short `title` and a `description` of what you are building. Also say
+who you are: `agent` is `claude`, `codex` or `other` (with a few words in
+`agentDescription`, such as the product name), and `agentSurface` is the app
+you run in (`desktop_app`, `terminal`, `web`, `ide` or `other`). The
+instructions then point you at the guides for your app. Read the
 instructions it returns and pass the returned `sessionId` to every other
 Builder tool. Where the server requires sessions, a call without a valid
 `sessionId` is refused with `session_required` or `session_not_found`: call
@@ -104,12 +108,18 @@ Never let it hold up the build. The panel is mainly for the
 user to watch. Make changes through the Builder MCP tools by default: they are
 faster and more reliable than the UI, and their results can be checked.
 
-**At the start of a session in the Claude desktop app**, open the tenant's
-Thunk.AI app in the browser pane and complete steps 3–5 of
-**In the Claude desktop app** (site approval, sign-in, a visible pane) before
-building, so the user approves and signs in once, up front. The tenant's app
-is the site of any thunk `url` the Builder MCP returns (for example from
-`list_thunks`).
+**How you open and move the pane depends on the app you run in.** Before you
+open it, read the guide for your app with `get_help_article`:
+
+- The Claude desktop app, or a cloud session linked to the user's computer
+  with the Claude browser-pane tools: `show-a-thunk-in-the-claude-desktop-app`.
+  It also says what to do at the start of a session, so the user approves the
+  site and signs in once, up front.
+- The Codex desktop app: `show-a-thunk-in-the-codex-desktop-app`.
+
+The instructions `create_session` returns name the guide for your app when you
+pass `agent` and `agentSurface`. With no side-panel browser, follow
+**With no side-panel browser**.
 
 **When the user asks to see it done in the UI.** If the user explicitly asks to
 see how to do something in the Thunk.AI app (for example "show me how to add a
@@ -155,9 +165,9 @@ watches the change land, or after it, to show what you changed or found.
 If the page doesn't show the change after the call, navigate to the same URL
 again to reload it.
 
-Do this by **changing the URL only**: `navigate` the same tab (Claude desktop),
-or move the existing tab as described in **In the Codex desktop app** (never a
-new `open_in_codex` call for each view). Never click through the app to get
+Do this by **changing the URL only**, in the same tab, as the guide for your
+app describes (`show-a-thunk-in-the-claude-desktop-app` or
+`show-a-thunk-in-the-codex-desktop-app`). Never click through the app to get
 there. Navigate once per view, not once per call, and skip it if the pane is
 already there. Prefer a `url` the tool returned; otherwise build one on the
 thunk URL's host (`<host>` in the table). Either way, add `agentMode=true`
@@ -184,72 +194,7 @@ side-panel browser, or it couldn't be reached), give the URL as a link
 instead. This doesn't apply to work you do on a thunk that is not the one in
 the pane, such as reading a source thunk while building a copy.
 
-#### In the Claude desktop app
-
-The browser pane's tools are named `mcp__Claude_Browser__*` in a desktop
-session and `mcp__remote-devices__Claude_Browser__*` in a cloud session linked
-to the user's computer. Below they are named by the part after that prefix.
-
-1. **Load the tools in one call.** If the browser-pane tools are deferred, load
-   them all with one ToolSearch whose query is the full prefix, with
-   `max_results: 64`. If the only tool present is
-   `enable__mcp__remote-devices__Claude_Browser`, call it first.
-2. **Reuse an existing tab.** Call `tabs_context`. If a tab is already on the
-   thunk URL's site, `navigate` that tab (its `tabId`) to the thunk URL.
-   Otherwise call `preview_start` with the thunk URL.
-3. **Handle site approval.** If the call says the site isn't allowed yet and
-   the session has `request_access`, call it with the site's URL (such as
-   `https://<the thunk URL's host>`) and scope `"site"`, so it isn't asked
-   again in later sessions. Wait for the answer, then retry once. If it is
-   declined, or there is no `request_access`, say so in one line and carry on.
-4. **Check the page.** Use `read_page`, or take one small screenshot
-   (`computer`, scale 0.5). This checks the state of the pane (a banner, the
-   sign-in screen), not how the thunk is configured.
-   - If a cookie banner shows, choose the most privacy-preserving option
-     ("Only Essential").
-   - If the Thunk.AI sign-in screen shows, never sign in on the user's
-     behalf. Tell them to sign in with Google or Microsoft in the pane. The
-     pane keeps its own sign-ins, separate from their regular browser, so this
-     is needed once.
-5. **Make sure they can see it.** If `tabs_context` reports the pane as
-   hidden, tell the user to press Cmd+Shift+B (Mac) or Ctrl+Shift+B
-   (Windows), or to close what's in the side panel and click the globe icon.
-   Opening a page does not bring a hidden pane forward on its own.
-6. **If the pane can't be reached** (no browser tools after the load, or calls
-   error or time out), tell the user in one line that the Claude app's browser
-   isn't reachable and that they can open the thunk link themselves. Don't
-   retry, and don't switch to Claude in Chrome unless they ask.
-7. **Keep it current.** Navigate the same tab as you work, following
-   **Show each change in the pane**. Don't open
-   a new tab for each view.
-
-#### In the Codex desktop app
-
-**Every `open_in_codex` call opens a new tab.** It takes no tab to reuse and
-returns none, so calling it for each view fills the panel with tabs. Call it
-**once per session** to open the thunk, then move that same tab:
-
-1. **Open the thunk once.** Call `mcp__codex_app__open_in_codex` with
-   `target: { type: "browser", url: "<the thunk's url>" }` and
-   `placement: "right"`, as soon as the thunk's URL is available, for every
-   thunk task (not only builds). The panel opens asynchronously; carry on with
-   the work. If the call fails or no browser panel is available, say so in one
-   line and give the clickable link anyway.
-2. **Change the view by moving that tab, when Computer Use is available.** If
-   the session has Computer Use (`cua_repl`), navigate the existing in-app
-   browser tab instead of opening another one. Call
-   `cua.listTabs({ browser: "iab" })`, pick the tab whose `url` is on the
-   thunk URL's site, bind it with `cua.getTab(tab.id, { browser: tab.browserId })`,
-   and call `goto("<the new url>")` on it. Only change its URL; don't click or
-   type there. Use the tab `id` and `browserId` that `listTabs` returns, not a
-   URL: binding a tab by URL can fail with "Tab not found".
-3. **Without Computer Use, don't call `open_in_codex` again** for each view.
-   Give the link to the new view in your message instead, and let the user
-   open it. Call `open_in_codex` again only when the user asks to see it in
-   the panel, or says they closed the tab. With Computer Use, also call it
-   again when `listTabs` shows no tab on the thunk URL's site.
-
-#### Elsewhere
+#### With no side-panel browser
 
 In the Claude Code terminal, Cursor, Claude chat without the desktop app, or
 any agent with no side-panel browser, give the thunk's link (`url` in the
@@ -316,6 +261,9 @@ with just a number. They can still answer in their own words.
 - Did every Thunk.AI app URL I opened or gave carry `agentMode=true`?
 - Did every fact I gave about the thunk come from the Builder MCP, not from
   the browser pane?
+- Is every fact a later step or tool needs its own property, with the most
+  specific type that fits, and in `requiredOutputProperties` of the step
+  that produces it when the work cannot go on without it?
 - Do the directions and AI tool instructions I wrote open with an objective
   and a numbered process, and is every code tool I wrote readable source?
 - If I'm waiting for the user, did I end with numbered choices?
@@ -407,8 +355,25 @@ For a new workflow or chat-app thunk:
    one-line `userGuidance`), because a new AI tool picks up the thunk's
    enabled tools only when it is added, not when a stub is changed into one.
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
+   - before you add any property, audit its type. List every fact this
+     step, a later step or a tool needs, one property per fact, and give
+     each the most specific type that fits ("Choosing a property type" in
+     `schematized-state`): `NUMBER` for an amount or count,
+     `CALENDAR_DATE` or `DATE` for a date, `YES_OR_NO` for a flag, `TEXT`
+     with an `enum` constraint for a fixed set of values, `FILE` or `IMAGE`
+     for a document or picture (`file-and-image-property-types`),
+     `isListType` for several values, and `JSON_OBJECT` (with an
+     `exampleObject`) for a record with its own fields. Use plain `TEXT`
+     only when no more specific type fits, and be able to say why. Don't pack several facts into one text
+     property for a later step or tool to pick apart;
    - add the properties it reads and writes (`batch_properties`) and bind them
      on the step (`batch_steps` update `inputProperties` / `outputProperties`);
+   - align each tool's input schema with the properties it reads: one
+     argument per property, with the same meaning and a matching type (a
+     `NUMBER` property is a number argument, an `enum` is the same set of
+     allowed values). If an argument carries a fact about the work item
+     that no property holds, the work item never records it: add the
+     property;
    - mark the outputs the step must produce with `requiredOutputProperties`
      on the same update (and inputs it cannot start without with
      `requiredInputProperties`). This, not the property's own
@@ -423,7 +388,13 @@ For a new workflow or chat-app thunk:
      readable directions and code** says), check each with
      `run_tool`, and enable them on the step (`toolConfig`);
    - set the plan's input bindings while doing the first step and its output
-     bindings while doing the last (`batch_plan_bindings`).
+     bindings while doing the last (`batch_plan_bindings`);
+   - check the result in `get_definition` section `interface`. It shows, for
+     each property, whether it is a workflow input, a workflow output and
+     required when a work item is created. For each step, it lists what the
+     step needs to start and must record to finish. Its `changeWith` names
+     the tool and field that changes each one. These are four separate
+     settings: making a property a workflow input does not make it required.
 
    Finish a step before starting the next. When a step is done, you can run a
    test work item through it before moving on.
@@ -454,7 +425,12 @@ For a new workflow or chat-app thunk:
    placeholder: fetch one from a public URL with `upload_files`, or build
    one locally for the test (for example a PDF invoice laid out the way real
    ones are, or a scanned-looking image of a receipt) and upload it with
-   `create_upload_link` (see **Files**). Tidy inputs
+   `create_upload_link` (see **Files**). When you make several, do not
+   fill one template with different values: vary the layout from issuer to
+   issuer, vary the content (line items, taxes, currencies, date formats),
+   and make some of them look captured rather than exported (photographed
+   at an angle, cropped, creased, faded, blurred, shadowed). Keep the values
+   the tests assert on readable. Tidy inputs
    pass tests that real ones fail (`building-a-test-plan`).
 6. **Harden it when the design is nearly complete.** Once the main path
    passes and the steps and tools have stopped changing, add test work items

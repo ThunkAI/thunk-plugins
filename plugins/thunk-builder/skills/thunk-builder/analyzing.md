@@ -1,6 +1,6 @@
 <!-- GENERATED, DO NOT EDIT: built from the Thunk.AI help article `analyze-a-thunk-with-the-builder-mcp`. Edits here are overwritten and never committed; change the article in the source repository instead. -->
 
-> Help articles bundled in this skill's folder: `build-thunks-with-the-builder-mcp` is `SKILL.md`.
+> Help articles bundled in this skill's folder: `build-thunks-with-the-builder-mcp` is `SKILL.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`; `show-a-thunk-in-the-codex-desktop-app` is `codex-desktop-app.md`.
 
 This guide is for AI agents (such as Claude or Codex) that analyze thunks through the **Thunk.AI Builder MCP**.
 
