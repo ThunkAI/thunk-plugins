@@ -342,18 +342,91 @@ For a new workflow or chat-app thunk:
    environment's connections instead. An OAuth connection that needs
    a person to sign in is created on the Account page, not with
    `batch_connections`. Otherwise, and whenever the user prefers, build a
-   **mock**: an MCP-server thunk (`create_thunk kind:"mcpServer"`) of
-   deterministic code tools with the real system's tool names and realistic
-   answers, published with `set_export` and added to this thunk with
-   `add_thunk_connection`. The rules for good stand-ins are in
+   **mock** of that system, shaped so that moving to the real system later
+   is a rebind, not a rebuild:
+   - **One MCP-server thunk per system, with the real system's interface.**
+     `create_thunk kind:"mcpServer"` with an `interface` whose tools copy the
+     real system's API: its operation names, ids, fields, required arguments
+     and error answers (an unknown id, a refund larger than the charge, a
+     duplicate request). Give every tool its output as well as its inputs
+     (`outputSchema`, or `outputProperties` in property-type form): the
+     fields of a successful response, with each field the caller relies on
+     marked required and a field that can be empty typed to allow null. The
+     output is half of the contract: without it a replacement for the mock
+     can match the interface and still return different fields. Read the
+     vendor's API documentation first; for an internal system with no public
+     documentation, model the calls such a system would plausibly offer.
+     File it with the project, for example in `/invoice-intake/mocks`.
+   - **Its records in a spreadsheet, never in code.** Put the mock's data in
+     a **Spreadsheets** content folder on the mock thunk
+     (`batch_content_folders`, `readOnly` true), one tab per record type with
+     a header row, so the user can open the workbook and see and change what
+     the mock returns. Build the workbook yourself and upload it
+     (`create_upload_link`), or link a Google Sheet the user owns. Each tab
+     gets list and lookup tools; read their names from `get_definition`
+     section `contentFolders`.
+   - **Thin code tools over the tabs.** Implement each interface tool as a
+     short code tool that reads the tabs through those tools (in code, a tab's
+     list tool is `tools.<workbook>_<tab>_list`, with dots and other
+     characters turned into underscores) and returns the real system's
+     response shape. A write tool checks the request the way the real system
+     would, returns what it would have done with an id derived from the
+     request's idempotency key, and changes nothing. Never write records,
+     ids or amounts into the code. A request the real system would refuse
+     fails the call (`throw` an error naming the status and the reason, such
+     as `404 trip_not_found`); it is not a successful response with an
+     error inside, which would not match the output. Each code tool gets its
+     output from the interface: pin it with `batch_tools` `signature` (the
+     interface and the tool's name), which copies the contract's name,
+     description, inputs and output onto the tool. Test each tool with
+     `batch_tool_tests`, including a rejection (`$status` is `rejected`),
+     then `set_export` with exactly the interface's tools enabled; the tabs'
+     own list and lookup tools stay unpublished.
+   - **Reach it through a plug-in connection.** On the thunk you are
+     building, declare a plug-in connection with the same interface, bound to
+     the mock: `add_thunk_connection` with `kind: "plugIn"`, an `alias` such
+     as `CRM`, the `interface`, and `bindTo` set to the mock thunk's id. Steps
+     and code tools then call the tools under the plug-in's name
+     (`get_account_crm`), and swapping in the real system is binding the same
+     alias to a connection that matches the interface, or to an adapter
+     (`reuse-thunk-interfaces-and-plug-in-connections`).
+   - **Keep the write tools away from the agent.** A plug-in's tools are on
+     for every step when it is added. On each step, turn off with
+     `toolConfig` every write tool its agent must not call directly, and turn
+     the plug-in off on steps that do not use it. A step's `toolConfig` does
+     not limit a code tool the step calls: the code tool can call any tool
+     that is on for the thunk, unless its own **Tools** settings turn it off
+     (`batch_tools` `toolConfig` with `disable_tool` or `disable_library`).
+     So a code tool is the place for a write that must follow a rule (for
+     example, a refund whose amount the code computes). When a code tool
+     calls a plug-in tool and the call fails, the code tool can receive
+     the failure as text rather than as an object or a thrown error: treat
+     any result that is not the declared object as a refused request.
+
+   Data the thunk itself owns, such as a policy table, a rate card or
+   thresholds, goes the same way: a Spreadsheets folder on this thunk, read by
+   its tools, never constants in code. The rules for good stand-ins are in
    `improve-a-live-thunk-safely` and in `analyze-a-thunk-with-the-builder-mcp` (C3).
    Tell the user which systems are mocked.
 3. **Outline the tools.** One `batch_tools` call that adds each custom tool
-   the design needs, with its final name, description, `intent` and input
-   schema, and a stub implementation: a short `code` body that returns a
-   "not implemented yet" message. Stub an `ai` tool as an `ai` tool (with
-   one-line `userGuidance`), because a new AI tool picks up the thunk's
-   enabled tools only when it is added, not when a stub is changed into one.
+   the design needs, with its final name, description, `intent`, input
+   schema and output, and a stub implementation: a short `code` body that
+   returns a "not implemented yet" message. Give the output as
+   `outputProperties` (property types, with `constraints.required` on each
+   field the tool always returns) or `outputSchema`. A code tool that
+   returns one value can declare a bare value, such as
+   `{"type":"string","enum":["Red","Amber","Green"]}`. An `ai` tool's output
+   is an object of fields. A `classifier` needs at least one `YES_OR_NO`
+   field, or a `TEXT` field with an `enum` constraint, before it can be used.
+   Leave the output out of a later update to keep it; `{}` or `[]` clears
+   it. `get_definition` returns each tool's `outputSchema`, `batchInvoke` and
+   `batchConcurrency`, and with `includeToolImpl`, for an `ai` or `code`
+   tool, the `toolConfig` of what it may call. Stub an `ai` tool
+   as an `ai` tool (with one-line `userGuidance`), because a new AI tool
+   picks up the thunk's enabled tools only when it is added, not when a
+   stub is changed into one. To change what an `ai` or `code` tool may
+   call later, send `toolConfig` on its `batch_tools` update, with the
+   same ops a step's `toolConfig` takes.
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
    - before you add any property, audit its type. List every fact this
      step, a later step or a tool needs, one property per fact, and give
@@ -373,7 +446,11 @@ For a new workflow or chat-app thunk:
      `NUMBER` property is a number argument, an `enum` is the same set of
      allowed values). If an argument carries a fact about the work item
      that no property holds, the work item never records it: add the
-     property;
+     property. The step's agent passes every argument; nothing fills one
+     in from the work item. That holds for an argument typed as a
+     reference to a property (`x-thunk-ref`) too: it gets only that
+     property's type, so a call without it fails. A Conversation input
+     is the one exception (`how-to-build-a-tool-that-uses-a-conversation`);
    - mark the outputs the step must produce with `requiredOutputProperties`
      on the same update (and inputs it cannot start without with
      `requiredInputProperties`). This, not the property's own
@@ -447,7 +524,8 @@ Don't run work items through a step whose tools are still stubs.
 
 For an MCP-server thunk, the interface is the outline: create it with its
 tool signatures (`create_thunk` with `kind: "mcpServer"` and an `interface`,
-or one `batch_tools` call of stubs), open the thunk and give its link, then
+whose tools can give their inputs as `inputProperties` with the fields of a
+`batch_properties` add, or one `batch_tools` call of stubs), open the thunk and give its link, then
 implement and
 `run_tool`-check one tool at a time, and publish the export (`set_export`)
 when they work.
@@ -474,6 +552,23 @@ shape:
 - Markdown with real line breaks between the objective, the list and each
   item. Never write the whole text as one paragraph, and never send `\n`
   as two literal characters in place of a line break.
+
+Two rules are broken most often when the earlier steps of a workflow are
+already built:
+
+- **Don't restate or guard the inputs.** Never recap what an earlier step
+  recorded, and never write "Do not change X". The agent already sees the
+  step's input values. A step can change only its output properties, so
+  to keep it from changing a property, bind the property as an input and
+  not as an output (`batch_steps`).
+- **Put what a value means in the property's description.** A definition
+  such as "Red means escalate, Amber means monitor" goes in the property's
+  `description` (`batch_properties`), where every step that reads or
+  records the property sees it. The directions keep only the actions that
+  depend on a value: "If the Disposition is Red, draft the report."
+
+The design review (`run_review`) reports instructions that break these
+rules or lack the Objective and Process shape.
 
 After you save them, read the instructions back with `get_definition` and
 check them against the article's quick checklist, as an author would before

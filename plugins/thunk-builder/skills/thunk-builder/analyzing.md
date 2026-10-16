@@ -362,11 +362,18 @@ The rules for stand-ins are in `improve-a-live-thunk-safely` (Details → 3):
 same names, recorded answers keyed by input, gaps filled from work items,
 stricter than the real system, failures on chosen inputs, would-be actions
 recorded, stable ids. Through the MCP, build them as an MCP-server thunk
-(`create_thunk kind:"mcpServer"`) of deterministic **code** tools, so several
-copies can share them:
+(`create_thunk kind:"mcpServer"`) with the live system's interface, so several
+copies can share them. Keep the recorded answers as rows in a **Spreadsheets**
+content folder on that thunk, one tab per kind of record, and implement each
+tool as a short deterministic **code** tool that reads the tabs; the answers
+never go into the code (see **Decide real or mock for each external system**
+in `build-thunks-with-the-builder-mcp` for the full pattern). Upload the workbook
+(`create_upload_link`) rather than linking a shared Google Sheet, so recorded
+customer data stays inside the mock thunk:
 
 - **Replay the recorded tool results — don't reconstruct them**, keyed by the
-  call's input (e.g. ticket id → the real ticket JSON).
+  call's input (e.g. ticket id → the real ticket's fields, one row per
+  ticket).
   - **In bulk:** `get_tool_call_history` (thunk id + the tool name the AI
     called, as shown in `get_step_history` toolCall entries — imported and
     connection tools can carry a suffix). It lists the tool's recorded calls,
