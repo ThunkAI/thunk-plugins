@@ -14,7 +14,9 @@
         "developerName": "Thunk.AI",
         "category": "Productivity",
         "websiteURL": "https://info.thunk.ai",
-        "defaultPrompt": ["Analyze my thunk and tell me why its work items are failing"]
+        "defaultPrompt": [
+          "Analyze my thunk and tell me why its work items are failing"
+        ]
       }
     }
   }

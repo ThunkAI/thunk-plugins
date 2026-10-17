@@ -6,11 +6,7 @@
     "url": "https://thunk.ai"
   },
   "homepage": "https://info.thunk.ai",
-  "keywords": [
-    "thunk",
-    "workflow",
-    "mcp"
-  ],
+  "keywords": ["thunk", "workflow", "mcp"],
   "mcpServers": "./mcp.json",
   "interface": {
     "displayName": "Thunk.AI Builder (prod)",
