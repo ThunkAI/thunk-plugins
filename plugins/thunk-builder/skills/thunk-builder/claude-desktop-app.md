@@ -18,7 +18,7 @@ Open the tenant's Thunk.AI app in the browser pane and complete steps 3–5 of
 **Open and keep the pane** (site approval, sign-in, a visible pane) before
 building, so the user approves and signs in once, up front. The tenant's app
 is the site of any thunk `url` the Builder MCP returns (for example from
-`list_thunks`).
+the thunk list).
 
 ## Open and keep the pane
 
