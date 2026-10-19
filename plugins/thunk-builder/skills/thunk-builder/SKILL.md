@@ -503,6 +503,9 @@ For a new workflow or chat-app thunk:
    for the reply), give each test work item a simulated user
    (`setSimulatedUser`) so the run does not stop to
    wait for a person; read `test-a-conversation-with-a-simulated-user`.
+   For a conversation the end user opens, give the simulated user an
+   `initialMessage`: running the new test work item starts its
+   conversation with it.
    To turn a finished work item into a test, `set`
    makes that work item a test work item and gives each conversation it
    holds a simulated user that replays the conversation. Re-running it
