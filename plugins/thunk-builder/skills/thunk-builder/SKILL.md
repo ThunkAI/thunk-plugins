@@ -439,7 +439,9 @@ For a new workflow or chat-app thunk:
    is an object of fields. A `classifier` needs at least one `YES_OR_NO`
    field, or a `TEXT` field with an `enum` constraint, before it can be used.
    Leave the output out of a later update to keep it; `{}` or `[]` clears
-   it. The design returns each tool's `outputSchema`, `batchInvoke` and
+   it. A `documentTemplate` or `spreadsheetLookup` tool's output is set by
+   its type, so you cannot declare one; the design still returns it, and an
+   update that sends it back unchanged is accepted. The design returns each tool's `outputSchema`, `batchInvoke` and
    `batchConcurrency`, and with `includeToolImpl`, for an `ai` or `code`
    tool, the `toolConfig` of what it may call. Stub an `ai` tool
    as an `ai` tool (with one-line `userGuidance`), because a new AI tool
