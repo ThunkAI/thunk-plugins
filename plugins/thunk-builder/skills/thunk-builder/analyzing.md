@@ -562,10 +562,11 @@ a controlled live trial. Build it as you go (C4.6), not from memory.
 Then:
 
 - The original thunk's owner (from the thunk summary) should be an admin on
-  the mock thunk, and on the copy if they are not already its owner. Builder
-  cannot add people: propose members with `role: "Admin"` and give
-  the user the returned `shareUrl` so they add the owner there (propose only
-  the owner and anyone else the user names).
+  the mock thunk, and on the copy if they are not already its owner. Add
+  them with `role: "Admin"` (only the owner and anyone else the user names).
+  Builder adds people who are already users in an organization you and the
+  thunk's owner share. For anyone else, give the user the returned
+  `shareUrl` so they add that person there.
 - Delete the copied clutter, keeping the test items: delete work items in
   batches of 100 (soft delete).
 - Report builder bugs and doc gaps as feedback through the Builder MCP.

@@ -745,7 +745,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Switch AI model (thunk options, model definitions) | `move-a-thunk-to-a-new-ai-model`, `supported-ai-models-and-what-happens-when-they-change` |
 | Pause / resume | `pause-and-restart-a-thunk` |
 | Delete work items | `how-to-work-with-your-work-items-list`, `data-retention` |
-| Propose people for a thunk (the user adds them at `shareUrl`) | `users-and-access-controls`, `users-organizations-and-governance` |
+| Add people to a thunk (people outside your organization: the user adds them at `shareUrl`) | `users-and-access-controls`, `users-organizations-and-governance` |
 
 ### Diagnose a run
 
