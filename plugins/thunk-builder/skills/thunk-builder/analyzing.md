@@ -36,8 +36,8 @@ a cleanup starts from a health check's findings. Say when you switch.
 - Work only through the Thunk.AI Builder MCP connector this session has
   (connected as thunk-builder, Thunk.AI or another name). It acts
   as you on the tenant it is connected to: if the thunk is not on that tenant,
-  or you lack the access a step needs (Owner or thunk Admin for call history
-  and members), say so and ask the user — do not look for another way into the
+  or you lack the access a step needs (Owner or thunk Admin for call history,
+  members, and the work log), say so and ask the user — do not look for another way into the
   thunk's data.
 - For B and C, **two horizons — both are required**
   (`check-a-thunks-health-where-to-start`, "Look at recent work, and at a

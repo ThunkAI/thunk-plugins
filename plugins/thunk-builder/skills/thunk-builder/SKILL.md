@@ -322,6 +322,15 @@ thunk's owner or an admin can move it, and the move is refused in
 Production. List the project's thunks with `folder` set to that path. A folder
 needs no creating: filing a thunk in it is enough.
 
+**Work log for a unit of edits.** Before you change a thunk's definition
+(properties, steps, tools, connections, options, export, reports), begin a
+work-log note that states that unit of work. End it when you finish.
+End is optional: if you forget, further edits keep attaching to that note,
+and a later begin closes it. Use a closed note only when you are not
+starting a burst of edits. Do not pass a work-log id to mutation tools;
+the builder joins the edits. If those operations are not listed, skip this
+and keep building.
+
 For a new workflow or chat-app thunk:
 
 1. **Create it with every step laid out, then open it.** If
@@ -457,8 +466,20 @@ For a new workflow or chat-app thunk:
      `CALENDAR_DATE` or `DATE` for a date, `YES_OR_NO` for a flag, `TEXT`
      with an `enum` constraint for a fixed set of values, `FILE` or `IMAGE`
      for a document or picture (`file-and-image-property-types`),
-     `isListType` for several values, and `JSON_OBJECT` (with an
-     `exampleObject`) for a record with its own fields. Use plain `TEXT`
+     `isListType` for several values, and — for a value with several
+     parts (a record such as a contact, an address or a line item) — a
+     **Structure Type**: a named, reusable shape added to the Type Library,
+     with the column given the `STRUCTURE_TYPE_REF` type pointing at it
+     (`structure-types`). A Structure Type is preferred over `JSON_OBJECT`
+     for any shape you know, and over several loose columns when the parts
+     belong together. Reach for `JSON_OBJECT` (with an `exampleObject`)
+     only for a value whose shape you genuinely cannot name. A Conversation
+     property is the thread for email or chat
+     (`conversation-properties-for-email`). If a step should send a
+     message and wait for the reply, set
+     `constraints.convoSendMessageMode` to `sendAndWaitForReply` and
+     list that conversation under the step's `outputProperties`; leaving
+     the mode unset does not wait. Use plain `TEXT`
      only when no more specific type fits, and be able to say why. Don't pack several facts into one text
      property for a later step or tool to pick apart;
    - add the properties it reads and writes and bind them
@@ -466,7 +487,11 @@ For a new workflow or chat-app thunk:
    - align each tool's input schema with the properties it reads: one
      argument per property, with the same meaning and a matching type (a
      `NUMBER` property is a number argument, an `enum` is the same set of
-     allowed values). If an argument carries a fact about the work item
+     allowed values). The surest way to match is to type the argument
+     as a reference to the property (`x-thunk-ref`), so it takes the
+     property's type and allowed values and stays in step when they
+     change; prefer it for every argument a property holds, above all
+     an `enum`, number, date or object. If an argument carries a fact about the work item
      that no property holds, the work item never records it: add the
      property. The step's agent passes every argument; nothing fills one
      in from the work item. That holds for an argument typed as a
@@ -687,7 +712,8 @@ In this skill that article is `analyzing.md`, in this folder: read it there. Tro
 | Task | Slugs |
 | --- | --- |
 | Lay out steps / statuses | `workflow-plan`, `workflow-orchestration` |
-| Define work-item schema | `schematized-state`, `file-and-image-property-types`, `conversation-properties-for-email` |
+| Define work-item schema | `schematized-state`, `structure-types`, `file-and-image-property-types`, `conversation-properties-for-email` |
+| Email or chat thread that waits for a reply | `conversation-properties-for-email` |
 | Workflow inputs/outputs | `workflow-plan`, `schematized-state` |
 | Run a step only when / until a condition holds | `run-a-step-only-when-a-condition-matches` |
 | Error handling and when a step saves results | `choose-how-a-step-handles-errors-and-when-it-saves-results` |
@@ -746,6 +772,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Pause / resume | `pause-and-restart-a-thunk` |
 | Delete work items | `how-to-work-with-your-work-items-list`, `data-retention` |
 | Add people to a thunk (people outside your organization: the user adds them at `shareUrl`) | `users-and-access-controls`, `users-organizations-and-governance` |
+| Read or update a thunk's work log (Owner or Admin only; Production does not block this). For a unit of definition edits, begin a work-log note first and end it when you are done (end is optional). create is a closed note that does not attach later edits. | `thunk-work-log`, `users-and-access-controls` |
 
 ### Diagnose a run
 
