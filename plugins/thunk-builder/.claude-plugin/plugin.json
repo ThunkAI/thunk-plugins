@@ -1,8 +1,0 @@
-{
-  "name": "thunk-builder",
-  "displayName": "Thunk.AI Builder",
-  "description": "How to build, test and analyze thunks with the Thunk.AI Builder MCP. Installed with a tenant plugin.",
-  "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
-  "homepage": "https://info.thunk.ai",
-  "keywords": ["thunk", "workflow", "mcp"]
-}

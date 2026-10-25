@@ -2,6 +2,44 @@
 
 > Help articles bundled in this skill's folder: `build-thunks-with-the-builder-mcp` is `SKILL.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`; `show-a-thunk-in-the-codex-desktop-app` is `codex-desktop-app.md`.
 
+**Read all of this file before you act on it.** It is longer than one read may return. If what
+you read is cut short (a "truncated" notice), read the rest by line range, at most 150 lines at
+a time, using the contents below. Read each help article this skill names in its own call, all
+of it: not several in one call, and not only part of one.
+
+Contents (line numbers in this file):
+- Pick the scenario first: lines 55-66
+- Common ground (all scenarios): lines 67-199
+  - Target and window: lines 69-87
+  - Read the design: lines 88-94
+  - Design checklist: lines 95-127
+  - Reading a run: lines 128-144
+  - Counting: lines 145-182
+  - When the cause is the platform: lines 183-199
+- Scenario A — Troubleshoot a specific problem: lines 200-232
+- Scenario B — Health check: lines 233-349
+  - B1. Operational metrics: lines 240-246
+  - B2. Stuck work: lines 247-257
+  - B3. Error rates and error diagnosis: lines 258-277
+  - B4. Result quality: lines 278-293
+  - B5. Design review: lines 294-300
+  - B6. Time analysis: lines 301-309
+  - B7. Cost: lines 310-315
+  - B8. Security: lines 316-328
+  - B9. Report: lines 329-349
+- Scenario C — Cleanup / review / upgrade: lines 350-646
+  - C1. Review: lines 362-374
+  - C2. Sort the findings, propose, then stop: lines 375-398
+  - C3. Mock the external effects: lines 399-449
+  - C4. Copy and swap in the mock: lines 450-485
+  - C5. Tests from real data: lines 486-512
+  - C6. Fix in the copy: lines 513-560
+  - C7. Run, grade, and compare models: lines 561-588
+  - C8. The pre-production checklist, hand over and clean up: lines 589-611
+  - C9. The report (required): lines 612-646
+- Rules: lines 647-659
+- The method articles: lines 660-668
+
 This guide is for AI agents (such as Claude or Codex) that analyze thunks through the **Thunk.AI Builder MCP**.
 
 It follows on from `build-thunks-with-the-builder-mcp`, which says which help articles to read

@@ -1,0 +1,10 @@
+{
+  "name": "thunk-skills",
+  "displayName": "Thunk.AI Skills",
+  "description": "How to build, test and analyze thunks with the Thunk.AI Builder MCP, a Thunk pane with your thunks, and next-step suggestions. Installed with a tenant plugin.",
+  "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
+  "homepage": "https://info.thunk.ai",
+  "keywords": ["thunk", "workflow", "mcp"],
+  "license": "Apache-2.0",
+  "types": "./types/index.d.ts"
+}

@@ -1,5 +1,5 @@
 ---
-name: thunk-builder
+name: thunk-guide
 description: >-
   How to build, analyze and explain thunks with the Thunk.AI Builder MCP (connected as
   thunk-builder, Thunk.AI or another name): which help articles to read before designing
@@ -17,6 +17,38 @@ description: >-
 <!-- GENERATED, DO NOT EDIT: built from the Thunk.AI help article `build-thunks-with-the-builder-mcp`. Edits here are overwritten and never committed; change the article in the source repository instead. -->
 
 > Help articles bundled in this skill's folder: `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`; `show-a-thunk-in-the-codex-desktop-app` is `codex-desktop-app.md`.
+
+**Read all of this file before you act on it.** It is longer than one read may return. If what
+you read is cut short (a "truncated" notice), read the rest by line range, at most 150 lines at
+a time, using the contents below. Read each help article this skill names in its own call, all
+of it: not several in one call, and not only part of one.
+
+Contents (line numbers in this file):
+- Pick your path: lines 56-71
+- Common instructions: lines 72-305
+  - The Builder MCP and its tools: lines 76-90
+  - Start a session first: lines 91-108
+  - More than one tenant: lines 109-118
+  - The Builder MCP informs; the browser pane shows: lines 119-129
+  - Open the thunk in the browser pane: lines 130-240
+  - Files: lines 241-262
+  - Offer numbered choices when you stop: lines 263-269
+  - How to read an article: lines 270-281
+  - Rules: lines 282-291
+  - Before finishing: lines 292-305
+- Build or change a thunk: lines 306-669
+  - Build order: lines 308-616
+  - Write readable directions and code: lines 617-669
+- Explain a thunk: lines 670-718
+- Troubleshoot or analyze a thunk: lines 719-730
+- Help articles for each task: lines 731-824
+  - Start here (first thunk in a session): lines 733-741
+  - Design the workflow: lines 742-756
+  - Write step AI instructions: lines 757-768
+  - Tools, connections and content: lines 769-782
+  - Kinds of thunk and how they are reached: lines 783-792
+  - Run and test: lines 793-808
+  - Diagnose a run: lines 809-824
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.

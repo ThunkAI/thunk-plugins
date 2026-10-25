@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "thunk-builder",
+  "name": "thunk-skills",
   "description": "How to build, test and analyze thunks with the Thunk.AI Builder MCP. Also install the plugin for your Thunk.AI tenant, for the tools.",
   "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
   "homepage": "https://info.thunk.ai",
@@ -8,9 +8,9 @@
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Thunk.AI Builder",
+        "displayName": "Thunk.AI Skills",
         "shortDescription": "Build, test and analyze Thunk.AI thunks",
-        "longDescription": "The thunk-builder skill: which Thunk.AI help articles to read, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. Also install the plugin for your Thunk.AI tenant, for the Builder MCP tools.",
+        "longDescription": "The thunk-guide skill: which Thunk.AI help articles to read, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. Also install the plugin for your Thunk.AI tenant, for the Builder MCP tools.",
         "developerName": "Thunk.AI",
         "category": "Productivity",
         "websiteURL": "https://info.thunk.ai",
