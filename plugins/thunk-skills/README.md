@@ -8,7 +8,7 @@ This plugin carries:
 - **The `thunk-guide` skill**: which Thunk.AI help articles to read, the order to build a
   thunk in, and how to test, troubleshoot and clean up a thunk.
 - **A Thunk.AI pane and next steps** (Claude Code): a pane beside the chat with a first-run
-  welcome, things to try and your most recent thunks (the last list Claude looked up; **Show my thunks** asks it to); after Claude uses a Builder tool, a
+  welcome and things to try; after Claude uses a Builder tool, a
   suggested next step above the prompt, and Analyze, Explain, Debug errors and Suggest
   improvements for the thunk you have open; `/thunk <name or id>` opens a thunk, `/thunk` the
   pane, and `/thunk-welcome` shows the welcome again. These show in the Claude desktop app's Code tab. In the terminal nothing shows

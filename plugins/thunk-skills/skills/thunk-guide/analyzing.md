@@ -9,36 +9,36 @@ of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
 - Pick the scenario first: lines 55-66
-- Common ground (all scenarios): lines 67-199
+- Common ground (all scenarios): lines 67-219
   - Target and window: lines 69-87
   - Read the design: lines 88-94
-  - Design checklist: lines 95-127
-  - Reading a run: lines 128-144
-  - Counting: lines 145-182
-  - When the cause is the platform: lines 183-199
-- Scenario A — Troubleshoot a specific problem: lines 200-232
-- Scenario B — Health check: lines 233-349
-  - B1. Operational metrics: lines 240-246
-  - B2. Stuck work: lines 247-257
-  - B3. Error rates and error diagnosis: lines 258-277
-  - B4. Result quality: lines 278-293
-  - B5. Design review: lines 294-300
-  - B6. Time analysis: lines 301-309
-  - B7. Cost: lines 310-315
-  - B8. Security: lines 316-328
-  - B9. Report: lines 329-349
-- Scenario C — Cleanup / review / upgrade: lines 350-646
-  - C1. Review: lines 362-374
-  - C2. Sort the findings, propose, then stop: lines 375-398
-  - C3. Mock the external effects: lines 399-449
-  - C4. Copy and swap in the mock: lines 450-485
-  - C5. Tests from real data: lines 486-512
-  - C6. Fix in the copy: lines 513-560
-  - C7. Run, grade, and compare models: lines 561-588
-  - C8. The pre-production checklist, hand over and clean up: lines 589-611
-  - C9. The report (required): lines 612-646
-- Rules: lines 647-659
-- The method articles: lines 660-668
+  - Design checklist: lines 95-141
+  - Reading a run: lines 142-164
+  - Counting: lines 165-202
+  - When the cause is the platform: lines 203-219
+- Scenario A — Troubleshoot a specific problem: lines 220-252
+- Scenario B — Health check: lines 253-369
+  - B1. Operational metrics: lines 260-266
+  - B2. Stuck work: lines 267-277
+  - B3. Error rates and error diagnosis: lines 278-297
+  - B4. Result quality: lines 298-313
+  - B5. Design review: lines 314-320
+  - B6. Time analysis: lines 321-329
+  - B7. Cost: lines 330-335
+  - B8. Security: lines 336-348
+  - B9. Report: lines 349-369
+- Scenario C — Cleanup / review / upgrade: lines 370-675
+  - C1. Review: lines 382-394
+  - C2. Sort the findings, propose, then stop: lines 395-418
+  - C3. Mock the external effects: lines 419-469
+  - C4. Copy and swap in the mock: lines 470-505
+  - C5. Tests from real data: lines 506-532
+  - C6. Fix in the copy: lines 533-580
+  - C7. Run, grade, and compare models: lines 581-617
+  - C8. The pre-production checklist, hand over and clean up: lines 618-640
+  - C9. The report (required): lines 641-675
+- Rules: lines 676-688
+- The method articles: lines 689-697
 
 This guide is for AI agents (such as Claude or Codex) that analyze thunks through the **Thunk.AI Builder MCP**.
 
@@ -120,6 +120,20 @@ plus:
   fixes are planned. Find the copy points and rank them by what the value
   does next. URLs are passed by reference (URL shortening), but URL copy
   errors (dropped query parameters) have still been seen — check them too.
+  Tool inputs that take an id as plain text should reference a property
+  with a length limit (`schematized-state`, "Values the AI agent copies").
+- **Comparisons:** superlatives the agent must work out itself ("the
+  cheapest", "the most recent") in directions or tool descriptions; each
+  needs a tool that computes it (`custom-tools`, "Answer 'which one' with a
+  query tool").
+- **Custom AI tools that own part of a chat:** each gets the decisions
+  already settled as inputs, has a hand-off rule, returns its effects on
+  records outside it, and the routing step does none of its work
+  (`use-modularity-effectively-when-building-a-thunk`, "Give a module that
+  takes over the conversation a clear contract").
+- **Gates:** a rule such as "authenticate first" belongs in its own step with
+  a Required to finish output, not in a sentence of a larger step
+  (`workflow-plan`, "Make a gate its own step").
 - **Wiring:** connections and libraries with `enabledOnThunk: false` that the
   design seems to need; steps (often the collect step) with every tool
   enabled; knowledge files in a failed state; options such as
@@ -141,6 +155,12 @@ plus:
   including every earlier tool result in full. This is how you tell "the
   directions were ambiguous" from "the model ignored them" from "the tool
   returned junk".
+- In the tool call history, calls made inside a custom AI tool of the same
+  thunk are attributed to the work item and step that called the tool.
+  Older calls have no work item and sit under an "Automation" step, and
+  calls made inside a tool imported from another thunk are recorded in that
+  thunk. Find those in the call history of the tool they called, by a value
+  the run carries (an order number, a conversation key) and the time.
 
 ### Counting
 
@@ -568,6 +588,15 @@ re-set it with an update if it is missing.
   property (a work-item query projection) or the work item's state. Count
   passes in **assertions**, not just items (e.g. 120 of 124 checks on 23
   items).
+- **Change one thing per run.** A design change and a platform change (a
+  different model, a changed option) in the same run cannot be told apart in
+  the results; run them separately.
+- **Read results per test against run-to-run noise.** The same thunk on the
+  same tests passes a different few each run, especially chat tests. Run the
+  unchanged set more than once to see how much the totals move by themselves
+  (with a few dozen tests, a handful), and treat a smaller difference as
+  noise (with 40 chat tests, two or three either way is common). Compare per
+  test: which ones a change fixed, and which ones it broke.
 - For a failure, decide: the thunk is wrong (fix and re-run), the assertion is
   wrong (`set` then `regrade`), the behaviour is a
   pending design question (leave it failing and point at the question), or

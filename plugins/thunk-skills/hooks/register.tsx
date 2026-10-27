@@ -60,8 +60,8 @@ function thunkName(text: string | undefined) {
   }
 }
 
-// The thunk the person is working on: the one they opened, the one Claude opened in the browser
-// pane, or the one Claude last worked on through the Builder tools. The band offers actions on it.
+// The thunk the person is working on: the one Claude opened in the browser pane, or the one
+// Claude last worked on through the Builder tools. The band offers actions on it.
 const current = atom(
   { plugin: "thunk-skills", key: "current" } as const,
   null as CurrentThunk | null,
@@ -237,10 +237,12 @@ type Shown = {
   folderPath?: unknown;
 };
 
-// The pane never calls the Builder server itself: a plugin's own MCP call goes through the
+// The plugin never calls the Builder server itself: a plugin's own MCP call goes through the
 // person's permissions with no one to approve it (auto mode refuses it outright), and a plugin
-// cannot approve its own call in the desktop app. It shows the thunks from the last unfiltered
-// list_thunks Claude ran instead, kept in $.store so the next session starts with them.
+// cannot approve its own call in the desktop app. It keeps the thunks from the last unfiltered
+// list_thunks Claude ran instead, in $.store so the next session starts with them. The pane does
+// not list them (too noisy); they name the current thunk, the status line count and the pane's
+// example requests.
 const SHOWN = 8;
 
 // The thunks in a list_thunks result, or undefined when the call was filtered (a search, a
@@ -329,11 +331,6 @@ const COMMANDS: [string, string][] = [
   ["/thunk-welcome", "show the welcome again"],
   ["/mcp", "sign in to the Thunk.AI Builder server"],
 ];
-
-const LIST_THUNKS: NextStep = {
-  label: "Show my thunks",
-  prompt: `List my ${SHOWN} most recently changed thunks (list_thunks with access "owned" and first ${SHOWN}, no other filter), as a short table of name, phase and folder.`,
-};
 
 async function openPane($: EngineInterface, focus: boolean) {
   await $.ui.open({
@@ -553,7 +550,7 @@ export const register: Register = (on) => {
         : undefined;
     // The pane steps aside once per thunk opened, so after the person brings it back, moving
     // around the same thunk's pages leaves it. Keyed on the page, not on the current thunk:
-    // Open sets the current thunk before Claude opens its page.
+    // a Builder tool call (get_thunk, say) sets the current thunk before Claude opens its page.
     if (pageId) {
       await setCurrent($, pageId).catch(() => false);
       if (pageId !== steppedAsideFor) {
@@ -617,7 +614,7 @@ export const register: Register = (on) => {
     return (
       <Box flexDirection="column">
         {thunk && (
-          <Box flexDirection="column">
+          <Box flexDirection="column" gap={1}>
             <Box gap={1}>
               <Text color={AMBER}>●</Text>
               <Text bold>{thunk.name ?? "This thunk"}</Text>
@@ -697,7 +694,7 @@ export const register: Register = (on) => {
   });
 
   on("ui.render", { component: "Pane", requestId: PANE }, async ($, e) => {
-    const { Box, Button, Link, Text } = $.ui.resolve(e);
+    const { Box, Button, Text } = $.ui.resolve(e);
     const state = await read($, account);
     const showWelcome = await read($, isNew);
     const step = await read($, next);
@@ -786,76 +783,6 @@ export const register: Register = (on) => {
         )}
 
         {showWelcome && starters(true)}
-
-        <Box flexDirection="column" gap={1}>
-          <Box gap={1}>
-            <Text bold>Your thunks</Text>
-            {state.kind === "ready" && (
-              <Button
-                key="refresh"
-                plain
-                dimColor
-                onPress={() => ask($, LIST_THUNKS)}
-              >
-                ↻ Refresh
-              </Button>
-            )}
-          </Box>
-          {state.kind === "unknown" && (
-            <Box flexDirection="column" gap={1}>
-              <Text dimColor>
-                Claude lists them here once it has looked them up.
-              </Text>
-              <Button key="show-thunks" onPress={() => ask($, LIST_THUNKS)}>
-                {LIST_THUNKS.label}
-              </Button>
-            </Box>
-          )}
-          {state.kind === "ready" && (
-            <Text dimColor>
-              As of {new Date(state.listedAt).toLocaleString()}
-            </Text>
-          )}
-          {state.kind === "ready" && state.thunks.length === 0 && (
-            <Text dimColor>
-              No thunks yet. Start with "Build my first thunk".
-            </Text>
-          )}
-          {state.kind === "ready" &&
-            state.thunks.map((thunk) => (
-              <Box key={`row-${thunk.id}`} flexDirection="column">
-                <Text>
-                  {thunk.name} <Text dimColor>{thunk.phase}</Text>
-                </Text>
-                <Box gap={1}>
-                  <Button
-                    key={`open-${thunk.id}`}
-                    onPress={async () => {
-                      await setCurrent($, thunk.id, thunk.name);
-                      ask($, openThunkStep(thunkRef(thunk)));
-                    }}
-                  >
-                    Open
-                  </Button>
-                  <Button
-                    key={`analyze-${thunk.id}`}
-                    plain
-                    onPress={async () => {
-                      await setCurrent($, thunk.id, thunk.name);
-                      ask($, {
-                        label: "Analyze",
-                        prompt: THUNK_ACTIONS[0]!.prompt(thunk),
-                      });
-                    }}
-                  >
-                    Analyze
-                  </Button>
-                  <Link href={thunk.url} label="Open in Thunk.AI" />
-                </Box>
-                <Text dimColor>{thunk.folder}</Text>
-              </Box>
-            ))}
-        </Box>
 
         <Box flexDirection="column">
           <Text bold>Ask Claude to…</Text>

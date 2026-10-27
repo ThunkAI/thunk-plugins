@@ -36,19 +36,19 @@ Contents (line numbers in this file):
   - How to read an article: lines 270-281
   - Rules: lines 282-291
   - Before finishing: lines 292-305
-- Build or change a thunk: lines 306-669
+- Build or change a thunk: lines 306-672
   - Build order: lines 308-616
-  - Write readable directions and code: lines 617-669
-- Explain a thunk: lines 670-718
-- Troubleshoot or analyze a thunk: lines 719-730
-- Help articles for each task: lines 731-824
-  - Start here (first thunk in a session): lines 733-741
-  - Design the workflow: lines 742-756
-  - Write step AI instructions: lines 757-768
-  - Tools, connections and content: lines 769-782
-  - Kinds of thunk and how they are reached: lines 783-792
-  - Run and test: lines 793-808
-  - Diagnose a run: lines 809-824
+  - Write readable directions and code: lines 617-672
+- Explain a thunk: lines 673-721
+- Troubleshoot or analyze a thunk: lines 722-733
+- Help articles for each task: lines 734-827
+  - Start here (first thunk in a session): lines 736-744
+  - Design the workflow: lines 745-759
+  - Write step AI instructions: lines 760-771
+  - Tools, connections and content: lines 772-785
+  - Kinds of thunk and how they are reached: lines 786-795
+  - Run and test: lines 796-811
+  - Diagnose a run: lines 812-827
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -666,6 +666,9 @@ more than one value. Never send minified code or a script on one line.
 When the saved code has a line over 160 characters, or more than three
 lines and no comments, the save result carries a warning; the tool
 is saved, so reformat the code and send it again as an `update`.
+Code that is not valid JavaScript, for example a script cut off part
+way, is refused: nothing is saved for that operation, and the error
+names the line where the code breaks. Fix it and send it again.
 
 ## Explain a thunk
 
