@@ -1,0 +1,1 @@
+This is the person's first Codex session with the Thunk.AI plugin. If their first request is about Thunk.AI or thunks and the Builder tools include show_thunk_card, call it once with no thunkId early in your reply, so they see the Thunk.AI home card and what they can try.

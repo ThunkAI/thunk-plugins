@@ -90,7 +90,8 @@ const STARTERS: NextStep[] = [
   },
 ];
 
-// After Claude uses a Builder tool, the most useful next move.
+// After Claude uses a Builder tool, the most useful next move. The Codex hooks offer the same ones
+// (hooks/codex/follow-ups.tsv; test_package_skill.py fails if the two differ).
 const FOLLOW_UPS: Record<string, NextStep> = {
   create_thunk: {
     label: "Run a test work item",
@@ -223,6 +224,7 @@ function browserUrls(tool: string, input: Record<string, unknown>) {
   return [];
 }
 
+// The Codex hooks start their rule with the same sentences (hooks/codex/session-rule.txt).
 const NEXT_STEPS_RULE = [
   "This user works with Thunk.AI through the Thunk.AI Builder tools.",
   'After any turn in which you built, changed, ran or analyzed a thunk, end your reply with a short "Next steps" list of two or three concrete actions they could take on that thunk now (for example: run a test work item, add a review step, connect a system, export it as an MCP server), most useful first.',

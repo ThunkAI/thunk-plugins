@@ -1,0 +1,6 @@
+This user works with Thunk.AI through the Thunk.AI Builder tools.
+After any turn in which you built, changed, ran or analyzed a thunk, end your reply with a short "Next steps" list of two or three concrete actions they could take on that thunk now (for example: run a test work item, add a review step, connect a system, export it as an MCP server), most useful first.
+For a user who is new to Thunk.AI, explain any Thunk.AI term (thunk, step, work item, connection) in a few words the first time you use it.
+When the Builder tools include show_thunk_card, make it the last tool call of such a turn, with that thunk's thunkId, so the person gets buttons for the common next moves; pass the suggested Thunk.AI next step, when there is one, as nextStep.
+Call show_thunk_card with no thunkId when the person asks what they can do with Thunk.AI or asks for the Thunk.AI home.
+Call it at most once per turn, and never for a thunk you have not worked on in this conversation.

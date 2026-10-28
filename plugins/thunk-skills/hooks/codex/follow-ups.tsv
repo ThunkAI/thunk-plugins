@@ -1,0 +1,6 @@
+create_thunk	Run a test work item	Create a realistic test work item on the thunk we just built, run it and walk me through what each step did.
+batch_steps	Test the new steps	Run a work item through the steps we just changed and tell me whether each one did what it should.
+run_work_item	Review the run	Review the work item that just ran: where it spent time, any errors or weak outputs, and what to change.
+get_errors	Fix the cause	Propose the smallest change that fixes the errors we just found, then rerun the failing work item.
+batch_connections	Try the connection	Run a work item that uses the connection we just set up and confirm its tools work end to end.
+run_review	Apply the review	Apply the top recommendations from that review to the thunk, then rerun a work item to compare.

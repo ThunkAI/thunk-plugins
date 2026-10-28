@@ -1,0 +1,26 @@
+{
+  "name": "thunk-skills",
+  "description": "How to build, test and analyze thunks with the Thunk.AI Builder MCP, and next-step suggestions after Codex uses a Builder tool. Also install the plugin for your Thunk.AI tenant, for the tools.",
+  "author": {
+    "name": "Thunk.AI",
+    "url": "https://thunk.ai"
+  },
+  "homepage": "https://info.thunk.ai",
+  "license": "Apache-2.0",
+  "keywords": ["thunk", "workflow", "mcp"],
+  "skills": "./skills/",
+  "hooks": "./codex-hooks.json",
+  "interface": {
+    "displayName": "Thunk.AI Skills",
+    "shortDescription": "Build, test and analyze Thunk.AI thunks",
+    "longDescription": "The thunk-guide skill: which Thunk.AI help articles to read, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. Its hooks suggest the next step after Codex uses a Builder tool and show the Thunk.AI cards in the Codex app. Also install the plugin for your Thunk.AI tenant, for the Builder MCP tools.",
+    "developerName": "Thunk.AI",
+    "category": "Productivity",
+    "websiteURL": "https://info.thunk.ai",
+    "defaultPrompt": [
+      "I'm new to Thunk.AI. Interview me about a process to automate, then build it as a thunk I can watch.",
+      "Give me a guided tour of Thunk.AI in the browser pane, using a public sample thunk.",
+      "Ask me about my role and team, then suggest three processes Thunk.AI could automate for me."
+    ]
+  }
+}
