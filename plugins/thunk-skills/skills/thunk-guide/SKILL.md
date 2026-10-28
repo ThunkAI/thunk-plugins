@@ -25,30 +25,30 @@ of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
 - Pick your path: lines 56-71
-- Common instructions: lines 72-305
+- Common instructions: lines 72-309
   - The Builder MCP and its tools: lines 76-90
-  - Start a session first: lines 91-108
-  - More than one tenant: lines 109-118
-  - The Builder MCP informs; the browser pane shows: lines 119-129
-  - Open the thunk in the browser pane: lines 130-240
-  - Files: lines 241-262
-  - Offer numbered choices when you stop: lines 263-269
-  - How to read an article: lines 270-281
-  - Rules: lines 282-291
-  - Before finishing: lines 292-305
-- Build or change a thunk: lines 306-672
-  - Build order: lines 308-616
-  - Write readable directions and code: lines 617-672
-- Explain a thunk: lines 673-721
-- Troubleshoot or analyze a thunk: lines 722-733
-- Help articles for each task: lines 734-827
-  - Start here (first thunk in a session): lines 736-744
-  - Design the workflow: lines 745-759
-  - Write step AI instructions: lines 760-771
-  - Tools, connections and content: lines 772-785
-  - Kinds of thunk and how they are reached: lines 786-795
-  - Run and test: lines 796-811
-  - Diagnose a run: lines 812-827
+  - Start a session first: lines 91-112
+  - More than one tenant: lines 113-122
+  - The Builder MCP informs; the browser pane shows: lines 123-133
+  - Open the thunk in the browser pane: lines 134-244
+  - Files: lines 245-266
+  - Offer numbered choices when you stop: lines 267-273
+  - How to read an article: lines 274-285
+  - Rules: lines 286-295
+  - Before finishing: lines 296-309
+- Build or change a thunk: lines 310-693
+  - Build order: lines 312-620
+  - Write readable directions and code: lines 621-693
+- Explain a thunk: lines 694-742
+- Troubleshoot or analyze a thunk: lines 743-754
+- Help articles for each task: lines 755-848
+  - Start here (first thunk in a session): lines 757-765
+  - Design the workflow: lines 766-780
+  - Write step AI instructions: lines 781-792
+  - Tools, connections and content: lines 793-806
+  - Kinds of thunk and how they are reached: lines 807-816
+  - Run and test: lines 817-832
+  - Diagnose a run: lines 833-848
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -95,16 +95,20 @@ anything else with a short `title`, a `description` of what you are doing, and
 `purpose`: `build_thunk` when you are creating or substantially changing a
 thunk, `analyze_performance` when you are measuring time or cost,
 `debug_ai_control` when a step or work item did the wrong thing, or `other`
-when none of those fit. Also say who you are: `agent` is `claude`, `codex`
-or `other` (with a few words in `agentDescription`, such as the product
-name), and `agentSurface` is the app you run in (`desktop_app`, `terminal`,
-`web`, `ide` or `other`). The instructions then include the guide for that
-purpose and the app you named. Read the instructions it returns and pass
-the returned `sessionId` to every other Builder call. Where the server requires sessions, a call without a valid
-`sessionId` is refused with `session_required` or `session_not_found`: start
-a session again and carry on. Over HTTP the id travels in the
-`X-Builder-Session` header instead. Sessions are yours alone and show up under
-Account → Builder → Sessions.
+when none of those fit. Also say who you are: `agent` is `claude`, `codex`,
+`cursor` or `other` (with a few words in `agentDescription` when it is
+`other`, such as the product name), and `agentSurface` is the app you run in
+(`desktop_app`, `terminal`, `web`, `ide` or `other`). The instructions then
+include the guide for that purpose and the app you named. Start the session
+with those arguments, as the only Builder call in its turn, and wait for its
+result: you do not have its `sessionId` until it finishes. Read the
+instructions it returns and pass that `sessionId` to every other Builder call.
+Where the server requires sessions, a call without a `sessionId` is refused
+with `session_required`. A `sessionId` that is not yours, or not a real one,
+is always refused with `session_not_found`. Either way, start a session
+again and carry on. Over HTTP the id travels in the `X-Builder-Session` header
+instead. Sessions are yours alone and show up under Account → Builder →
+Sessions.
 
 ### More than one tenant
 
@@ -230,7 +234,7 @@ the pane, such as reading a source thunk while building a copy.
 
 #### With no side-panel browser
 
-In the Claude Code terminal, Cursor, Claude chat without the desktop app, or
+In the Claude Code terminal, Cursor, Copilot, Claude chat without the desktop app, or
 any agent with no side-panel browser, give the thunk's link (`url` in the
 thunk summary) and carry on. Don't build a page of the thunk or write one
 to a file for the user to open.
@@ -648,8 +652,25 @@ already built:
   records the property sees it. The directions keep only the actions that
   depend on a value: "If the Disposition is Red, draft the report."
 
-The design review reports instructions that break these
-rules or lack the Objective and Process shape.
+A third rule is broken in every kind of step: **don't name tools or
+describe how they are called.** Three things are easy to mix up here:
+
+- A step's input properties are the values its agent sees when the step
+  starts.
+- A tool argument typed as a reference to a property (`x-thunk-ref`)
+  takes only that property's type and allowed values, never its value.
+- The agent fills in every argument of a tool call itself, from what it
+  sees, when it decides to call the tool.
+
+So the directions say what to do with the data: "look up the supplier's
+open orders". They never say which tool to call, which property goes into
+which argument, or which field of a result to read. The tools enabled on
+the step decide which tool does the work (the "Say what should happen, not
+which tool to call" and "Describe the intent, not the mechanics" guidelines
+in `how-to-write-effective-directions`).
+
+The design review reports instructions that name a tool, that break the
+first two rules, or that lack the Objective and Process shape.
 
 After you save them, read the instructions back from the design and
 check them against the article's quick checklist, as an author would before
@@ -789,7 +810,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | --- | --- |
 | Chat App (`kind:"chatApp"`) | `set-up-the-hosted-chat-ui-for-your-thunk`, `conversational-interface-via-a-rest-api` |
 | MCP server (`kind:"mcpServer"`) | `publish-your-thunk-as-an-mcp-server-for-ai-agents`, `modular-reuse-of-tools` |
-| Inbound requests / webhooks | `inbound-requests`, `receive-requests-through-a-webhook-or-a-shared-form` |
+| Inbound requests: add, change or remove webhooks; change the email channel and who may send email to it; let a channel update existing work items instead of adding new ones | `inbound-requests`, `receive-requests-through-a-webhook-or-a-shared-form`, `send-requests-to-your-thunk-by-email` |
 | Copy a thunk | `how-to-copy-a-thunk` |
 | Clean up or upgrade a live thunk in a copy, with stand-in tools | `improve-a-live-thunk-safely` |
 

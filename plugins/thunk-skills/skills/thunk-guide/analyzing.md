@@ -40,7 +40,7 @@ Contents (line numbers in this file):
 - Rules: lines 676-688
 - The method articles: lines 689-697
 
-This guide is for AI agents (such as Claude or Codex) that analyze thunks through the **Thunk.AI Builder MCP**.
+This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI Builder MCP**.
 
 It follows on from `build-thunks-with-the-builder-mcp`, which says which help articles to read
 before each kind of work (directions, schema, tools, tests, diagnosis) and
@@ -137,7 +137,7 @@ plus:
 - **Wiring:** connections and libraries with `enabledOnThunk: false` that the
   design seems to need; steps (often the collect step) with every tool
   enabled; knowledge files in a failed state; options such as
-  `workItemInactiveTimeoutHours` and `alertOnError`.
+  `workItemInactiveTimeoutMinutes` (or the older `workItemInactiveTimeoutHours`) and `alertOnError`.
 
 ### Reading a run
 
@@ -611,7 +611,7 @@ re-set it with an update if it is missing.
   `models` list in usage. Take a usage snapshot before and after
   each run; the difference is that run's cost and active time.
 - Changing thunk options has been seen to reset
-  `workItemInactiveTimeoutHours` to 0 when another option is changed — pass
+  `workItemInactiveTimeoutMinutes` (or `workItemInactiveTimeoutHours`) to 0 when another option is changed — pass
   it on every call and check the returned value.
 - Re-run the design review on the copy; report critical and advisory counts.
 
