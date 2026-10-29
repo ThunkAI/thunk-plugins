@@ -255,7 +255,8 @@ function listedThunks(
   text: string | undefined,
 ) {
   const isFiltered =
-    ["search", "folder", "tag", "after"].some(
+    // `folder` too: a server older than this plugin still takes the old folder filter name.
+    ["search", "folderPath", "folder", "tag", "after"].some(
       (key) => input[key] !== undefined,
     ) ||
     (input.access !== undefined &&

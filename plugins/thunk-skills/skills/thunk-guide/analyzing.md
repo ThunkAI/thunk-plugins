@@ -27,18 +27,18 @@ Contents (line numbers in this file):
   - B7. Cost: lines 330-335
   - B8. Security: lines 336-348
   - B9. Report: lines 349-369
-- Scenario C — Cleanup / review / upgrade: lines 370-675
+- Scenario C — Cleanup / review / upgrade: lines 370-676
   - C1. Review: lines 382-394
   - C2. Sort the findings, propose, then stop: lines 395-418
   - C3. Mock the external effects: lines 419-469
   - C4. Copy and swap in the mock: lines 470-505
-  - C5. Tests from real data: lines 506-532
-  - C6. Fix in the copy: lines 533-580
-  - C7. Run, grade, and compare models: lines 581-617
-  - C8. The pre-production checklist, hand over and clean up: lines 618-640
-  - C9. The report (required): lines 641-675
-- Rules: lines 676-688
-- The method articles: lines 689-697
+  - C5. Tests from real data: lines 506-533
+  - C6. Fix in the copy: lines 534-581
+  - C7. Run, grade, and compare models: lines 582-618
+  - C8. The pre-production checklist, hand over and clean up: lines 619-641
+  - C9. The report (required): lines 642-676
+- Rules: lines 677-689
+- The method articles: lines 690-698
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI Builder MCP**.
 
@@ -210,7 +210,7 @@ infrastructure. Instead:
 1. Collect the evidence the MCP gave you: thunk id, work item and step ids,
    the turn, the error text, and how many items it hits.
 2. Log it as feedback through the Builder MCP (`kind: "bug"`, ids in
-   `details`, no customer data or credentials). That records a note for the
+   `description`, no customer data or credentials). That records a note for the
    Thunk.AI team; it does not open a ticket.
 3. Tell the user to raise a support ticket with the same evidence
    (`available-resources-and-support`), and say in the report that the fix is
@@ -523,9 +523,10 @@ has been seen to let one through. Remove the live tool from the copy instead.
 - Tests check the work item's fields, not the live state of outside systems,
   which drifts. Say so in the report.
 - **A thunk that converses.** Where the original talks to a person, give the
-  item a simulated user (`setSimulatedUser`, or
-  `copyAsTest` from a real conversation) and rerun it, so the
-  run does not wait for a reply; `test-a-conversation-with-a-simulated-user`.
+  item a simulated user so the run does not wait for a reply: set one on the
+  item (`set_simulated_user`) and rerun it, or make a new test item from a
+  real conversation (`copy_as_test`) and run it;
+  `test-a-conversation-with-a-simulated-user`.
 - Run one item first as a smoke test (file access, mock wiring), then the
   rest. Test items start in Draft: run each (rerun
   for an item with a simulated user opener).

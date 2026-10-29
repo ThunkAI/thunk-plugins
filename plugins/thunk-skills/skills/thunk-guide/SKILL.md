@@ -24,31 +24,32 @@ a time, using the contents below. Read each help article this skill names in its
 of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
-- Pick your path: lines 56-71
-- Common instructions: lines 72-309
-  - The Builder MCP and its tools: lines 76-90
-  - Start a session first: lines 91-112
-  - More than one tenant: lines 113-122
-  - The Builder MCP informs; the browser pane shows: lines 123-133
-  - Open the thunk in the browser pane: lines 134-244
-  - Files: lines 245-266
-  - Offer numbered choices when you stop: lines 267-273
-  - How to read an article: lines 274-285
-  - Rules: lines 286-295
-  - Before finishing: lines 296-309
-- Build or change a thunk: lines 310-693
-  - Build order: lines 312-620
-  - Write readable directions and code: lines 621-693
-- Explain a thunk: lines 694-742
-- Troubleshoot or analyze a thunk: lines 743-754
-- Help articles for each task: lines 755-848
-  - Start here (first thunk in a session): lines 757-765
-  - Design the workflow: lines 766-780
-  - Write step AI instructions: lines 781-792
-  - Tools, connections and content: lines 793-806
-  - Kinds of thunk and how they are reached: lines 807-816
-  - Run and test: lines 817-832
-  - Diagnose a run: lines 833-848
+- Pick your path: lines 57-72
+- Common instructions: lines 73-317
+  - The Builder MCP and its tools: lines 77-91
+  - Start a session first: lines 92-113
+  - More than one tenant: lines 114-123
+  - The Builder MCP informs; the browser pane shows: lines 124-134
+  - Open the thunk in the browser pane: lines 135-245
+  - Files: lines 246-267
+  - Offer numbered choices when you stop: lines 268-274
+  - How to read an article: lines 275-286
+  - Rules: lines 287-296
+  - Before finishing: lines 297-317
+- Build or change a thunk: lines 318-778
+  - Keep the user in the loop while you build: lines 320-391
+  - Build order: lines 392-705
+  - Write readable directions and code: lines 706-778
+- Explain a thunk: lines 779-837
+- Troubleshoot or analyze a thunk: lines 838-849
+- Help articles for each task: lines 850-943
+  - Start here (first thunk in a session): lines 852-860
+  - Design the workflow: lines 861-875
+  - Write step AI instructions: lines 876-887
+  - Tools, connections and content: lines 888-901
+  - Kinds of thunk and how they are reached: lines 902-911
+  - Run and test: lines 912-927
+  - Diagnose a run: lines 928-943
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -306,8 +307,87 @@ with just a number. They can still answer in their own words.
 - Do the directions and AI tool instructions I wrote open with an objective
   and a numbered process, and is every code tool I wrote readable source?
 - If I'm waiting for the user, did I end with numbered choices?
+- Did I answer the user's direct questions, and paste the output they came
+  for as text rather than summarizing it?
+- Am I ending on a result, a question or a plain blocker, and not on "still
+  running"? If this turn has run past about five minutes without a result,
+  did I show what exists and hand back?
+- If the pane shows the Thunk.AI sign-in screen, did my reply say so in plain
+  words, without telling the user to look at the pane?
 
 ## Build or change a thunk
+
+### Keep the user in the loop while you build
+
+Most users are new to Thunk.AI and can't see your tool calls. They see only
+your messages, the task list and the browser pane. A few minutes of silence
+looks to them like the build has frozen, and a result that arrives after
+they've run out of time is a result they never see. Show the first useful
+result fast, and keep them informed until then.
+
+1. **Answer their questions first.** If the user asked something direct
+   (where the data goes, whether the AI makes the decision, who approves,
+   what it costs, how it connects to their system), answer it in your first
+   reply, before you build. If an answer depends on the build, say what you
+   know now and when you'll know the rest. Don't make them wait for the
+   build to learn whether the tool is acceptable to them.
+2. **Say the plan, then build.** Before a build that will take more than a
+   minute, give a plan of two or three lines in plain words: what you'll
+   make, what you'll test it on, and roughly how long it will take ("about 5
+   minutes"). Keep the task list in step with the work: mark each item done
+   as you finish it, so the list moves at least every couple of minutes.
+3. **First result on one sample, before anything else.** The first goal is
+   one realistic sample through the main path, with its output shown to the
+   user. Do these only after that first result is shown: mock thunks for
+   systems the main path can do without (give it the sample data directly
+   instead), extra test cases, consistency reruns, probe tools and other
+   hardening. Then offer them as next steps. On a user's first build this
+   rule takes priority over steps 2 and 5 of **Build order**: a mock of
+   the user's ERP, ticketing system or HR system waits until the first
+   result is shown.
+4. **Show the output itself.** When a run produces what the user came for
+   (a memo, an email, a list of findings, a score with its evidence, a
+   coaching note), paste it into your reply as text. Don't just report that
+   it exists or that its checks passed. Lead with the output, then the pass
+   or fail summary.
+5. **Never go quiet for long.** Post a one-line status in plain words at
+   each milestone (thunk created, steps written, test running, result in),
+   and at least every 60–90 seconds during long work. Write status lines for
+   a business user: say "the test deal is running", not "rerunning the work
+   item", "indexing" or "the contaminated item".
+6. **Don't end your turn on a wait.** "Still running", "I'll check back in a
+   minute" or "the test has started" is not a result. While a run is in
+   progress, keep the turn going and check the run as **Wait for a run**
+   says. End the turn on a result, a question, or a real blocker, said
+   plainly.
+7. **Time-box each turn to about five minutes.** If a turn has run about
+   five minutes without a result for the user, stop adding to it. Show what
+   exists now (the steps, any partial output), say in a line what's left and
+   how long it will take, and end the turn with a choice: carry on, or
+   change course. The user can't reply while your turn is running, so a long
+   turn full of status lines still keeps them waiting.
+
+#### Wait for a run
+
+Running or re-running a work item through the Builder MCP (or creating one
+that starts on its own) returns at once while the work item keeps running. Don't
+guess how long it will take and wait for that long. Fixed waits of one to
+two minutes usually overshoot a run that finished in 30 seconds, and leave
+the user with nothing to read while you wait.
+
+- Any wait of a set length is a fixed wait, however it is written: a sleep,
+  a loop that runs until a clock time, or a background timer that wakes you
+  later. Don't use any of them for longer than about 20 seconds.
+- Read the work item's state through the Builder MCP after every pause of
+  up to about 20 seconds. Stop as soon as the work item finishes, fails, waits for a
+  person (`stepCompletionApprovalRequired`, `waitingForConversationReply`),
+  or reports `blocked`.
+- Between checks, post a short status line when the step has changed ("Step
+  2 of 3: checking against the policy").
+- When several work items are running, check them all in each round instead
+  of waiting on them one at a time.
+- Give up after the step time limit (about five minutes of working time) and
+  read `blocked` and the step history to see why.
 
 ### Build order
 
@@ -345,18 +425,18 @@ them scattered among everything else the user owns. At the start of a
 project, choose one folder path for it, such as
 `/invoice-intake` or `/claims/fraud-review`, and tell the user which one.
 Use a short name for the project, not for the session or the date. Before
-choosing, list the user's thunks through the Builder MCP with `folder` set
-to `/` and `includeSubfolders` true to see the folders they already have, and
-reuse one that fits (each summary's `folderPath` shows where a thunk is
+choosing, list the user's thunks through the Builder MCP with `folderPath`
+set to `/` and `includeSubfolders` true to see the folders they already have,
+and reuse one that fits (each summary's `folderPath` shows where a thunk is
 filed). Then file **every** thunk you create for the project there: pass
 `folderPath` when you create or copy a thunk (a copy of a thunk the user owns
 otherwise stays in the source's folder, and a copy of someone else's lands
 at the top level). Mock services and test copies go in the same folder, or
 in a subfolder such as `/invoice-intake/mocks`. To file a thunk you didn't
-create there, or move one, set the thunk's `folderPath` option; only the
-thunk's owner or an admin can move it, and the move is refused in
-Production. List the project's thunks with `folder` set to that path. A folder
-needs no creating: filing a thunk in it is enough.
+create there, or move one, set the thunk's folder path (`folderPath`); only
+the thunk's owner or an admin can move it, and the move is refused in
+Production. List the project's thunks with `folderPath` set to that path. A
+folder needs no creating: filing a thunk in it is enough.
 
 **Work log for a unit of edits.** Before you change a thunk's definition
 (properties, steps, tools, connections, options, export, reports), begin a
@@ -383,7 +463,12 @@ For a new workflow or chat-app thunk:
    open the thunk in the browser pane (see **Open the thunk in the browser
    pane**)
    and give its link.
-2. **Decide real or mock for each external system.** For every outside
+2. **Decide real or mock for each external system.** On a user's first
+   build of a thunk, skip this step until the first result is shown (see
+   **Keep the user in the loop while you build**). Put the sample record's
+   data from those systems straight into the test work item, or into a small
+   content folder, and run the main path on it. Build mocks only after that
+   first result, and offer them to the user as the next step. For every outside
    system the workflow reads or changes (a CRM, email, a ticketing system, a
    database), read the thunk's design for an account connection that
    already reaches it. If there is a suitable one, **ask the user** whether
@@ -564,7 +649,7 @@ For a new workflow or chat-app thunk:
    test work item with assertions on its expected outputs. If the thunk
    holds a conversation (a chat app, or a step that emails someone and waits
    for the reply), give each test work item a simulated user
-   (`setSimulatedUser`) so the run does not stop to
+   (`set_simulated_user`) so the run does not stop to
    wait for a person; read `test-a-conversation-with-a-simulated-user`.
    For a conversation the end user opens, give the simulated user an
    `initialMessage`: running the new test work item starts its
@@ -573,7 +658,7 @@ For a new workflow or chat-app thunk:
    makes that work item a test work item and gives each conversation it
    holds a simulated user that replays the conversation. Re-running it
    replays the conversation in the same thread and replaces the recorded
-   messages and outputs; to keep the original, use `copyAsTest` instead.
+   messages and outputs; to keep the original, use `copy_as_test` instead.
    Leave edge cases
    and failure cases for hardening (step 6): while the design is still
    changing, they cost runs and fixes on behavior that may not last. Run
@@ -730,6 +815,16 @@ numbered choices.
 5. **After a deep dive, stay at the same place in the tour** and offer
    numbered choices again, with **1. Continue the tour** first.
 
+**Explaining a sample.** Every sample already has test work items that
+have run. Show how a sample works through one of those runs: list its work
+items, pick one that finished, and show it and its step runs in the pane.
+That is quicker and clearer than copying the sample and running a new work
+item, so don't do that just to explain it. Offer a copy only when the user
+wants to change the sample or try it on their own data. If no run can be
+read, say so and offer the copy. When the sample's summary has a `videoUrl`,
+give that link once as a short video about the sample, for the user to watch
+if they want.
+
 Don't claim that a feature works just because a description or a step's
 directions mention it. Check its configuration through the Builder MCP (for
 example, that the tool is enabled on the step, that the connection exists,
@@ -820,7 +915,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | --- | --- |
 | Create / run / rerun work items | `workflow-orchestration`, `manual-testing` |
 | Automated tests | `evals-automated-tests`, `building-a-test-plan` |
-| Test a conversation: a test work item whose end user is a simulated user, with assertions (`setSimulatedUser` / `copyAsTest`, then rerun) | `test-a-conversation-with-a-simulated-user`, `evals-automated-tests` |
+| Test a conversation: a test work item whose end user is a simulated user, with assertions (`set_simulated_user` then rerun, or `copy_as_test` then run) | `test-a-conversation-with-a-simulated-user`, `evals-automated-tests` |
 | Mock external systems for testing | `improve-a-live-thunk-safely`, `evals-automated-tests` |
 | Production readiness | `shipping-enterprise-thunks-testing-and-quality-principles` |
 | Design review | `workflow-review` |

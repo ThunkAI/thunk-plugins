@@ -20,6 +20,12 @@ building, so the user approves and signs in once, up front. The tenant's app
 is the site of any thunk `url` the Builder MCP returns (for example from
 the thunk list).
 
+Do this in the first turn where you will build, change or run a thunk,
+before the first create call, not after the thunk exists. A turn that only
+explains Thunk.AI doesn't need it. If the pane shows the sign-in screen, the
+user can sign in while you build, so they can see the thunk when it first
+appears.
+
 ## Open and keep the pane
 
 The browser pane's tools are named `mcp__Claude_Browser__*` in a desktop
@@ -43,10 +49,25 @@ to the user's computer. This guide names them by the part after that prefix.
    sign-in screen), not how the thunk is configured.
    - If a cookie banner shows, choose the most privacy-preserving option
      ("Only Essential").
-   - If the Thunk.AI sign-in screen shows, never sign in on the user's
-     behalf. Tell them to sign in with Google or Microsoft in the pane. The
-     pane keeps its own sign-ins, separate from their regular browser, so this
-     is needed once.
+   - If the Thunk.AI sign-in screen shows (it may say "Your session
+     expired"), never sign in on the user's behalf. Tell them in plain words,
+     and in the visible text of your reply, not only in a status line or
+     tool output. Say that the panel beside the chat is asking them to sign
+     in to Thunk.AI with Google or Microsoft, that they need to do it once
+     (the pane keeps its own sign-ins, separate from their regular browser),
+     and that you carry on building in the meantime. For example: "The panel
+     on the right is asking you to sign in to Thunk.AI. Sign in once with
+     Google or Microsoft and you'll see the thunk there. I'll keep building
+     meanwhile."
+   - Until the user is signed in, don't say "open it in the pane", "watch it
+     in the pane" or "click … in the pane". Repeat the one-line sign-in ask
+     in the closing message (or next-step box) of each turn that points at
+     the app. Check the page again when they say they've signed in, or
+     before you next point at the pane.
+   - If the user can't or won't sign in yet (for example, while IT reviews
+     the tool), show what the pane would have shown as text in the chat
+     instead: the steps, the test results, the output. Don't point at the
+     app again unless they ask.
 5. **Make sure they can see it.** If `tabs_context` reports the pane as
    hidden, tell the user to press Cmd+Shift+B (Mac) or Ctrl+Shift+B
    (Windows), or to close what's in the side panel and click the globe icon.

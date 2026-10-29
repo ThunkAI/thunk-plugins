@@ -265,6 +265,11 @@ test("Claude's unfiltered list_thunks is kept for the next session, not listed i
     builderCall("list_thunks", { access: "owned", search: "inv" }),
   );
   expect(stored.get("thunks")).toBeUndefined();
+  await $.tool.call(builderCall("list_thunks", { folderPath: "/finance" }));
+  expect(stored.get("thunks")).toBeUndefined();
+  // The old filter name, from a session against a server older than the plugin.
+  await $.tool.call(builderCall("list_thunks", { folder: "/finance" }));
+  expect(stored.get("thunks")).toBeUndefined();
 
   await $.tool.call(builderCall("list_thunks", { access: "owned", first: 8 }));
   expect(stored.get("thunks")).toMatchObject({ thunks: [{ id: "T1" }] });
