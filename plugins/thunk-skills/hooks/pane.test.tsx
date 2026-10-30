@@ -205,6 +205,76 @@ test("the band stays quiet while Claude works", async ($, on) => {
   await band.unmount();
 });
 
+// The Boxes of the band's own rows under the root, which also holds what is drawn below.
+type Drawn = {
+  type?: string;
+  props?: Record<string, unknown>;
+  children?: unknown[];
+};
+function bandBoxes(node: Drawn, isRoot = true): Drawn[] {
+  const boxes = (node.children ?? []).flatMap((child) =>
+    child && typeof child === "object" ? bandBoxes(child as Drawn, false) : [],
+  );
+  return node.type === "Box" && !isRoot ? [node, ...boxes] : boxes;
+}
+
+// A desktop draws each Button as a native one, taller than a row of text: every row of the band
+// is spaced from the next, and the Buttons in a row (wrapped ones too) from each other.
+function expectSpaced(root: Drawn | undefined) {
+  const boxes = bandBoxes(root ?? {});
+  expect(boxes.length).toBeGreaterThan(0);
+  for (const box of boxes) {
+    const props = box.props ?? {};
+    const across = props.columnGap ?? props.gap;
+    const down = props.rowGap ?? props.gap;
+    if (props.flexDirection === "column" || props.flexWrap === "wrap") {
+      expect(down).toBeDefined();
+      expect(down).not.toBe(0);
+    }
+    if (props.flexDirection !== "column") {
+      expect(across).toBeDefined();
+      expect(across).not.toBe(0);
+    }
+  }
+}
+
+test("the band's rows and buttons are spaced apart on the desktop", async ($, on) => {
+  engine(on, []);
+  on("tool.call", () => ({ result: {} }));
+
+  await $.session.start({ cwd: "/", surface: null, isInteractive: false });
+  const chip = await $.ui.mount({ ...BAND, surface: "desktop" });
+  expect(await chip.find({ type: "Button", key: "open-pane" })).toBeDefined();
+  expectSpaced(await chip.find({ type: "Box" }));
+  await chip.unmount();
+
+  await $.tool.call(builderCall("batch_steps", { thunkId: "T1" }));
+  const both = await $.ui.mount({ ...BAND, surface: "desktop" });
+  expect((await both.find({ type: "Button", key: "next" }))?.text).toBe(
+    "Test the new steps",
+  );
+  expect(await both.find({ type: "Button", key: "do-debug" })).toBeDefined();
+  expectSpaced(await both.find({ type: "Box" }));
+  await both.unmount();
+
+  await $.prompt.submit({
+    text: "something else",
+    wait: false,
+    origin: { kind: "composer" },
+  });
+  const thunkOnly = await $.ui.mount({ ...BAND, surface: "desktop" });
+  expect(await thunkOnly.find({ type: "Button", key: "next" })).toBeUndefined();
+  expectSpaced(await thunkOnly.find({ type: "Box" }));
+  await thunkOnly.press({ key: "clear-thunk" });
+  await $.tool.call(builderCall("create_thunk", { name: "Invoices" }));
+  expect(
+    await thunkOnly.find({ type: "Button", key: "do-debug" }),
+  ).toBeUndefined();
+  expect(await thunkOnly.find({ type: "Button", key: "next" })).toBeDefined();
+  expectSpaced(await thunkOnly.find({ type: "Box" }));
+  await thunkOnly.unmount();
+});
+
 test("a Builder tool call suggests a next step, until the person types their own prompt", async ($, on) => {
   engine(on, [{ isPlaced: true, isShown: true }]);
   let failed = false;

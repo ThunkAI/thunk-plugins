@@ -614,83 +614,88 @@ export const register: Register = (on) => {
       return below;
     }
 
+    // A desktop draws each Button as a native one, taller than a row of text: the rows get a
+    // row's gap between them, as the pane's do, and the Buttons the surface's own spacing step.
+    // What is drawn below keeps its own spacing.
     return (
       <Box flexDirection="column">
-        {thunk && (
-          <Box flexDirection="column" gap={1}>
-            <Box gap={1}>
-              <Text color={AMBER}>●</Text>
-              <Text bold>{thunk.name ?? "This thunk"}</Text>
-              {!paneVisible && (
+        <Box flexDirection="column" gap={1}>
+          {thunk && (
+            <Box flexDirection="column" gap={1}>
+              <Box gap="sm">
+                <Text color={AMBER}>●</Text>
+                <Text bold>{thunk.name ?? "This thunk"}</Text>
+                {!paneVisible && (
+                  <Button
+                    key="thunk-pane"
+                    plain
+                    dimColor
+                    onPress={() => openPane($, true)}
+                  >
+                    Thunk.AI pane
+                  </Button>
+                )}
                 <Button
-                  key="thunk-pane"
+                  key="clear-thunk"
                   plain
                   dimColor
-                  onPress={() => openPane($, true)}
+                  onPress={() => update($, current, () => null)}
                 >
-                  Thunk.AI pane
+                  Close
                 </Button>
-              )}
+              </Box>
+              <Box columnGap="sm" rowGap={1} flexWrap="wrap" paddingLeft={2}>
+                {THUNK_ACTIONS.map((action) => (
+                  <Button
+                    key={`do-${action.key}`}
+                    onPress={() =>
+                      ask($, {
+                        label: action.label,
+                        prompt: action.prompt(thunk),
+                      })
+                    }
+                  >
+                    {action.label}
+                  </Button>
+                ))}
+              </Box>
+            </Box>
+          )}
+          {step && (
+            <Box gap="sm">
+              <Text color={AMBER}>●</Text>
+              <Text bold>Thunk.AI next step:</Text>
+              <Button key="next" variant="primary" onPress={() => ask($, step)}>
+                {step.label}
+              </Button>
               <Button
-                key="clear-thunk"
-                plain
+                key="dismiss"
+                role="dismiss"
                 dimColor
-                onPress={() => update($, current, () => null)}
+                onPress={() => update($, next, () => null)}
               >
-                Close
+                Not now
               </Button>
             </Box>
-            <Box gap={1} flexWrap="wrap" paddingLeft={2}>
-              {THUNK_ACTIONS.map((action) => (
-                <Button
-                  key={`do-${action.key}`}
-                  onPress={() =>
-                    ask($, {
-                      label: action.label,
-                      prompt: action.prompt(thunk),
-                    })
-                  }
-                >
-                  {action.label}
-                </Button>
-              ))}
+          )}
+          {!thunk && showChip && (
+            <Box gap="sm">
+              <Text color={AMBER}>●</Text>
+              <Button key="open-pane" plain onPress={() => openPane($, true)}>
+                Open Thunk.AI pane
+              </Button>
+              <Button
+                key="hide-chip"
+                role="dismiss"
+                plain
+                dimColor
+                onPress={() => setChipHidden($, true)}
+              >
+                Hide
+              </Button>
             </Box>
-          </Box>
-        )}
-        {step && (
-          <Box gap={1}>
-            <Text color={AMBER}>●</Text>
-            <Text bold>Thunk.AI next step:</Text>
-            <Button key="next" variant="primary" onPress={() => ask($, step)}>
-              {step.label}
-            </Button>
-            <Button
-              key="dismiss"
-              role="dismiss"
-              dimColor
-              onPress={() => update($, next, () => null)}
-            >
-              Not now
-            </Button>
-          </Box>
-        )}
-        {!thunk && showChip && (
-          <Box gap={1}>
-            <Text color={AMBER}>●</Text>
-            <Button key="open-pane" plain onPress={() => openPane($, true)}>
-              Open Thunk.AI pane
-            </Button>
-            <Button
-              key="hide-chip"
-              role="dismiss"
-              plain
-              dimColor
-              onPress={() => setChipHidden($, true)}
-            >
-              Hide
-            </Button>
-          </Box>
-        )}
+          )}
+        </Box>
         {below}
       </Box>
     );

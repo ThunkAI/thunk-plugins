@@ -9,36 +9,36 @@ of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
 - Pick the scenario first: lines 55-66
-- Common ground (all scenarios): lines 67-219
+- Common ground (all scenarios): lines 67-234
   - Target and window: lines 69-87
   - Read the design: lines 88-94
-  - Design checklist: lines 95-141
-  - Reading a run: lines 142-164
-  - Counting: lines 165-202
-  - When the cause is the platform: lines 203-219
-- Scenario A — Troubleshoot a specific problem: lines 220-252
-- Scenario B — Health check: lines 253-369
-  - B1. Operational metrics: lines 260-266
-  - B2. Stuck work: lines 267-277
-  - B3. Error rates and error diagnosis: lines 278-297
-  - B4. Result quality: lines 298-313
-  - B5. Design review: lines 314-320
-  - B6. Time analysis: lines 321-329
-  - B7. Cost: lines 330-335
-  - B8. Security: lines 336-348
-  - B9. Report: lines 349-369
-- Scenario C — Cleanup / review / upgrade: lines 370-676
-  - C1. Review: lines 382-394
-  - C2. Sort the findings, propose, then stop: lines 395-418
-  - C3. Mock the external effects: lines 419-469
-  - C4. Copy and swap in the mock: lines 470-505
-  - C5. Tests from real data: lines 506-533
-  - C6. Fix in the copy: lines 534-581
-  - C7. Run, grade, and compare models: lines 582-618
-  - C8. The pre-production checklist, hand over and clean up: lines 619-641
-  - C9. The report (required): lines 642-676
-- Rules: lines 677-689
-- The method articles: lines 690-698
+  - Design checklist: lines 95-156
+  - Reading a run: lines 157-179
+  - Counting: lines 180-217
+  - When the cause is the platform: lines 218-234
+- Scenario A — Troubleshoot a specific problem: lines 235-267
+- Scenario B — Health check: lines 268-384
+  - B1. Operational metrics: lines 275-281
+  - B2. Stuck work: lines 282-292
+  - B3. Error rates and error diagnosis: lines 293-312
+  - B4. Result quality: lines 313-328
+  - B5. Design review: lines 329-335
+  - B6. Time analysis: lines 336-344
+  - B7. Cost: lines 345-350
+  - B8. Security: lines 351-363
+  - B9. Report: lines 364-384
+- Scenario C — Cleanup / review / upgrade: lines 385-691
+  - C1. Review: lines 397-409
+  - C2. Sort the findings, propose, then stop: lines 410-433
+  - C3. Mock the external effects: lines 434-484
+  - C4. Copy and swap in the mock: lines 485-520
+  - C5. Tests from real data: lines 521-548
+  - C6. Fix in the copy: lines 549-596
+  - C7. Run, grade, and compare models: lines 597-633
+  - C8. The pre-production checklist, hand over and clean up: lines 634-656
+  - C9. The report (required): lines 657-691
+- Rules: lines 692-704
+- The method articles: lines 705-713
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI Builder MCP**.
 
@@ -133,10 +133,25 @@ plus:
   takes over the conversation a clear contract").
 - **Gates:** a rule such as "authenticate first" belongs in its own step with
   a Required to finish output, not in a sentence of a larger step
-  (`workflow-plan`, "Make a gate its own step").
+  (`workflow-plan`, "Make a gate its own step"). On a step with an approval
+  gate, and the step after it, wording that tells the agent to wait for the
+  reviewer (`how-to-write-effective-directions`, "Say 'finish' when a
+  hand-off is only a result").
+- **Finish checks:** each AI check against the step's directions. A check
+  that forbids something the directions require, or that counts or measures
+  (words, characters, sums), fails correct work, and fails it differently on
+  different models (`run-a-step-only-when-a-condition-matches`, "Write AI
+  checks the step can pass").
+- **Sources:** every value a step must record, from its directions or an
+  output property's description, has a source the step can reach: an input,
+  an enabled tool or a file (`how-to-write-effective-directions`, "Ask only
+  for what the step can find"). A code tool that looks up an outside value
+  returns "not found" as a result rather than failing
+  (`how-custom-code-tools-work`).
 - **Wiring:** connections and libraries with `enabledOnThunk: false` that the
   design seems to need; steps (often the collect step) with every tool
-  enabled; knowledge files in a failed state; options such as
+  enabled; knowledge files in a failed state, or linked from another thunk
+  (`content-folders`); options such as
   `workItemInactiveTimeoutMinutes` (or the older `workItemInactiveTimeoutHours`) and `alertOnError`.
 
 ### Reading a run

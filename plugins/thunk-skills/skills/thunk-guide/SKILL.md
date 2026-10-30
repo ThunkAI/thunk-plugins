@@ -25,7 +25,7 @@ of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
 - Pick your path: lines 57-72
-- Common instructions: lines 73-317
+- Common instructions: lines 73-332
   - The Builder MCP and its tools: lines 77-91
   - Start a session first: lines 92-113
   - More than one tenant: lines 114-123
@@ -35,21 +35,21 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 268-274
   - How to read an article: lines 275-286
   - Rules: lines 287-296
-  - Before finishing: lines 297-317
-- Build or change a thunk: lines 318-778
-  - Keep the user in the loop while you build: lines 320-391
-  - Build order: lines 392-705
-  - Write readable directions and code: lines 706-778
-- Explain a thunk: lines 779-837
-- Troubleshoot or analyze a thunk: lines 838-849
-- Help articles for each task: lines 850-943
-  - Start here (first thunk in a session): lines 852-860
-  - Design the workflow: lines 861-875
-  - Write step AI instructions: lines 876-887
-  - Tools, connections and content: lines 888-901
-  - Kinds of thunk and how they are reached: lines 902-911
-  - Run and test: lines 912-927
-  - Diagnose a run: lines 928-943
+  - Before finishing: lines 297-332
+- Build or change a thunk: lines 333-808
+  - Keep the user in the loop while you build: lines 335-406
+  - Build order: lines 407-735
+  - Write readable directions and code: lines 736-808
+- Explain a thunk: lines 809-867
+- Troubleshoot or analyze a thunk: lines 868-879
+- Help articles for each task: lines 880-973
+  - Start here (first thunk in a session): lines 882-890
+  - Design the workflow: lines 891-905
+  - Write step AI instructions: lines 906-917
+  - Tools, connections and content: lines 918-931
+  - Kinds of thunk and how they are reached: lines 932-941
+  - Run and test: lines 942-957
+  - Diagnose a run: lines 958-973
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -306,6 +306,21 @@ with just a number. They can still answer in their own words.
   that produces it when the work cannot go on without it?
 - Do the directions and AI tool instructions I wrote open with an objective
   and a numbered process, and is every code tool I wrote readable source?
+- Does every value a step must record have a source it can reach (an input
+  property, an enabled tool or a file), and do its directions agree with the
+  output properties' descriptions (`how-to-write-effective-directions`,
+  "Ask only for what the step can find")?
+- Does every AI finish check pass work done exactly as the directions say,
+  with no counting or measuring left to it
+  (`run-a-step-only-when-a-condition-matches`, "Write AI checks the step can
+  pass")?
+- Do the directions of a step with an approval gate, and of the step after
+  it, say to finish rather than to wait for the reviewer?
+- Does a code tool that looks up a value from outside the system return "not
+  found" as a result, and do the directions say what to do with it
+  (`how-custom-code-tools-work`)?
+- Is every content-folder file stored on this thunk, not linked from
+  another thunk (`content-folders`)?
 - If I'm waiting for the user, did I end with numbered choices?
 - Did I answer the user's direct questions, and paste the output they came
   for as text rather than summarizing it?
@@ -476,18 +491,22 @@ For a new workflow or chat-app thunk:
    without asking. If the user wants a real system that has no connection
    yet, create one on their account through the Builder MCP: a REST API
    (`Generic API`), an MCP server (`MCP service`) or an OAuth connection
-   that uses the client-credentials grant (`Generic OAuth`). Do not ask
+   (`Generic OAuth`), with the client-credentials grant or, for a provider
+   the user signs in to, `grantType` `authorizationCode`. Do not ask
    the user to paste a client secret or API key into the chat, for any
    connection type: OAuth and MCP connections take no secret, and a REST
    connection can be created without its key. Create the connection; if
    it comes back with `secretPending` true, ask the user to enter the
    secret on that connection on their Thunk.AI Account page, then refresh
-   an MCP connection's tools. Add the connection
-   to the thunk. These are the user's personal
+   an MCP connection's tools. If it comes back with `signInPending` true,
+   give the user the `signInUrl` link: there they enter the client secret
+   if the provider needs one and click **Authorize**. Refresh the tools of
+   the MCP connection that uses it once they say they are done; until the
+   sign-in is complete the refresh reports that OAuth authorization is
+   required. Add the
+   connection to the thunk. These are the user's personal
    connections; a thunk assigned to a resource environment uses that
-   environment's connections instead. An OAuth connection that needs
-   a person to sign in is created on the Account page, not through the
-   Builder MCP. Otherwise, and whenever the user prefers, build a
+   environment's connections instead. Otherwise, and whenever the user prefers, build a
    **mock** of that system, shaped so that moving to the real system later
    is a rebind, not a rebuild:
    - **One MCP-server thunk per system, with a business-level interface.**
@@ -594,7 +613,11 @@ For a new workflow or chat-app thunk:
      (`structure-types`). A Structure Type is preferred over `JSON_OBJECT`
      for any shape you know, and over several loose columns when the parts
      belong together. Reach for `JSON_OBJECT` (with an `exampleObject`)
-     only for a value whose shape you genuinely cannot name. A Conversation
+     only for a value whose shape you genuinely cannot name. When its
+     fields can be empty or change with the kind of value (an approval
+     that is either a receipt or a card-limit change), give an
+     `objectSchema` instead of the example: a strict JSON Schema whose
+     kinds sit in an `anyOf` inside a field. A Conversation
      property is the thread for email or chat
      (`conversation-properties-for-email`). If a step should send a
      message and wait for the reply, set
@@ -688,8 +711,15 @@ For a new workflow or chat-app thunk:
    real connection in step 5 applies here too. Then run the design review
    (start a design review, then poll it; `workflow-review`). It is slow and
    costly, so run it once here rather than during the build, and again only
-   after a set of fixes is finished. Tell the user what the hardening tests
-   and the review found, and what you fixed.
+   after a set of fixes is finished. Then run the main-path tests once more
+   on a different AI model, in a copy whose model you change in the thunk
+   options (`move-a-thunk-to-a-new-ai-model`). A step that finishes on one
+   model and stops or waits on another usually has a design fault one model
+   happened to work around: directions and a finish check or property
+   description that contradict each other, a value the step has no way to
+   get, or wording that reads as "wait for a person". Tell the user what the
+   hardening tests, the second model and the review found, and what you
+   fixed.
 
 Don't run work items through a step whose tools are still stubs.
 
