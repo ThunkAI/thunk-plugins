@@ -1,7 +1,7 @@
 #!/bin/sh
 # Codex PostToolUse hook (thunk-skills): after a Builder tool that has a follow-up (follow-ups.tsv,
 # the same table as FOLLOW_UPS in ../register.tsx), tells the model the next step to lead its
-# "Next steps" with and to put on the thunk card. The Codex counterpart of the Claude pane's
+# "Next steps" with. The Codex counterpart of the Claude pane's
 # next-step button. See docs/codex-thunk-pane-design.md.
 dir=$(dirname "$0")
 input=$(cat)
@@ -26,6 +26,6 @@ tab=$(printf '\t')
 row=$(grep "^$verb$tab" "$dir/follow-ups.tsv") || exit 0
 label=$(printf '%s\n' "$row" | cut -f 2)
 prompt=$(printf '%s\n' "$row" | cut -f 3)
-text="Thunk.AI next step: $label. Lead your Next steps list with it, worded for the person to ask as: $prompt If you call show_thunk_card for this thunk, pass it as nextStep with this label and prompt."
+text="Thunk.AI next step: $label. Lead your Next steps list with it, worded for the person to ask as: $prompt"
 escaped=$(printf '%s' "$text" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')
 printf '{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"%s"}}\n' "$escaped"

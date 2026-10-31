@@ -26,6 +26,7 @@ declare module "claude-code" {
       isPaneOpen: boolean;
       isChipHidden: boolean;
       current: CurrentThunk | null;
+      guideRead: boolean;
     };
   }
 }

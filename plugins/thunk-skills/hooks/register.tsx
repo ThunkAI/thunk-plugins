@@ -60,6 +60,22 @@ function thunkName(text: string | undefined) {
   }
 }
 
+// Whether this session loaded the thunk-guide skill. Until it has, Builder tool calls are
+// refused (see the guide gate in register). An atom, not a module variable, so a reload of this
+// module mid-session does not refuse calls again.
+const guideRead = atom(
+  { plugin: "thunk-skills", key: "guideRead" } as const,
+  false,
+);
+
+// The skill the gate waits for, as Claude names it from this plugin or as a bare skill name.
+const GUIDE_SKILL = /^(thunk-skills:)?thunk-guide$/;
+
+// A Builder server: a tenant plugin's thunk-builder, or one added by hand under a name like it.
+// Narrower than the follow-ups' "contains thunk" test, so other Thunk.AI servers (the ops
+// server, mcp__thunk__*) are never refused.
+const GUIDE_GATED_SERVER = /thunk.?builder/i;
+
 // The thunk the person is working on: the one Claude opened in the browser pane, or the one
 // Claude last worked on through the Builder tools. The band offers actions on it.
 const current = atom(
@@ -230,6 +246,29 @@ const NEXT_STEPS_RULE = [
   'After any turn in which you built, changed, ran or analyzed a thunk, end your reply with a short "Next steps" list of two or three concrete actions they could take on that thunk now (for example: run a test work item, add a review step, connect a system, export it as an MCP server), most useful first.',
   "For a user who is new to Thunk.AI, explain any Thunk.AI term (thunk, step, work item, connection) in a few words the first time you use it.",
 ].join(" ");
+
+// Asks Claude to read the guide before it uses the tools, so the gate rarely has to refuse.
+// The Codex hooks say the same (hooks/codex/session-rule.txt).
+const GUIDE_RULE =
+  "Before your first Thunk.AI Builder tool call in a session, load the thunk-guide skill and follow it.";
+
+// The guide gate: why a Builder tool call before the thunk-guide skill loaded is refused, or
+// undefined to let the call run.
+async function guideRefusal($: EngineInterface, tool: string) {
+  const server = BUILDER_TOOL.exec(tool)?.[1];
+  if (
+    !server ||
+    !GUIDE_GATED_SERVER.test(server) ||
+    (await read($, guideRead))
+  ) {
+    return undefined;
+  }
+
+  return (
+    "Load the thunk-skills:thunk-guide skill (Skill tool) before using the Thunk.AI " +
+    "Builder tools, then retry this call."
+  );
+}
 
 type Shown = {
   thunkId?: unknown;
@@ -486,6 +525,11 @@ export const register: Register = (on) => {
           text: NEXT_STEPS_RULE,
           scope: "session" as const,
         },
+        {
+          id: "thunk-skills:read-guide",
+          text: GUIDE_RULE,
+          scope: "session" as const,
+        },
       ],
     };
   });
@@ -501,7 +545,25 @@ export const register: Register = (on) => {
     return nextHook(e);
   });
 
+  // The guide gate: a Builder tool call before the thunk-guide skill loaded is refused, and the
+  // refusal tells Claude what to load. The skill.prompt event fires however the skill loads
+  // (/thunk-guide, the Skill tool, a subagent's preload); the refusal is in the tool.call hook.
+  on("skill.prompt", async ($, e, nextHook) => {
+    const prompted = await nextHook(e);
+    if (GUIDE_SKILL.test(e.skill)) {
+      await update($, guideRead, () => true);
+    }
+
+    return prompted;
+  }).catch(($, e, nextHook) => nextHook(e));
+
   on("tool.call", async ($, e, nextHook) => {
+    // A gate that fails lets the call run.
+    const refusal = await guideRefusal($, e.tool).catch(() => undefined);
+    if (refusal) {
+      return { deny: refusal };
+    }
+
     const ran = await nextHook(e);
     const match = BUILDER_TOOL.exec(e.tool);
     const followUp =

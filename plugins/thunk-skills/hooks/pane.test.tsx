@@ -1,4 +1,5 @@
 import type { On, RenderSurface } from "claude-code";
+import type { Engine } from "claude-code/testing";
 import { expect, test } from "claude-code/testing";
 
 const PANE = {
@@ -36,6 +37,14 @@ function builderCall(tool: string, args: Record<string, unknown> = {}) {
     tool: `mcp__plugin_tenant_thunk-builder__${tool}`,
     ...args,
   } as never;
+}
+
+// Claude loads the thunk-guide skill, which the guide gate waits for before any Builder call.
+async function readGuide($: Engine) {
+  await $.skill.prompt({
+    skill: "thunk-skills:thunk-guide",
+    text: "the guide",
+  });
 }
 
 const BAND = {
@@ -108,6 +117,7 @@ function engine(
     return { text: e.text };
   });
   on("session.start", (_, e) => ({ cwd: e.cwd }));
+  on("skill.prompt", (_, e) => ({ text: e.text }));
   return { stored, submitted, origins, opened, shown };
 }
 
@@ -282,6 +292,8 @@ test("a Builder tool call suggests a next step, until the person types their own
   const createThunk = builderCall("create_thunk", { name: "Invoices" });
 
   await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+
+  await readGuide($);
   await $.tool.call(createThunk);
   const band = await $.ui.mount({ ...BAND, surface: "desktop" });
   expect((await band.find({ type: "Button", key: "next" }))?.text).toBe(
@@ -331,6 +343,8 @@ test("Claude's unfiltered list_thunks is kept for the next session, not listed i
   on("tool.call", () => ({ result: {}, text: JSON.stringify(THUNKS) }));
 
   await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+
+  await readGuide($);
   await $.tool.call(
     builderCall("list_thunks", { access: "owned", search: "inv" }),
   );
@@ -370,6 +384,8 @@ test("a new session starts with the thunks Claude listed last time", async ($, o
   });
 
   await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+
+  await readGuide($);
   expect(shown).toContainEqual(
     expect.objectContaining({ text: "Thunk.AI · 1 thunks" }),
   );
@@ -436,6 +452,8 @@ test("a thunk Claude works on becomes the band's thunk, with actions on it", asy
   }));
 
   await $.session.start({ cwd: "/", surface: null, isInteractive: true });
+
+  await readGuide($);
   await $.tool.call(builderCall("get_thunk", { thunkId: "T1" }));
 
   const band = await $.ui.mount({ ...BAND, surface: "desktop" });
@@ -555,6 +573,8 @@ test("names and ids from the server are cleaned before they reach a prompt", asy
   }));
 
   await $.session.start({ cwd: "/", surface: null, isInteractive: true });
+
+  await readGuide($);
   await $.tool.call(builderCall("list_thunks", { access: "owned" }));
   expect(stored.get("thunks")).toMatchObject({
     thunks: [
@@ -604,6 +624,8 @@ test("copy_thunk's source is not taken for the thunk being worked on", async ($,
   }));
 
   await $.session.start({ cwd: "/", surface: null, isInteractive: true });
+
+  await readGuide($);
   await $.tool.call(builderCall("copy_thunk", { thunkId: "T5" }));
   const band = await $.ui.mount({ ...BAND, surface: "desktop" });
   expect(
@@ -660,4 +682,65 @@ test("Claude opening a listed thunk's page makes the pane step aside; the row st
     (await band.find({ type: "Text", text: /Invoice intake/ }))?.text,
   ).toBe("Invoice intake");
   await band.unmount();
+});
+
+test("Builder tools are refused until the thunk-guide skill loads", async ($, on) => {
+  engine(on, [{ isPlaced: true, isShown: true }]);
+  on("tool.call", () => ({ result: {} }));
+  const getThunk = builderCall("get_thunk", { thunkId: "T1" });
+
+  await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+  const refused = await $.tool.call(getThunk);
+  expect(refused.deny).toMatch(/thunk-skills:thunk-guide/);
+
+  // Another skill does not open the gate.
+  await $.skill.prompt({ skill: "commit", text: "commit" });
+  expect((await $.tool.call(getThunk)).deny).toMatch(/thunk-guide/);
+
+  await readGuide($);
+  expect((await $.tool.call(getThunk)).deny).toBeUndefined();
+});
+
+test("the bare thunk-guide skill name opens the gate too", async ($, on) => {
+  engine(on, [{ isPlaced: true, isShown: true }]);
+  on("tool.call", () => ({ result: {} }));
+
+  await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+  await $.skill.prompt({ skill: "thunk-guide", text: "the guide" });
+  const ran = await $.tool.call(builderCall("get_thunk", { thunkId: "T1" }));
+  expect(ran.deny).toBeUndefined();
+});
+
+test("the guide gate leaves other tools and other Thunk.AI servers alone", async ($, on) => {
+  engine(on, [{ isPlaced: true, isShown: true }]);
+  on("tool.call", () => ({ result: {} }));
+
+  await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+  // The ops server (mcp__thunk__*) and a hand-added Builder server under its own name.
+  const ops = await $.tool.call({
+    tool: "mcp__thunk__context_current",
+  } as never);
+  expect(ops.deny).toBeUndefined();
+  const handAdded = await $.tool.call({
+    tool: "mcp__thunk-builder__list_thunks",
+  } as never);
+  expect(handAdded.deny).toMatch(/thunk-guide/);
+});
+
+test("the system prompt asks Claude to load the guide before the Builder tools", async ($, on) => {
+  engine(on, [{ isPlaced: true, isShown: true }]);
+  on("prompt.compose", () => ({ sections: [] }));
+
+  await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+  const composed = await $.prompt.compose({
+    model: "claude-opus-5-5",
+    promptModel: "claude-opus-5-5",
+    surfaces: ["desktop"],
+    tools: [],
+    outputStyle: { name: "default", isKeepingCodingInstructions: true },
+    traits: [],
+  });
+  expect(
+    composed.sections.find((one) => one.id === "thunk-skills:read-guide")?.text,
+  ).toMatch(/load the thunk-guide skill/);
 });
