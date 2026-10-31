@@ -36,20 +36,20 @@ Contents (line numbers in this file):
   - How to read an article: lines 275-286
   - Rules: lines 287-296
   - Before finishing: lines 297-332
-- Build or change a thunk: lines 333-808
+- Build or change a thunk: lines 333-813
   - Keep the user in the loop while you build: lines 335-406
   - Build order: lines 407-735
-  - Write readable directions and code: lines 736-808
-- Explain a thunk: lines 809-867
-- Troubleshoot or analyze a thunk: lines 868-879
-- Help articles for each task: lines 880-973
-  - Start here (first thunk in a session): lines 882-890
-  - Design the workflow: lines 891-905
-  - Write step AI instructions: lines 906-917
-  - Tools, connections and content: lines 918-931
-  - Kinds of thunk and how they are reached: lines 932-941
-  - Run and test: lines 942-957
-  - Diagnose a run: lines 958-973
+  - Write readable directions and code: lines 736-813
+- Explain a thunk: lines 814-872
+- Troubleshoot or analyze a thunk: lines 873-884
+- Help articles for each task: lines 885-978
+  - Start here (first thunk in a session): lines 887-895
+  - Design the workflow: lines 896-910
+  - Write step AI instructions: lines 911-922
+  - Tools, connections and content: lines 923-936
+  - Kinds of thunk and how they are reached: lines 937-946
+  - Run and test: lines 947-962
+  - Diagnose a run: lines 963-978
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -805,6 +805,11 @@ is saved, so reformat the code and send it again as an `update`.
 Code that is not valid JavaScript, for example a script cut off part
 way, is refused: nothing is saved for that operation, and the error
 names the line where the code breaks. Fix it and send it again.
+To change part of a large code tool, send an `update` with `codeEdits`
+instead of `tool`: a list of `find` and `replace` texts, applied in
+order to the saved code. Each `find` must appear exactly once in the
+code, or nothing is saved and the error says how many times it matched.
+Read the current code first, asking for the tool's definition with its implementation included.
 
 ## Explain a thunk
 
