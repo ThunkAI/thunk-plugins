@@ -36,20 +36,20 @@ Contents (line numbers in this file):
   - How to read an article: lines 275-286
   - Rules: lines 287-296
   - Before finishing: lines 297-332
-- Build or change a thunk: lines 333-813
+- Build or change a thunk: lines 333-823
   - Keep the user in the loop while you build: lines 335-406
-  - Build order: lines 407-735
-  - Write readable directions and code: lines 736-813
-- Explain a thunk: lines 814-872
-- Troubleshoot or analyze a thunk: lines 873-884
-- Help articles for each task: lines 885-978
-  - Start here (first thunk in a session): lines 887-895
-  - Design the workflow: lines 896-910
-  - Write step AI instructions: lines 911-922
-  - Tools, connections and content: lines 923-936
-  - Kinds of thunk and how they are reached: lines 937-946
-  - Run and test: lines 947-962
-  - Diagnose a run: lines 963-978
+  - Build order: lines 407-745
+  - Write readable directions and code: lines 746-823
+- Explain a thunk: lines 824-882
+- Troubleshoot or analyze a thunk: lines 883-894
+- Help articles for each task: lines 895-989
+  - Start here (first thunk in a session): lines 897-905
+  - Design the workflow: lines 906-920
+  - Write step AI instructions: lines 921-932
+  - Tools, connections and content: lines 933-947
+  - Kinds of thunk and how they are reached: lines 948-957
+  - Run and test: lines 958-973
+  - Diagnose a run: lines 974-989
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -596,8 +596,10 @@ For a new workflow or chat-app thunk:
    as an `ai` tool (with one-line `userGuidance`), because a new AI tool
    picks up the thunk's enabled tools only when it is added, not when a
    stub is changed into one. To change what an `ai` or `code` tool may
-   call later, send `toolConfig` on its update, with the
-   same ops a step's `toolConfig` takes.
+   call later, send `toolConfig` on its update, with the enable/disable
+   library and tool ops a step's `toolConfig` takes. Map I/O
+   (`set_io_bindings`) is a step setting only
+   (`map-a-tools-inputs-and-outputs-to-the-work-item`).
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
    - before you add any property, audit its type. List every fact this
      step, a later step or a tool needs, one property per fact, and give
@@ -637,11 +639,14 @@ For a new workflow or chat-app thunk:
      change; prefer it for every argument a property holds, above all
      an `enum`, number, date or object. If an argument carries a fact about the work item
      that no property holds, the work item never records it: add the
-     property. The step's agent passes every argument; nothing fills one
-     in from the work item. That holds for an argument typed as a
-     reference to a property (`x-thunk-ref`) too: it gets only that
-     property's type, so a call without it fails. A Conversation input
-     is the one exception (`how-to-build-a-tool-that-uses-a-conversation`);
+     property. The step's agent passes every argument unless you map
+     that field with `set_io_bindings` (Map I/O): then the platform
+     fills it from the work item at call time
+     (`map-a-tools-inputs-and-outputs-to-the-work-item`). A reference
+     (`x-thunk-ref`) still only copies the property's type, so a call
+     without that argument fails unless the field is mapped. A
+     Conversation input is the other exception
+     (`how-to-build-a-tool-that-uses-a-conversation`);
    - mark the outputs the step must produce with `requiredOutputProperties`
      on the same update (and inputs it cannot start without with
      `requiredInputProperties`). This, not the property's own
@@ -655,6 +660,11 @@ For a new workflow or chat-app thunk:
      (the full definition, written as **Write
      readable directions and code** says), try each tool through the
      Builder MCP, and enable them on the step (`toolConfig`);
+   - when a large property should go into a tool as-is, or a large tool
+     result should land on a step output without the agent copying it,
+     map those fields with `set_io_bindings` on that step's `toolConfig`
+     (`map-a-tools-inputs-and-outputs-to-the-work-item`). Map only the
+     fields that are being copied; leave judgment arguments for the model;
    - set the plan's input bindings while doing the first step and its output
      bindings while doing the last;
    - check the result in the design section `interface`. It shows, for
@@ -925,6 +935,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Task | Slugs |
 | --- | --- |
 | Pick / enable tools on a step (`toolConfig`) | `ai-tools`, `ai-tool-libraries`, `conditional-tool-availability` |
+| Map a tool's inputs/outputs onto the step (`set_io_bindings`) | `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Build custom tools | `custom-tools`, `how-custom-code-tools-work`, `how-to-build-a-tool-wrapper` |
 | Specific tool recipes | `how-to-build-a-custom-database-tool`, `how-to-build-a-spreadsheet-lookup-tool`, `how-to-build-a-tool-that-uses-a-conversation` |
 | Test a tool | `testing-custom-tools` |
@@ -969,8 +980,8 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Agent did the wrong thing / unreliable | `troubleshooting-ai-reliability-issues`, `ai-reliability-mechanisms`, then `how-to-write-effective-directions` to fix the instructions |
 | Inspect what happened | `step-diagnostics`, `tool-call-history-and-performance` |
 | What a tool really received and returned, across work items | `tool-call-history-and-performance`, `testing-custom-tools` |
-| Too slow | **`time-analysis-how-long-your-thunk-takes`**, `what-working-waiting-and-waiting-for-tool-mean` |
-| Too expensive | **`token-costs-what-your-thunk-spends-on-ai`**, `understanding-llm-costs-and-latency` |
+| Too slow | **`time-analysis-how-long-your-thunk-takes`**, `what-working-waiting-and-waiting-for-tool-mean`, `map-a-tools-inputs-and-outputs-to-the-work-item` |
+| Too expensive | **`token-costs-what-your-thunk-spends-on-ai`**, `understanding-llm-costs-and-latency`, `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Work item stuck waiting | `find-work-that-is-waiting-on-you`, `how-an-ai-agent-ends-a-run` |
 
 Each of the bold articles opens with a **Concepts** section (how to think
