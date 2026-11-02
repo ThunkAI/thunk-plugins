@@ -25,31 +25,31 @@ of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
 - Pick your path: lines 57-72
-- Common instructions: lines 73-332
+- Common instructions: lines 73-340
   - The Builder MCP and its tools: lines 77-91
-  - Start a session first: lines 92-113
-  - More than one tenant: lines 114-123
-  - The Builder MCP informs; the browser pane shows: lines 124-134
-  - Open the thunk in the browser pane: lines 135-245
-  - Files: lines 246-267
-  - Offer numbered choices when you stop: lines 268-274
-  - How to read an article: lines 275-286
-  - Rules: lines 287-296
-  - Before finishing: lines 297-332
-- Build or change a thunk: lines 333-823
-  - Keep the user in the loop while you build: lines 335-406
-  - Build order: lines 407-745
-  - Write readable directions and code: lines 746-823
-- Explain a thunk: lines 824-882
-- Troubleshoot or analyze a thunk: lines 883-894
-- Help articles for each task: lines 895-989
-  - Start here (first thunk in a session): lines 897-905
-  - Design the workflow: lines 906-920
-  - Write step AI instructions: lines 921-932
-  - Tools, connections and content: lines 933-947
-  - Kinds of thunk and how they are reached: lines 948-957
-  - Run and test: lines 958-973
-  - Diagnose a run: lines 974-989
+  - Start a session first: lines 92-121
+  - More than one tenant: lines 122-131
+  - The Builder MCP informs; the browser pane shows: lines 132-142
+  - Open the thunk in the browser pane: lines 143-253
+  - Files: lines 254-275
+  - Offer numbered choices when you stop: lines 276-282
+  - How to read an article: lines 283-294
+  - Rules: lines 295-304
+  - Before finishing: lines 305-340
+- Build or change a thunk: lines 341-831
+  - Keep the user in the loop while you build: lines 343-414
+  - Build order: lines 415-753
+  - Write readable directions and code: lines 754-831
+- Explain a thunk: lines 832-890
+- Troubleshoot or analyze a thunk: lines 891-902
+- Help articles for each task: lines 903-999
+  - Start here (first thunk in a session): lines 905-913
+  - Design the workflow: lines 914-928
+  - Write step AI instructions: lines 929-940
+  - Tools, connections and content: lines 941-956
+  - Kinds of thunk and how they are reached: lines 957-966
+  - Run and test: lines 967-982
+  - Diagnose a run: lines 983-999
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -110,6 +110,14 @@ is always refused with `session_not_found`. Either way, start a session
 again and carry on. Over HTTP the id travels in the `X-Builder-Session` header
 instead. Sessions are yours alone and show up under Account → Builder →
 Sessions.
+
+One session covers the whole chat. Reuse its `sessionId` for every Builder
+call in every later turn: a new turn is not a reason to start a new session.
+Start a new session only when no `sessionId` appears earlier in this chat,
+when a call is refused with `session_required` or `session_not_found`, or
+when the user moves to work with a different `purpose`, such as from building
+a thunk to measuring its cost. Going on to another thunk with the same
+purpose keeps the session.
 
 ### More than one tenant
 
@@ -914,7 +922,7 @@ In this skill that article is `analyzing.md`, in this folder: read it there. Tro
 | Run a step only when / until a condition holds | `run-a-step-only-when-a-condition-matches` |
 | Error handling and when a step saves results | `choose-how-a-step-handles-errors-and-when-it-saves-results` |
 | Human approval / review gates | `set-human-approval-gates-for-your-workflow`, `ai-governance` |
-| Scheduled / recurring steps | `scheduled-work-on-workflow-steps` |
+| Scheduled / recurring steps — re-run a later step on existing work items, or add a new work item on a timer (schedule **Add to Work Items**, the collect step; a later step's schedule never creates work items) | `scheduled-work-on-workflow-steps` |
 | How an agent finishes (conclude, ask, error) | `how-an-ai-agent-ends-a-run` |
 | Recurring patterns | `work-tracker-pattern` |
 
@@ -937,6 +945,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Pick / enable tools on a step (`toolConfig`) | `ai-tools`, `ai-tool-libraries`, `conditional-tool-availability` |
 | Map a tool's inputs/outputs onto the step (`set_io_bindings`) | `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Build custom tools | `custom-tools`, `how-custom-code-tools-work`, `how-to-build-a-tool-wrapper` |
+| Reuse a custom AI or code tool's result for identical lookups (opt in only when the tool reads and does not change anything; clear the cache after you change the tool) | `cache-results-of-a-custom-ai-or-code-tool` |
 | Specific tool recipes | `how-to-build-a-custom-database-tool`, `how-to-build-a-spreadsheet-lookup-tool`, `how-to-build-a-tool-that-uses-a-conversation` |
 | Test a tool | `testing-custom-tools` |
 | Give a tool unit tests, run them, read graded results — test one tool without a work item; iterate on selected cases (not saved), then run the whole suite once (saved as its test status) | `testing-custom-tools`, `custom-tools` |
@@ -980,6 +989,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Agent did the wrong thing / unreliable | `troubleshooting-ai-reliability-issues`, `ai-reliability-mechanisms`, then `how-to-write-effective-directions` to fix the instructions |
 | Inspect what happened | `step-diagnostics`, `tool-call-history-and-performance` |
 | What a tool really received and returned, across work items | `tool-call-history-and-performance`, `testing-custom-tools` |
+| A custom AI or code tool skipped nested work, or reused an answer you expected to change | `cache-results-of-a-custom-ai-or-code-tool`, `tool-call-history-and-performance` |
 | Too slow | **`time-analysis-how-long-your-thunk-takes`**, `what-working-waiting-and-waiting-for-tool-mean`, `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Too expensive | **`token-costs-what-your-thunk-spends-on-ai`**, `understanding-llm-costs-and-latency`, `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Work item stuck waiting | `find-work-that-is-waiting-on-you`, `how-an-ai-agent-ends-a-run` |
