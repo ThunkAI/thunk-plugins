@@ -253,6 +253,7 @@ test("the band's rows and buttons are spaced apart on the desktop", async ($, on
   on("tool.call", () => ({ result: {} }));
 
   await $.session.start({ cwd: "/", surface: null, isInteractive: false });
+  await readGuide($);
   const chip = await $.ui.mount({ ...BAND, surface: "desktop" });
   expect(await chip.find({ type: "Button", key: "open-pane" })).toBeDefined();
   expectSpaced(await chip.find({ type: "Box" }));

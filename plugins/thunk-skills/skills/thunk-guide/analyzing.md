@@ -27,18 +27,18 @@ Contents (line numbers in this file):
   - B7. Cost: lines 348-355
   - B8. Security: lines 356-368
   - B9. Report: lines 369-389
-- Scenario C — Cleanup / review / upgrade: lines 390-696
+- Scenario C — Cleanup / review / upgrade: lines 390-701
   - C1. Review: lines 402-414
   - C2. Sort the findings, propose, then stop: lines 415-438
-  - C3. Mock the external effects: lines 439-489
-  - C4. Copy and swap in the mock: lines 490-525
-  - C5. Tests from real data: lines 526-553
-  - C6. Fix in the copy: lines 554-601
-  - C7. Run, grade, and compare models: lines 602-638
-  - C8. The pre-production checklist, hand over and clean up: lines 639-661
-  - C9. The report (required): lines 662-696
-- Rules: lines 697-709
-- The method articles: lines 710-718
+  - C3. Mock the external effects: lines 439-494
+  - C4. Copy and swap in the mock: lines 495-530
+  - C5. Tests from real data: lines 531-558
+  - C6. Fix in the copy: lines 559-606
+  - C7. Run, grade, and compare models: lines 607-643
+  - C8. The pre-production checklist, hand over and clean up: lines 644-666
+  - C9. The report (required): lines 667-701
+- Rules: lines 702-714
+- The method articles: lines 715-723
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI Builder MCP**.
 
@@ -235,7 +235,7 @@ infrastructure. Instead:
 ## Scenario A — Troubleshoot a specific problem
 
 Go deep on one thing. Read `reading-a-failed-run`, `step-diagnostics` and,
-for wrong behaviour, `troubleshooting-ai-reliability-issues`; for a stuck
+for wrong behavior, `troubleshooting-ai-reliability-issues`; for a stuck
 item, `how-an-ai-agent-ends-a-run`.
 
 1. **Locate the run.** From the work item id (or, for a step, a few recent
@@ -393,7 +393,7 @@ Improve the design, and prove the improvement, without touching the original
 or any system it writes to. The method is `improve-a-live-thunk-safely`;
 this section is how to carry it out through the Builder MCP.
 
-**The goal is fixed up front: keep the original's business behaviour and
+**The goal is fixed up front: keep the original's business behavior and
 remove its execution and data-integrity failures.** A change to what the
 workflow decides (who gets handed off, what counts as a match, whether to
 retry) is a business-logic change: it goes to the owner as a design question
@@ -459,8 +459,13 @@ customer data stays inside the mock thunk:
     connection tools can carry a suffix). It lists the tool's recorded calls,
     newest first, each with its full input and output text (raise
     `maxOutputChars` for large results) and the workitem and step that made
-    it; filter by `workItemId`, `days` or `status: "error"`, and page with
-    `nextCursor`. Owner or thunk Admin only.
+    it; filter by `workItemId`, `days`, `status: "error"`, or a
+    case-sensitive substring of the stored input (`inputContains`) or full
+    output (`outputContains`). Substring filters scan stored calls in
+    memory (no search index) and stop after 1000 rows with a note that
+    the page may be incomplete (an empty page is not "no matches") and
+    `nextCursor` when more remain. Page with `nextCursor`. Owner or thunk
+    Admin only.
   - **One call at a time:** the step history `depth: "full"` on the step
     that made the call shows its args, but **the result is cut off** after a
     few hundred characters. The full result is also in
@@ -525,7 +530,7 @@ has been seen to let one through. Remove the live tool from the copy instead.
 
 ### C5. Tests from real data
 
-- One item per behaviour: the happy path, **each failure class found in the
+- One item per behavior: the happy path, **each failure class found in the
   review** (named `REG-01`, `REG-02`… so the report can point at them), each
   injected failure (500, 429, already-done), and the non-cases (not a
   request, missing input, several records in one input). Typically 10–25.
@@ -596,8 +601,8 @@ in `troubleshooting-ai-reliability-issues`; follow
 
 Record each change as **Change / Why** as you make it — the report is built
 from these. Verify each change in the response. Set a step's `runCondition`
-(and its other Workflow Options) as an update once the step exists, then
-check the returned step.
+(and its other Workflow Options) as a separate update once the step
+exists, then check the returned step.
 
 ### C7. Run, grade, and compare models
 
@@ -619,7 +624,7 @@ check the returned step.
   noise (with 40 chat tests, two or three either way is common). Compare per
   test: which ones a change fixed, and which ones it broke.
 - For a failure, decide: the thunk is wrong (fix and re-run), the assertion is
-  wrong (`set` then `regrade`), the behaviour is a
+  wrong (`set` then `regrade`), the behavior is a
   pending design question (leave it failing and point at the question), or
   the environment blocks it (e.g. the copy cannot read the customer's files)
   — say so plainly rather than weakening the assertion.
@@ -667,7 +672,7 @@ the docx skill, render it once to check the layout (`qlmanage -t` works when
 LibreOffice is missing), and give the user the path. Sections:
 
 1. **Header:** the original and the copy (name, id, link), what the workflow
-   does in two sentences, and the goal (keep business behaviour, remove
+   does in two sentences, and the goal (keep business behavior, remove
    execution and data-integrity failures; business changes wait for the
    owner). Mark test-only infrastructure (e.g. in italics) wherever it
    appears.

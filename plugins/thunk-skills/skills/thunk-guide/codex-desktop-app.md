@@ -36,24 +36,3 @@ returns none, so calling it for each view fills the panel with tabs. Call it
    open it. Call `open_in_codex` again only when the user asks to see it in
    the panel, or says they closed the tab. With Computer Use, also call it
    again when `listTabs` shows no tab on the thunk URL's site.
-
-## The Thunk.AI card
-
-The Codex app shows a **Thunk.AI card** in the conversation under some Builder
-tool results. You don't call anything to show it:
-
-- **The home card** appears when you start a Builder session. A user new to
-  Thunk.AI sees first things to try. Anyone else sees buttons to list their
-  thunks, build a new one or check them for errors.
-- **A thunk's card** appears when you read a thunk's summary, or create or
-  copy a thunk, once the thunk is ready. It shows the thunk's name, its phase
-  and whether it is paused, with buttons to analyze it, explain it, debug its
-  errors, suggest improvements or open it. A public sample's card offers to
-  explain it, copy it or open it.
-
-A button sends its prompt as the user's own message: treat it as their
-request. Don't read the thunk again just to show the card. The card is not a
-view of the thunk: keep the thunk itself in the in-app browser, as in **Open
-the thunk once, then move that tab**. The card doesn't carry your suggested
-next step, so still end your reply with the next steps. Where the card does
-not render (in the Codex CLI, for example), there is nothing extra to do.

@@ -36,20 +36,20 @@ Contents (line numbers in this file):
   - How to read an article: lines 283-294
   - Rules: lines 295-304
   - Before finishing: lines 305-340
-- Build or change a thunk: lines 341-831
+- Build or change a thunk: lines 341-857
   - Keep the user in the loop while you build: lines 343-414
-  - Build order: lines 415-753
-  - Write readable directions and code: lines 754-831
-- Explain a thunk: lines 832-890
-- Troubleshoot or analyze a thunk: lines 891-902
-- Help articles for each task: lines 903-999
-  - Start here (first thunk in a session): lines 905-913
-  - Design the workflow: lines 914-928
-  - Write step AI instructions: lines 929-940
-  - Tools, connections and content: lines 941-956
-  - Kinds of thunk and how they are reached: lines 957-966
-  - Run and test: lines 967-982
-  - Diagnose a run: lines 983-999
+  - Build order: lines 415-766
+  - Write readable directions and code: lines 767-857
+- Explain a thunk: lines 858-916
+- Troubleshoot or analyze a thunk: lines 917-928
+- Help articles for each task: lines 929-1025
+  - Start here (first thunk in a session): lines 931-939
+  - Design the workflow: lines 940-954
+  - Write step AI instructions: lines 955-966
+  - Tools, connections and content: lines 967-982
+  - Kinds of thunk and how they are reached: lines 983-992
+  - Run and test: lines 993-1008
+  - Diagnose a run: lines 1009-1025
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -595,6 +595,8 @@ For a new workflow or chat-app thunk:
    `{"type":"string","enum":["Red","Amber","Green"]}`. An `ai` tool's output
    is an object of fields. A `classifier` needs at least one `YES_OR_NO`
    field, or a `TEXT` field with an `enum` constraint, before it can be used.
+   Classifier tools are in preview and are not available on every account.
+   When classifier is not offered, use an `ai` tool instead.
    Leave the output out of a later update to keep it; `{}` or `[]` clears
    it. A `documentTemplate` or `spreadsheetLookup` tool's output is set by
    its type, so you cannot declare one; the design still returns it, and an
@@ -606,8 +608,11 @@ For a new workflow or chat-app thunk:
    stub is changed into one. To change what an `ai` or `code` tool may
    call later, send `toolConfig` on its update, with the enable/disable
    library and tool ops a step's `toolConfig` takes. Map I/O
-   (`set_io_bindings`) is a step setting only
-   (`map-a-tools-inputs-and-outputs-to-the-work-item`).
+   (`set_io_bindings`) is a step setting, and the same op on an `ai`
+   tool's nested `toolConfig` maps nested tools onto that AI tool's
+   own inputs and outputs
+   (`map-a-tools-inputs-and-outputs-to-the-work-item`). A `code` tool's
+   nested `toolConfig` does not take it.
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
    - before you add any property, audit its type. List every fact this
      step, a later step or a tool needs, one property per fact, and give
@@ -661,7 +666,8 @@ For a new workflow or chat-app thunk:
      `constraints.required`, is what stops the step finishing without the
      value: `constraints.required` is checked only when a work item is
      created. For a value needed only in some cases, use `finishCondition`
-     instead (`schematized-state`, "Choosing which outputs are required");
+     instead, set as a separate update (`schematized-state`,
+     "Choosing which outputs are required");
    - write its full directions, in the shape **Write readable directions
      and code** gives, replacing the skeleton paragraph;
    - replace the stubs of the tools it uses with real implementations
@@ -721,6 +727,13 @@ For a new workflow or chat-app thunk:
    at an angle, cropped, creased, faded, blurred, shadowed). Keep the values
    the tests assert on readable. Tidy inputs
    pass tests that real ones fail (`building-a-test-plan`).
+
+   **Write the sample data yourself.** The Builder MCP has no tool that
+   generates sample work items the way the app's AI-generated sample data
+   option does. Read the thunk's work item properties from its definition,
+   write the values for each work item yourself, and create the work items one
+   at a time. Keep the data you sent for each one, so you can create the same
+   work items again when you need to repeat a test.
 6. **Harden it when the design is nearly complete.** Once the main path
    passes and the steps and tools have stopped changing, add test work items
    for the edge and failure cases: the edge of the range, missing data, bad
@@ -828,6 +841,19 @@ instead of `tool`: a list of `find` and `replace` texts, applied in
 order to the saved code. Each `find` must appear exactly once in the
 code, or nothing is saved and the error says how many times it matched.
 Read the current code first, asking for the tool's definition with its implementation included.
+
+**Partial updates.** To change part of a tool without resending it, send
+an `update` with a patch instead of `tool`. `guidanceEdits` is the same
+kind of `find` / `replace` list as `codeEdits`, applied to an AI tool's
+saved instructions; each `find` must appear exactly once. `cachePolicy`
+changes whether identical lookups are reused and for how long; omit a
+field to keep the stored value. `addSchemaField` and `removeSchemaField`
+add or remove one top-level field on the input or output schema (`side`;
+omit `side` for the input) on any tool that authors its schema — not a
+document template or spreadsheet lookup. Do not send both field
+operations in the same update, and do not mix a patch with `tool` or
+`codeEdits`. Read the current tool first, asking for the tool's
+definition with its implementation included.
 
 ## Explain a thunk
 
@@ -978,7 +1004,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Pause / resume | `pause-and-restart-a-thunk` |
 | Delete work items | `how-to-work-with-your-work-items-list`, `data-retention` |
 | Add people to a thunk (people outside your organization: the user adds them at `shareUrl`) | `users-and-access-controls`, `users-organizations-and-governance` |
-| Read or update a thunk's work log (Owner or Admin only; Production does not block this). For a unit of definition edits, begin a work-log note first and end it when you are done (end is optional). create is a closed note that does not attach later edits. | `thunk-work-log`, `users-and-access-controls` |
+| Read or update a thunk's work log (Owner or Admin only; Production does not block this). For a unit of definition edits, begin a work-log note first and end it when you are done (end is optional). create is a closed note that does not attach later edits. Each note includes a url that opens that note; the response url is the Work Log tab. | `thunk-work-log`, `users-and-access-controls` |
 
 ### Diagnose a run
 

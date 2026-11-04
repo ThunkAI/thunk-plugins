@@ -13,10 +13,9 @@ This plugin carries:
   improvements for the thunk you have open; `/thunk <name or id>` opens a thunk, `/thunk` the
   pane, and `/thunk-welcome` shows the welcome again. These show in the Claude desktop app's Code tab. In the terminal nothing shows
   unless you run `/thunk` or `/thunk-welcome`, and they do not run in claude.ai or Cowork.
-- **Next steps and Thunk.AI cards** (Codex): hooks that tell Codex the suggested next step after
-  it uses a Builder tool, and have it show the Thunk.AI home card and a card for the thunk you
-  are working on (Analyze, Explain, Debug errors, Suggest improvements) in the Codex app. Codex
-  asks you to trust the hooks once, and again after an update that changes them.
+- **Next steps** (Codex): hooks that tell Codex the suggested next step after it uses a Builder
+  tool, and welcome you with things to try on your first session. Codex asks you to trust the
+  hooks once, and again after an update that changes them.
 
 The Builder MCP tools come from the plugin for your Thunk.AI tenant, which installs this one
 with it.

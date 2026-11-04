@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "Thunk.AI Skills",
     "shortDescription": "Build, test and analyze Thunk.AI thunks",
-    "longDescription": "The thunk-guide skill: which Thunk.AI help articles to read, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. Its hooks suggest the next step after Codex uses a Builder tool and show the Thunk.AI cards in the Codex app. Also install the plugin for your Thunk.AI tenant, for the Builder MCP tools.",
+    "longDescription": "The thunk-guide skill: which Thunk.AI help articles to read, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. Its hooks suggest the next step after Codex uses a Builder tool and welcome you on your first session. Also install the plugin for your Thunk.AI tenant, for the Builder MCP tools.",
     "developerName": "Thunk.AI",
     "category": "Productivity",
     "websiteURL": "https://info.thunk.ai",
