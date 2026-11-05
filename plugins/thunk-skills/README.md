@@ -17,7 +17,7 @@ This plugin carries:
   tool, and welcome you with things to try on your first session. Codex asks you to trust the
   hooks once, and again after an update that changes them.
 
-The Builder MCP tools come from the plugin for your Thunk.AI tenant, which installs this one
+The FDA MCP tools come from the plugin for your Thunk.AI tenant, which installs this one
 with it.
 
 ## Install
@@ -30,7 +30,7 @@ claude plugin marketplace add ThunkAI/thunk-plugins
 ```
 
 Then run `/mcp`, select
-its `thunk-builder` server, choose **Authenticate** and sign in with your Thunk.AI account.
+its `thunk-fda` server, choose **Authenticate** and sign in with your Thunk.AI account.
 The Thunk.AI pane opens at the next session start and lists your thunks once you are signed in.
 
 ## Files

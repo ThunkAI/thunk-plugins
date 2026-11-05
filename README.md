@@ -6,7 +6,7 @@ Claude Code and from Codex. This repository is the `thunk-ai` plugin marketplace
 | Plugin | What it adds |
 | --- | --- |
 | `thunk-skills` | The thunk-guide skill: which [Thunk.AI help articles](https://info.thunk.ai) to read for a task, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. |
-| `thunk-prod` | The Thunk.AI Builder MCP server (`https://postern.thunk.ai/api/builder/mcp`): tools to create, edit, run and inspect thunks as your own Thunk.AI account. |
+| `thunk-prod` | The Thunk.AI FDA MCP server (`https://postern.thunk.ai/api/builder/mcp`): tools to create, edit, run and inspect thunks as your own Thunk.AI account. |
 
 ## Claude Code
 
@@ -20,7 +20,7 @@ Installing `thunk-prod` installs `thunk-skills` too. In a session that is alread
 
 Then, once:
 
-1. **Sign in.** Run `/mcp`, select `plugin:thunk-prod:thunk-builder`, choose
+1. **Sign in.** Run `/mcp`, select `plugin:thunk-prod:thunk-fda`, choose
    **Authenticate** and sign in with your Thunk.AI account.
 2. **Turn on auto-update.** Run `/plugin`, open **Marketplaces**, select `thunk-ai` and
    choose **Enable auto-update**. Claude Code keeps auto-update off for marketplaces outside
@@ -36,7 +36,7 @@ Without auto-update, get updates by hand with `/plugin marketplace update thunk-
 codex plugin marketplace add ThunkAI/thunk-plugins
 codex plugin add thunk-skills@thunk-ai
 codex plugin add thunk-prod@thunk-ai
-codex mcp login thunk-builder-prod
+codex mcp login thunk-fda-prod
 ```
 
 Codex has no plugin dependencies, so add both plugins. Codex copies a plugin when you add it:
@@ -46,9 +46,13 @@ plugin again.
 `thunk-skills` was called `thunk-builder` until 2026-10-24. If you added it under that name,
 remove the old copy: `codex plugin remove thunk-builder@thunk-ai`.
 
+The MCP server was called `thunk-builder` until 2026-11-04 and is now `thunk-fda`. Sign-ins are
+kept per server name, so after the update sign in once more: in Claude Code, `/mcp` →
+`plugin:thunk-prod:thunk-fda` → **Authenticate**; in Codex, `codex mcp login thunk-fda-prod`.
+
 ## Claude and ChatGPT chat
 
-Chat apps don't install plugins. Add the Builder MCP as a custom connector instead, with the
+Chat apps don't install plugins. Add the FDA MCP as a custom connector instead, with the
 URL `https://postern.thunk.ai/api/builder/mcp`, and sign in with your Thunk.AI account.
 
 ## About this repository

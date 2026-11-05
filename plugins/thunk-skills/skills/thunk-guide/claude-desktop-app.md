@@ -4,10 +4,10 @@
 
 This guide is for AI agents running in the **Claude desktop app** (or in a
 cloud session linked to the user's computer) that work on thunks through the
-**Thunk.AI Builder MCP**. It covers how to open a thunk in the app's browser
+**Thunk.AI FDA MCP**. It covers how to open a thunk in the app's browser
 pane and keep the pane on what you are working on. Why you show the thunk, and
 which view to show for each change, are in
-Building thunks with the Builder MCP (help article `build-thunks-with-the-builder-mcp`)
+Building thunks with the FDA MCP (help article `build-thunks-with-the-builder-mcp`)
 (**Open the thunk in the browser pane**). For the Codex desktop app, read
 Showing a thunk in the Codex desktop app (help article `show-a-thunk-in-the-codex-desktop-app`)
 instead.
@@ -17,7 +17,7 @@ instead.
 Open the tenant's Thunk.AI app in the browser pane and complete steps 3–5 of
 **Open and keep the pane** (site approval, sign-in, a visible pane) before
 building, so the user approves and signs in once, up front. The tenant's app
-is the site of any thunk `url` the Builder MCP returns (for example from
+is the site of any thunk `url` the FDA MCP returns (for example from
 the thunk list).
 
 Do this in the first turn where you will build, change or run a thunk,
@@ -78,5 +78,5 @@ to the user's computer. This guide names them by the part after that prefix.
    retry, and don't switch to Claude in Chrome unless they ask.
 7. **Keep it current.** Navigate the same tab as you work, following
    **Show each change in the pane** in
-   Building thunks with the Builder MCP (help article `build-thunks-with-the-builder-mcp`). Don't open
+   Building thunks with the FDA MCP (help article `build-thunks-with-the-builder-mcp`). Don't open
    a new tab for each view.

@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "thunk-builder-prod": {
+    "thunk-fda-prod": {
       "type": "http",
       "url": "https://postern.thunk.ai/api/builder/mcp"
     }

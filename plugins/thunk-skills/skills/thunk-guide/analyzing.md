@@ -40,12 +40,12 @@ Contents (line numbers in this file):
 - Rules: lines 702-714
 - The method articles: lines 715-723
 
-This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI Builder MCP**.
+This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
 It follows on from `build-thunks-with-the-builder-mcp`, which says which help articles to read
 before each kind of work (directions, schema, tools, tests, diagnosis) and
 how to open the thunk beside the conversation; those instructions apply here too. This guide is the procedure for analyzing a
-thunk through the Builder MCP; the help articles hold the method itself (what
+thunk through the FDA MCP; the help articles hold the method itself (what
 to look for and why) and are the reference. Read the articles a step names
 when you reach it — do not work from memory. Each pointer in this guide carries a
 one-line summary so the procedure still works if an article is not yet
@@ -68,11 +68,11 @@ a cleanup starts from a health check's findings. Say when you switch.
 
 ### Target and window
 
-- The thunk id (list thunks through the Builder MCP if you only have a
+- The thunk id (list thunks through the FDA MCP if you only have a
   name). For A, also the work
   item id and step.
-- Work only through the Thunk.AI Builder MCP connector this session has
-  (connected as thunk-builder, Thunk.AI or another name). It acts
+- Work only through the Thunk.AI FDA MCP connector this session has
+  (connected as thunk-fda, formerly thunk-builder, Thunk.AI or another name). It acts
   as you on the tenant it is connected to: if the thunk is not on that tenant,
   or you lack the access a step needs (Owner or thunk Admin for call history,
   members, and the work log), say so and ask the user — do not look for another way into the
@@ -161,7 +161,7 @@ plus:
   each run concluded (`waitForConvo` vs `stepFinished`); `full` for the
   tool-by-tool trace.
 - A tool run you started yourself — only for a tool you tried through the
-  Builder MCP. For a
+  FDA MCP. For a
   tool call inside a workflow run, the args and a cut-off result are in
   the step history `full`; the complete input and output are in
   the tool call history (every call to one tool, across workitems), or in
@@ -224,7 +224,7 @@ infrastructure. Instead:
 
 1. Collect the evidence the MCP gave you: thunk id, work item and step ids,
    the turn, the error text, and how many items it hits.
-2. Log it as feedback through the Builder MCP (`kind: "bug"`, ids in
+2. Log it as feedback through the FDA MCP (`kind: "bug"`, ids in
    `description`, no customer data or credentials). That records a note for the
    Thunk.AI team; it does not open a ticket.
 3. Tell the user to raise a support ticket with the same evidence
@@ -391,7 +391,7 @@ make, and where.
 
 Improve the design, and prove the improvement, without touching the original
 or any system it writes to. The method is `improve-a-live-thunk-safely`;
-this section is how to carry it out through the Builder MCP.
+this section is how to carry it out through the FDA MCP.
 
 **The goal is fixed up front: keep the original's business behavior and
 remove its execution and data-integrity failures.** A change to what the
@@ -409,7 +409,7 @@ retry) is a business-logic change: it goes to the owner as a design question
   a gate (classification property + `runCondition` + human-approval step)
   instead of directions that try to stop on their own, an inactivity timeout,
   a better-suited model for a step, test work items
-  (`evals-automated-tests`). Search the help center through the Builder MCP
+  (`evals-automated-tests`). Search the help center through the FDA MCP
   for what the platform offers now rather than assuming.
 
 ### C2. Sort the findings, propose, then stop
@@ -483,7 +483,7 @@ customer data stays inside the mock thunk:
 - Say in the report which seeds are recorded and which are rebuilt.
 - **Add what the fix needs**, e.g. a lookup tool for duplicate checks.
 - Return stable ids by hashing the inputs.
-- Try every tool through the Builder MCP, including a rejection case. Then
+- Try every tool through the FDA MCP, including a rejection case. Then
   publish the export and enable each tool — a first publish starts with the
   tools disabled, so patch them to `enabled:true` and republish.
 
@@ -561,7 +561,7 @@ has been seen to let one through. Remove the live tool from the copy instead.
 Make only the technical fixes the user approved. The typical fixes are in
 `improve-a-live-thunk-safely` (Details → 5) and the copied-value mitigations
 in `troubleshooting-ai-reliability-issues`; follow
-`how-to-write-effective-directions` for directions. Builder notes:
+`how-to-write-effective-directions` for directions. FDA MCP notes:
 
 - **Keep copied values exact** (see "Copied values" in the design checklist —
   a known platform gap, so these are mitigations, not a cure):
@@ -657,12 +657,12 @@ Then:
 - The original thunk's owner (from the thunk summary) should be an admin on
   the mock thunk, and on the copy if they are not already its owner. Add
   them with `role: "Admin"` (only the owner and anyone else the user names).
-  Builder adds people who are already users in an organization you and the
+  The FDA MCP adds people who are already users in an organization you and the
   thunk's owner share. For anyone else, give the user the returned
   `shareUrl` so they add that person there.
 - Delete the copied clutter, keeping the test items: delete work items in
   batches of 100 (soft delete).
-- Report builder bugs and doc gaps as feedback through the Builder MCP.
+- Report builder bugs and doc gaps as feedback through the FDA MCP.
 
 ### C9. The report (required)
 

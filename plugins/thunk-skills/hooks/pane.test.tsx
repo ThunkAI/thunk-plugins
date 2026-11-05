@@ -34,7 +34,7 @@ const THUNKS = {
 // so the call is cast.
 function builderCall(tool: string, args: Record<string, unknown> = {}) {
   return {
-    tool: `mcp__plugin_tenant_thunk-builder__${tool}`,
+    tool: `mcp__plugin_tenant_thunk-fda__${tool}`,
     ...args,
   } as never;
 }
@@ -717,7 +717,8 @@ test("the guide gate leaves other tools and other Thunk.AI servers alone", async
   on("tool.call", () => ({ result: {} }));
 
   await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
-  // The ops server (mcp__thunk__*) and a hand-added Builder server under its own name.
+  // The ops server (mcp__thunk__*) and a hand-added Builder server under its own name,
+  // old (thunk-builder) or new (thunk-fda).
   const ops = await $.tool.call({
     tool: "mcp__thunk__context_current",
   } as never);
@@ -726,6 +727,10 @@ test("the guide gate leaves other tools and other Thunk.AI servers alone", async
     tool: "mcp__thunk-builder__list_thunks",
   } as never);
   expect(handAdded.deny).toMatch(/thunk-guide/);
+  const handAddedFda = await $.tool.call({
+    tool: "mcp__thunk-fda__list_thunks",
+  } as never);
+  expect(handAddedFda.deny).toMatch(/thunk-guide/);
 });
 
 test("the system prompt asks Claude to load the guide before the Builder tools", async ($, on) => {

@@ -11,7 +11,7 @@ const TITLE = "Thunk.AI";
 // words keep the person's theme colors.
 const AMBER = "#eaa606";
 
-// A Builder MCP tool's name: mcp__plugin_<tenant plugin>_thunk-builder__<tool> for a tenant
+// A Builder (FDA MCP) tool's name: mcp__plugin_<tenant plugin>_thunk-fda__<tool> for a tenant
 // plugin's server, mcp__<server>__<tool> for one added by hand. No tenant is named here: the
 // public and private exports refuse a file that names another edition's tenant.
 const BUILDER_TOOL = /^mcp__(.+)__([a-z_]+)$/;
@@ -71,10 +71,12 @@ const guideRead = atom(
 // The skill the gate waits for, as Claude names it from this plugin or as a bare skill name.
 const GUIDE_SKILL = /^(thunk-skills:)?thunk-guide$/;
 
-// A Builder server: a tenant plugin's thunk-builder, or one added by hand under a name like it.
+// A Builder server: a tenant plugin's thunk-fda, or one added by hand under a name like it.
+// thunk-builder, the server's name until 2026-11-04, still counts: an install made before the
+// rename keeps that name until the plugin updates.
 // Narrower than the follow-ups' "contains thunk" test, so other Thunk.AI servers (the ops
 // server, mcp__thunk__*) are never refused.
-const GUIDE_GATED_SERVER = /thunk.?builder/i;
+const GUIDE_GATED_SERVER = /thunk.?(builder|fda)/i;
 
 // The thunk the person is working on: the one Claude opened in the browser pane, or the one
 // Claude last worked on through the Builder tools. The band offers actions on it.
@@ -242,7 +244,7 @@ function browserUrls(tool: string, input: Record<string, unknown>) {
 
 // The Codex hooks start their rule with the same sentences (hooks/codex/session-rule.txt).
 const NEXT_STEPS_RULE = [
-  "This user works with Thunk.AI through the Thunk.AI Builder tools.",
+  "This user works with Thunk.AI through the Thunk.AI FDA MCP tools.",
   'After any turn in which you built, changed, ran or analyzed a thunk, end your reply with a short "Next steps" list of two or three concrete actions they could take on that thunk now (for example: run a test work item, add a review step, connect a system, export it as an MCP server), most useful first.',
   "For a user who is new to Thunk.AI, explain any Thunk.AI term (thunk, step, work item, connection) in a few words the first time you use it.",
 ].join(" ");
@@ -250,7 +252,7 @@ const NEXT_STEPS_RULE = [
 // Asks Claude to read the guide before it uses the tools, so the gate rarely has to refuse.
 // The Codex hooks say the same (hooks/codex/session-rule.txt).
 const GUIDE_RULE =
-  "Before your first Thunk.AI Builder tool call in a session, load the thunk-guide skill and follow it.";
+  "Before your first Thunk.AI FDA MCP tool call in a session, load the thunk-guide skill and follow it.";
 
 // The guide gate: why a Builder tool call before the thunk-guide skill loaded is refused, or
 // undefined to let the call run.
@@ -266,7 +268,7 @@ async function guideRefusal($: EngineInterface, tool: string) {
 
   return (
     "Load the thunk-skills:thunk-guide skill (Skill tool) before using the Thunk.AI " +
-    "Builder tools, then retry this call."
+    "FDA MCP tools, then retry this call."
   );
 }
 
@@ -371,7 +373,7 @@ const COMMANDS: [string, string][] = [
   ["/thunk <name or id>", "open a thunk in the browser pane"],
   ["/thunk", "open this pane"],
   ["/thunk-welcome", "show the welcome again"],
-  ["/mcp", "sign in to the Thunk.AI Builder server"],
+  ["/mcp", "sign in to the Thunk.AI FDA server"],
 ];
 
 async function openPane($: EngineInterface, focus: boolean) {

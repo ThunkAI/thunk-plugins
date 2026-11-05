@@ -3,10 +3,10 @@
 > Help articles bundled in this skill's folder: `build-thunks-with-the-builder-mcp` is `SKILL.md`; `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`.
 
 This guide is for AI agents running in the **Codex desktop app** that work on
-thunks through the **Thunk.AI Builder MCP**. It covers how to open a thunk in
+thunks through the **Thunk.AI FDA MCP**. It covers how to open a thunk in
 the app's in-app browser and keep that tab on what you are working on. Why you
 show the thunk, and which view to show for each change, are in
-Building thunks with the Builder MCP (help article `build-thunks-with-the-builder-mcp`)
+Building thunks with the FDA MCP (help article `build-thunks-with-the-builder-mcp`)
 (**Open the thunk in the browser pane**). For the Claude desktop app, read
 Showing a thunk in the Claude desktop app (help article `show-a-thunk-in-the-claude-desktop-app`)
 instead.

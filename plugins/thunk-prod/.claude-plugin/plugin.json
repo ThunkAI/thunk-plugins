@@ -1,7 +1,7 @@
 {
   "name": "thunk-prod",
-  "displayName": "Thunk.AI Builder (prod)",
-  "description": "The Thunk.AI Builder MCP on the public production tenant (postern.thunk.ai), plus the thunk-guide skill.",
+  "displayName": "Thunk.AI FDA (prod)",
+  "description": "The Thunk.AI FDA MCP on the public production tenant (postern.thunk.ai), plus the thunk-guide skill.",
   "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
   "homepage": "https://info.thunk.ai",
   "keywords": ["thunk", "workflow", "mcp"],

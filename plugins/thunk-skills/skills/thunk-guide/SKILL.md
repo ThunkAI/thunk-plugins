@@ -1,17 +1,18 @@
 ---
 name: thunk-guide
 description: >-
-  How to build, analyze and explain thunks with the Thunk.AI Builder MCP (connected as
-  thunk-builder, Thunk.AI or another name): which help articles to read before designing
-  or editing a thunk, step AI instructions, schema, tools and connections, running and
-  testing work items, diagnosing a run, MCP export or chat apps; the order to build in
-  (steps and tool outlines first); opening the thunk in the side-panel browser (the Claude
-  desktop app's browser pane, or Codex's) so the user can watch. Also analyzing a thunk,
-  often a customer's production thunk you must not edit: troubleshoot a work item or step,
-  run a health check, or clean it up / upgrade it in a mocked copy with tests and a .docx
-  report. And explaining a thunk, or the platform through one, as a guided tour in the
-  browser pane. Use whenever you are about to build, change, test, analyze, troubleshoot,
-  review, debug or explain a thunk through the Builder MCP.
+  How to build, analyze and explain thunks with the Thunk.AI FDA MCP (connected as
+  thunk-fda, formerly thunk-builder, Thunk.AI or another name): which help articles to
+  read before designing or editing a thunk, step AI instructions, schema, tools and
+  connections, running and testing work items, diagnosing a run, MCP export or chat apps;
+  the order to build in (steps and tool outlines first); opening the thunk in the
+  side-panel browser (the Claude desktop app's browser pane, or Codex's) so the user can
+  watch. Also analyzing a thunk, often a customer's production thunk you must not edit:
+  troubleshoot a work item or step, run a health check, or clean it up / upgrade it in a
+  mocked copy with tests and a .docx report. And explaining a thunk, or the platform
+  through one, as a guided tour in the browser pane. Use whenever you are about to build,
+  change, test, analyze, troubleshoot, review, debug or explain a thunk through the FDA
+  MCP.
 ---
 
 <!-- GENERATED, DO NOT EDIT: built from the Thunk.AI help article `build-thunks-with-the-builder-mcp`. Edits here are overwritten and never committed; change the article in the source repository instead. -->
@@ -24,34 +25,34 @@ a time, using the contents below. Read each help article this skill names in its
 of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
-- Pick your path: lines 57-72
-- Common instructions: lines 73-340
-  - The Builder MCP and its tools: lines 77-91
-  - Start a session first: lines 92-121
-  - More than one tenant: lines 122-131
-  - The Builder MCP informs; the browser pane shows: lines 132-142
-  - Open the thunk in the browser pane: lines 143-253
-  - Files: lines 254-275
-  - Offer numbered choices when you stop: lines 276-282
-  - How to read an article: lines 283-294
-  - Rules: lines 295-304
-  - Before finishing: lines 305-340
-- Build or change a thunk: lines 341-857
-  - Keep the user in the loop while you build: lines 343-414
-  - Build order: lines 415-766
-  - Write readable directions and code: lines 767-857
-- Explain a thunk: lines 858-916
-- Troubleshoot or analyze a thunk: lines 917-928
-- Help articles for each task: lines 929-1025
-  - Start here (first thunk in a session): lines 931-939
-  - Design the workflow: lines 940-954
-  - Write step AI instructions: lines 955-966
-  - Tools, connections and content: lines 967-982
-  - Kinds of thunk and how they are reached: lines 983-992
-  - Run and test: lines 993-1008
-  - Diagnose a run: lines 1009-1025
+- Pick your path: lines 58-73
+- Common instructions: lines 74-343
+  - The FDA MCP and its tools: lines 78-93
+  - Start a session first: lines 94-124
+  - More than one tenant: lines 125-134
+  - The FDA MCP informs; the browser pane shows: lines 135-145
+  - Open the thunk in the browser pane: lines 146-256
+  - Files: lines 257-278
+  - Offer numbered choices when you stop: lines 279-285
+  - How to read an article: lines 286-297
+  - Rules: lines 298-307
+  - Before finishing: lines 308-343
+- Build or change a thunk: lines 344-876
+  - Keep the user in the loop while you build: lines 346-417
+  - Build order: lines 418-783
+  - Write readable directions and code: lines 784-876
+- Explain a thunk: lines 877-935
+- Troubleshoot or analyze a thunk: lines 936-947
+- Help articles for each task: lines 948-1044
+  - Start here (first thunk in a session): lines 950-958
+  - Design the workflow: lines 959-973
+  - Write step AI instructions: lines 974-985
+  - Tools, connections and content: lines 986-1001
+  - Kinds of thunk and how they are reached: lines 1002-1011
+  - Run and test: lines 1012-1027
+  - Diagnose a run: lines 1028-1044
 
-This skill is for working on Thunk.AI thunks through the **Thunk.AI Builder MCP**. It covers a
+This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
 
 ## Pick your path
@@ -74,24 +75,25 @@ are listed at the end, under **Help articles for each task**.
 
 These apply to every path.
 
-### The Builder MCP and its tools
+### The FDA MCP and its tools
 
 The help center (info.thunk.ai) is the source of truth for how to build good
 thunks.
 
-The **Thunk.AI Builder MCP** (`/api/builder/mcp` on your Thunk.AI tenant)
+The **Thunk.AI FDA MCP** (`/api/builder/mcp` on your Thunk.AI tenant)
 is how you read and change thunks. Its name depends on how it was
-connected: `thunk-builder` as a local MCP server, a claude.ai connector such
+connected: `thunk-fda` as a local MCP server, a claude.ai connector such
 as Thunk.AI, a Claude Code plugin per tenant, whose tools appear as
-`mcp__plugin_thunk-<tenant>_thunk-builder__*`, or a Codex plugin per tenant,
-whose server is named `thunk-<tenant>`. Discover the tools this session
+`mcp__plugin_thunk-<tenant>_thunk-fda__*`, or a Codex plugin per tenant,
+whose server is named `thunk-fda-<tenant>`. Installs made before
+2026-11-04 use the old name, `thunk-builder`, in place of `thunk-fda`. Discover the tools this session
 lists and use those; this guide names the product task, not a particular
 tool. This guide tells you **which articles to read** for
 the task in front of you. Read them before you act; do not work from memory.
 
 ### Start a session first
 
-If the Builder MCP offers a way to start a Builder session, do that before
+If the FDA MCP offers a way to start a Builder session, do that before
 anything else with a short `title`, a `description` of what you are doing, and
 `purpose`: `build_thunk` when you are creating or substantially changing a
 thunk, `analyze_performance` when you are measuring time or cost,
@@ -104,12 +106,13 @@ include the guide for that purpose and the app you named. Start the session
 with those arguments, as the only Builder call in its turn, and wait for its
 result: you do not have its `sessionId` until it finishes. Read the
 instructions it returns and pass that `sessionId` to every other Builder call.
-Where the server requires sessions, a call without a `sessionId` is refused
-with `session_required`. A `sessionId` that is not yours, or not a real one,
-is always refused with `session_not_found`. Either way, start a session
-again and carry on. Over HTTP the id travels in the `X-Builder-Session` header
-instead. Sessions are yours alone and show up under Account → Builder →
-Sessions.
+Where the server requires sessions, an FDA MCP call without a `sessionId` is
+refused with `session_required`. A `sessionId` that is not yours, or not a real
+one, is always refused with `session_not_found`. Either way, start a session
+again and carry on. Over HTTP you may send the id in the `X-Builder-Session`
+header; if you omit it, the server starts a session and returns the id in that
+header so later calls can reuse it. Sessions are yours alone and show up under
+Account → Forward Deployed Agent → Sessions.
 
 One session covers the whole chat. Reuse its `sessionId` for every Builder
 call in every later turn: a new turn is not a reason to start a new session.
@@ -123,22 +126,22 @@ purpose keeps the session.
 
 Each Thunk.AI tenant (such as the public one and a dedicated customer tenant)
 is a separate server with its own thunks and accounts, and a thunk id exists
-on only one of them. If this session has the Builder MCP for more than one
+on only one of them. If this session has the FDA MCP for more than one
 tenant, find out which tenant the user means before the first call, ask if it
 isn't clear, and keep every call for that thunk on that server. Never copy a
 design or data from one tenant to another unless the user asks for exactly
 that.
 
-### The Builder MCP informs; the browser pane shows
+### The FDA MCP informs; the browser pane shows
 
 Treat the browser pane (the in-app browser) as a presentation vehicle for the
 user, not as an information source for your work or your explanation. Get
-thunk facts and configuration from the Builder MCP — the thunk's summary and
+thunk facts and configuration from the FDA MCP — the thunk's summary and
 its full design. Use the pane to navigate to and display the
 relevant part of the app for the user; do not rely on its page text,
 screenshots or controls to learn how the thunk is configured. If the UI
-appears to differ from what the Builder MCP returns, tell the user about the
-difference and verify it through the Builder MCP.
+appears to differ from what the FDA MCP returns, tell the user about the
+difference and verify it through the FDA MCP.
 
 ### Open the thunk in the browser pane
 
@@ -152,11 +155,11 @@ message too. Reuse the current browser tab when possible. If opening fails or
 no browser pane is available, say so and give the link anyway. Do not treat
 this as optional because the user did not explicitly ask to see the UI.
 Never let it hold up the build. The panel is mainly for the
-user to watch. Make changes through the Builder MCP tools by default: they are
+user to watch. Make changes through the FDA MCP tools by default: they are
 faster and more reliable than the UI, and their results can be checked.
 
 **How you open and move the pane depends on the app you run in.** Before you
-open it, read the guide for your app through the Builder MCP:
+open it, read the guide for your app through the FDA MCP:
 
 - The Claude desktop app, or a cloud session linked to the user's computer
   with the Claude browser-pane tools: `show-a-thunk-in-the-claude-desktop-app`.
@@ -176,7 +179,7 @@ doing at each step so they can follow along and do it themselves next time.
 Where the session has no tools that can drive that browser, describe the clicks
 for them to follow instead.
 
-- Do only what they asked to see, then go back to the Builder MCP for the rest
+- Do only what they asked to see, then go back to the FDA MCP for the rest
   of the work, and check the result in the design.
 - A general request such as "build it" or "fix it" is not a request to use the
   UI. Neither is an MCP call that failed or seems slow.
@@ -186,7 +189,7 @@ for them to follow instead.
 #### Open every app URL in agent mode
 
 Add `agentMode=true` to every Thunk.AI app URL you open in the pane, navigate
-to, or give the user as a link: the `url` values the Builder MCP returns and
+to, or give the user as a link: the `url` values the FDA MCP returns and
 the URLs you build from the table in **Show each change in the pane**. Add it
 as a query parameter: after `?` when the URL has no query yet, otherwise after
 `&`, and always before any `#`. For example, `<host>/thunk/<thunkId>` becomes
@@ -206,7 +209,7 @@ upload links and `short.thunk.ai` links as they are.
 #### Show each change in the pane
 
 Once the pane is open, keep it on what you're working on. Whenever you change
-the thunk through the Builder MCP, or fetch specific information from it,
+the thunk through the FDA MCP, or fetch specific information from it,
 navigate the pane to the view that shows it: before the call, so the user
 watches the change land, or after it, to show what you changed or found.
 If the page doesn't show the change after the call, navigate to the same URL
@@ -254,8 +257,8 @@ you discuss a specific step.
 ### Files
 
 For a FILE or IMAGE input, or a content folder, never send a file's
-contents as base64 in a tool argument. If the file is at a public URL, upload it through the Builder MCP. If it is on your machine (one you made, or one the
-user gave you), ask the Builder MCP for an upload link and send the file from your shell.
+contents as base64 in a tool argument. If the file is at a public URL, upload it through the FDA MCP. If it is on your machine (one you made, or one the
+user gave you), ask the FDA MCP for an upload link and send the file from your shell.
 It returns an `uploadUrl` and an `uploadToken`. PUT each file's raw bytes to
 `uploadUrl`, one file per request, with the token in the `X-Upload-Token`
 header and the file name in the `name` query parameter:
@@ -271,7 +274,7 @@ content folder, or read them again later through the same upload link. A
 link lasts 30 minutes and takes up to 5 files of up to 16 MB each. The token
 is returned only once: keep it to yourself and don't show it in your
 replies. If you can't run commands that reach the network, ask the user to
-put the file at a public URL and upload it through the Builder MCP.
+put the file at a public URL and upload it through the FDA MCP.
 
 ### Offer numbered choices when you stop
 
@@ -282,11 +285,11 @@ with just a number. They can still answer in their own words.
 
 ### How to read an article
 
-- Read the article by its **slug** through the Builder MCP (the slugs for
+- Read the article by its **slug** through the FDA MCP (the slugs for
   each task are under **Which articles for which task**).
-- Not sure which slug? Search the help center through the Builder MCP with
+- Not sure which slug? Search the help center through the FDA MCP with
   a short query.
-- When a Builder tool or help page names articles for a task, those are the
+- When an FDA MCP tool or help page names articles for a task, those are the
   articles for that task. Read them the first time you do that work in a
   session.
 - Read 1–3 articles per task, not all of them. Where articles disagree,
@@ -300,14 +303,14 @@ with just a number. They can still answer in their own words.
 - Don't paste article text back into a thunk's instructions. Apply the
   guidance in your own words for that thunk.
 - If an article is wrong or missing something you needed, report it as
-  feedback through the Builder MCP.
+  feedback through the FDA MCP.
 
 ### Before finishing
 
 - Did I open the relevant thunk in the in-app browser and include its link?
 - Is every thunk I created filed in the project's folder?
 - Did every Thunk.AI app URL I opened or gave carry `agentMode=true`?
-- Did every fact I gave about the thunk come from the Builder MCP, not from
+- Did every fact I gave about the thunk come from the FDA MCP, not from
   the browser pane?
 - Is every fact a later step or tool needs its own property, with the most
   specific type that fits, and in `requiredOutputProperties` of the step
@@ -392,7 +395,7 @@ result fast, and keep them informed until then.
 
 #### Wait for a run
 
-Running or re-running a work item through the Builder MCP (or creating one
+Running or re-running a work item through the FDA MCP (or creating one
 that starts on its own) returns at once while the work item keeps running. Don't
 guess how long it will take and wait for that long. Fixed waits of one to
 two minutes usually overshoot a run that finished in 30 seconds, and leave
@@ -401,7 +404,7 @@ the user with nothing to read while you wait.
 - Any wait of a set length is a fixed wait, however it is written: a sleep,
   a loop that runs until a clock time, or a background timer that wakes you
   later. Don't use any of them for longer than about 20 seconds.
-- Read the work item's state through the Builder MCP after every pause of
+- Read the work item's state through the FDA MCP after every pause of
   up to about 20 seconds. Stop as soon as the work item finishes, fails, waits for a
   person (`stepCompletionApprovalRequired`, `waitingForConversationReply`),
   or reports `blocked`.
@@ -448,7 +451,7 @@ them scattered among everything else the user owns. At the start of a
 project, choose one folder path for it, such as
 `/invoice-intake` or `/claims/fraud-review`, and tell the user which one.
 Use a short name for the project, not for the session or the date. Before
-choosing, list the user's thunks through the Builder MCP with `folderPath`
+choosing, list the user's thunks through the FDA MCP with `folderPath`
 set to `/` and `includeSubfolders` true to see the folders they already have,
 and reuse one that fits (each summary's `folderPath` shows where a thunk is
 filed). Then file **every** thunk you create for the project there: pass
@@ -477,7 +480,12 @@ For a new workflow or chat-app thunk:
    them all in the create call, in order and chained by status (`New` → … →
    the last step's final status), plus any `properties` the design already
    fixes. Otherwise create the thunk, then add the same
-   steps. Give each step its real title and a short paragraph of directions
+   steps. Name the work item after the business object each one
+   stands for: `workItemName` is the singular ("Expense Receipt", "Job
+   Application") and `workItemListName` the plural ("Expense Receipts").
+   The thunk's list, its steps and its plan all use these names, and they
+   can't be changed later, so never pass a generic name such as "Work Item"
+   or "Item". Give each step its real title and a short paragraph of directions
    saying what the step is for (step 4 replaces it with full directions).
    Leave out `toolConfig`, and any binding to a property that doesn't exist
    yet. Check the `results` the response gives
@@ -497,7 +505,7 @@ For a new workflow or chat-app thunk:
    already reaches it. If there is a suitable one, **ask the user** whether
    to use it or a mock; never wire a live connection into a new thunk
    without asking. If the user wants a real system that has no connection
-   yet, create one on their account through the Builder MCP: a REST API
+   yet, create one on their account through the FDA MCP: a REST API
    (`Generic API`), an MCP server (`MCP service`) or an OAuth connection
    (`Generic OAuth`), with the client-credentials grant or, for a provider
    the user signs in to, `grantType` `authorizationCode`. Do not ask
@@ -538,7 +546,7 @@ For a new workflow or chat-app thunk:
      (`readOnly` true), one tab per record type with
      a header row, so the user can open the workbook and see and change what
      the mock returns. Build the workbook yourself and upload it
-     through an upload link from the Builder MCP, or link a Google Sheet the
+     through an upload link from the FDA MCP, or link a Google Sheet the
      user owns. Each tab
      gets list and lookup tools; read their names from the design
      section `contentFolders`.
@@ -556,7 +564,7 @@ For a new workflow or chat-app thunk:
      output from the interface: pin it with `signature` (the
      interface and the tool's name), which copies the contract's name,
      description, inputs and output onto the tool. Test each tool through
-     the Builder MCP, including a rejection (`$status` is `rejected`),
+     the FDA MCP, including a rejection (`$status` is `rejected`),
      then publish the export with exactly the interface's tools enabled; the tabs'
      own list and lookup tools stay unpublished.
    - **Reach it through a plug-in connection.** On the thunk you are
@@ -607,12 +615,14 @@ For a new workflow or chat-app thunk:
    picks up the thunk's enabled tools only when it is added, not when a
    stub is changed into one. To change what an `ai` or `code` tool may
    call later, send `toolConfig` on its update, with the enable/disable
-   library and tool ops a step's `toolConfig` takes. Map I/O
+   library and tool ops a step's `toolConfig` takes.    Map I/O
    (`set_io_bindings`) is a step setting, and the same op on an `ai`
    tool's nested `toolConfig` maps nested tools onto that AI tool's
    own inputs and outputs
-   (`map-a-tools-inputs-and-outputs-to-the-work-item`). A `code` tool's
-   nested `toolConfig` does not take it.
+   (`map-a-tools-inputs-and-outputs-to-the-work-item`). The same
+   property may fill a tool input and receive a tool output when it is
+   listed on both sides of the host. A `code` tool's nested
+   `toolConfig` does not take it.
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
    - before you add any property, audit its type. List every fact this
      step, a later step or a tool needs, one property per fact, and give
@@ -621,6 +631,9 @@ For a new workflow or chat-app thunk:
      `CALENDAR_DATE` or `DATE` for a date, `YES_OR_NO` for a flag, `TEXT`
      with an `enum` constraint for a fixed set of values, `FILE` or `IMAGE`
      for a document or picture (`file-and-image-property-types`),
+     `REF` for a field that always shows another field's value
+     (`constraints.refTargetName` is the property it points at;
+     "Choosing a property type" in `schematized-state`),
      `isListType` for several values, and — for a value with several
      parts (a record such as a contact, an address or a line item) — a
      **Structure Type**: a named, reusable shape added to the Type Library,
@@ -634,7 +647,7 @@ For a new workflow or chat-app thunk:
      `objectSchema` instead of the example: a strict JSON Schema whose
      kinds sit in an `anyOf` inside a field. A Conversation
      property is the thread for email or chat
-     (`conversation-properties-for-email`). If a step should send a
+     (`conversation-properties`). If a step should send a
      message and wait for the reply, set
      `constraints.convoSendMessageMode` to `sendAndWaitForReply` and
      list that conversation under the step's `outputProperties`; leaving
@@ -673,12 +686,16 @@ For a new workflow or chat-app thunk:
    - replace the stubs of the tools it uses with real implementations
      (the full definition, written as **Write
      readable directions and code** says), try each tool through the
-     Builder MCP, and enable them on the step (`toolConfig`);
+     FDA MCP, and enable them on the step (`toolConfig`);
    - when a large property should go into a tool as-is, or a large tool
      result should land on a step output without the agent copying it,
      map those fields with `set_io_bindings` on that step's `toolConfig`
      (`map-a-tools-inputs-and-outputs-to-the-work-item`). Map only the
-     fields that are being copied; leave judgment arguments for the model;
+     fields that are being copied; leave judgment arguments for the model.
+     The same property can fill a tool input and receive a tool output
+     when it is listed on both `inputProperties` and `outputProperties`
+     (or, on a custom AI tool, declared as both an input and an output).
+     List it on both first; Map I/O does not add those bindings;
    - set the plan's input bindings while doing the first step and its output
      bindings while doing the last;
    - check the result in the design section `interface`. It shows, for
@@ -717,7 +734,7 @@ For a new workflow or chat-app thunk:
    **Use realistic inputs.** Test data should look like what the thunk will
    get in production: realistic names, amounts and wording, in the real
    formats. For an IMAGE or FILE input, use a real document or image, not a
-   placeholder: fetch one from a public URL through the Builder MCP, or build
+   placeholder: fetch one from a public URL through the FDA MCP, or build
    one locally for the test (for example a PDF invoice laid out the way real
    ones are, or a scanned-looking image of a receipt) and upload it with
    an upload link (see **Files**). When you make several, do not
@@ -728,7 +745,7 @@ For a new workflow or chat-app thunk:
    the tests assert on readable. Tidy inputs
    pass tests that real ones fail (`building-a-test-plan`).
 
-   **Write the sample data yourself.** The Builder MCP has no tool that
+   **Write the sample data yourself.** The FDA MCP has no tool that
    generates sample work items the way the app's AI-generated sample data
    option does. Read the thunk's work item properties from its definition,
    write the values for each work item yourself, and create the work items one
@@ -843,17 +860,19 @@ code, or nothing is saved and the error says how many times it matched.
 Read the current code first, asking for the tool's definition with its implementation included.
 
 **Partial updates.** To change part of a tool without resending it, send
-an `update` with a patch instead of `tool`. `guidanceEdits` is the same
-kind of `find` / `replace` list as `codeEdits`, applied to an AI tool's
-saved instructions; each `find` must appear exactly once. `cachePolicy`
-changes whether identical lookups are reused and for how long; omit a
-field to keep the stored value. `addSchemaField` and `removeSchemaField`
-add or remove one top-level field on the input or output schema (`side`;
-omit `side` for the input) on any tool that authors its schema — not a
-document template or spreadsheet lookup. Do not send both field
-operations in the same update, and do not mix a patch with `tool` or
-`codeEdits`. Read the current tool first, asking for the tool's
-definition with its implementation included.
+an `update` with a patch instead of `tool`. `intent`, `description`, and
+`title` replace those stored strings; omit a field to keep it.
+`guidanceEdits` is the same kind of `find` / `replace` list as
+`codeEdits`, applied to an AI tool's saved instructions; each `find`
+must appear exactly once. `cachePolicy` changes whether identical
+lookups are reused and for how long; omit a field to keep the stored
+value. `addSchemaField` and `removeSchemaField` add or remove one
+top-level field on the input or output schema (`side`; omit `side` for
+the input) on any tool that authors its schema — not a document template
+or spreadsheet lookup. Do not send both field operations in the same
+update, and do not mix a patch with `tool` or `codeEdits`. Read the
+current tool first, asking for the tool's definition with its
+implementation included.
 
 ## Explain a thunk
 
@@ -870,7 +889,7 @@ Both follow the same flow; the only difference is whether you also explain
 the platform. If you can't tell which one the user wants, ask, with the two as
 numbered choices.
 
-1. **Read the thunk through the Builder MCP first**, its summary and its
+1. **Read the thunk through the FDA MCP first**, its summary and its
    design, so that you explain its actual design. Read the help
    articles for the parts you will explain (see **Which articles for which
    task**), especially for the second ask.
@@ -905,23 +924,23 @@ give that link once as a short video about the sample, for the user to watch
 if they want.
 
 Don't claim that a feature works just because a description or a step's
-directions mention it. Check its configuration through the Builder MCP (for
+directions mention it. Check its configuration through the FDA MCP (for
 example, that the tool is enabled on the step, that the connection exists,
 that the property is bound), and say plainly when you couldn't verify
 something.
 
 An explanation changes nothing and runs nothing. If the user asks for a
-change along the way, say so, and make it through the Builder MCP as for any
+change along the way, say so, and make it through the FDA MCP as for any
 other edit.
 
 ## Troubleshoot or analyze a thunk
 
 To analyze a thunk — often a customer's production thunk you must not edit —
-read the `analyze-a-thunk-with-the-builder-mcp` article through the Builder MCP before you start,
+read the `analyze-a-thunk-with-the-builder-mcp` article through the FDA MCP before you start,
 and follow it. It covers three scenarios: (A) troubleshooting one work item
 or step, (B) a health check, and (C) a cleanup / upgrade done in a mocked
 copy with tests from real data, a hand-over to the owner and a .docx report.
-It works only through this Builder MCP; when the cause is the platform, it
+It works only through this FDA MCP; when the cause is the platform, it
 files feedback and has the user raise a support ticket.
 
 In this skill that article is `analyzing.md`, in this folder: read it there. Troubleshooting is its Scenario A; a health check is B; a cleanup, review or upgrade is C.
@@ -942,8 +961,8 @@ In this skill that article is `analyzing.md`, in this folder: read it there. Tro
 | Task | Slugs |
 | --- | --- |
 | Lay out steps / statuses | `workflow-plan`, `workflow-orchestration` |
-| Define work-item schema | `schematized-state`, `structure-types`, `file-and-image-property-types`, `conversation-properties-for-email` |
-| Email or chat thread that waits for a reply | `conversation-properties-for-email` |
+| Define work-item schema | `schematized-state`, `structure-types`, `file-and-image-property-types`, `conversation-properties` |
+| Email or chat thread that waits for a reply | `conversation-properties`, `conversation-properties-for-email` |
 | Workflow inputs/outputs | `workflow-plan`, `schematized-state` |
 | Run a step only when / until a condition holds | `run-a-step-only-when-a-condition-matches` |
 | Error handling and when a step saves results | `choose-how-a-step-handles-errors-and-when-it-saves-results` |

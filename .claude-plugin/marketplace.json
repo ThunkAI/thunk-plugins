@@ -4,17 +4,17 @@
     "name": "Thunk.AI",
     "url": "https://thunk.ai"
   },
-  "description": "Build, test and analyze Thunk.AI thunks from Claude and Codex: the thunk-guide skill and the Thunk.AI Builder MCP.",
+  "description": "Build, test and analyze Thunk.AI thunks from Claude and Codex: the thunk-guide skill and the Thunk.AI FDA MCP.",
   "plugins": [
     {
       "name": "thunk-skills",
       "source": "./plugins/thunk-skills",
-      "description": "The thunk-guide skill: how to build, test and analyze thunks with the Thunk.AI Builder MCP. Installed with a tenant plugin."
+      "description": "The thunk-guide skill: how to build, test and analyze thunks with the Thunk.AI FDA MCP. Installed with a tenant plugin."
     },
     {
       "name": "thunk-prod",
       "source": "./plugins/thunk-prod",
-      "description": "Thunk.AI Builder MCP on the public production tenant (postern.thunk.ai), with the thunk-guide skill."
+      "description": "Thunk.AI FDA MCP on the public production tenant (postern.thunk.ai), with the thunk-guide skill."
     }
   ],
   "renames": {
