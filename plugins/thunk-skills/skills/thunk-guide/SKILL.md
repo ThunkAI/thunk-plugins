@@ -1019,7 +1019,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Mock external systems for testing | `improve-a-live-thunk-safely`, `evals-automated-tests` |
 | Production readiness | `shipping-enterprise-thunks-testing-and-quality-principles` |
 | Design review | `workflow-review` |
-| Switch AI model (thunk options, model definitions) | `move-a-thunk-to-a-new-ai-model`, `supported-ai-models-and-what-happens-when-they-change` |
+| Switch AI model (thunk options, a step, a custom AI tool, model definitions) | `move-a-thunk-to-a-new-ai-model`, `supported-ai-models-and-what-happens-when-they-change` |
 | Pause / resume | `pause-and-restart-a-thunk` |
 | Delete work items | `how-to-work-with-your-work-items-list`, `data-retention` |
 | Add people to a thunk (people outside your organization: the user adds them at `shareUrl`) | `users-and-access-controls`, `users-organizations-and-governance` |
