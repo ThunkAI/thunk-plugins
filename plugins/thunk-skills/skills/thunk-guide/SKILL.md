@@ -26,31 +26,31 @@ of it: not several in one call, and not only part of one.
 
 Contents (line numbers in this file):
 - Pick your path: lines 58-73
-- Common instructions: lines 74-343
+- Common instructions: lines 74-347
   - The FDA MCP and its tools: lines 78-93
-  - Start a session first: lines 94-124
-  - More than one tenant: lines 125-134
-  - The FDA MCP informs; the browser pane shows: lines 135-145
-  - Open the thunk in the browser pane: lines 146-256
-  - Files: lines 257-278
-  - Offer numbered choices when you stop: lines 279-285
-  - How to read an article: lines 286-297
-  - Rules: lines 298-307
-  - Before finishing: lines 308-343
-- Build or change a thunk: lines 344-876
-  - Keep the user in the loop while you build: lines 346-417
-  - Build order: lines 418-783
-  - Write readable directions and code: lines 784-876
-- Explain a thunk: lines 877-935
-- Troubleshoot or analyze a thunk: lines 936-947
-- Help articles for each task: lines 948-1044
-  - Start here (first thunk in a session): lines 950-958
-  - Design the workflow: lines 959-973
-  - Write step AI instructions: lines 974-985
-  - Tools, connections and content: lines 986-1001
-  - Kinds of thunk and how they are reached: lines 1002-1011
-  - Run and test: lines 1012-1027
-  - Diagnose a run: lines 1028-1044
+  - Start a session first: lines 94-128
+  - More than one tenant: lines 129-138
+  - The FDA MCP informs; the browser pane shows: lines 139-149
+  - Open the thunk in the browser pane: lines 150-260
+  - Files: lines 261-282
+  - Offer numbered choices when you stop: lines 283-289
+  - How to read an article: lines 290-301
+  - Rules: lines 302-311
+  - Before finishing: lines 312-347
+- Build or change a thunk: lines 348-880
+  - Keep the user in the loop while you build: lines 350-421
+  - Build order: lines 422-787
+  - Write readable directions and code: lines 788-880
+- Explain a thunk: lines 881-939
+- Troubleshoot or analyze a thunk: lines 940-951
+- Help articles for each task: lines 952-1048
+  - Start here (first thunk in a session): lines 954-962
+  - Design the workflow: lines 963-977
+  - Write step AI instructions: lines 978-989
+  - Tools, connections and content: lines 990-1005
+  - Kinds of thunk and how they are reached: lines 1006-1015
+  - Run and test: lines 1016-1031
+  - Diagnose a run: lines 1032-1048
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -98,11 +98,15 @@ anything else with a short `title`, a `description` of what you are doing, and
 `purpose`: `build_thunk` when you are creating or substantially changing a
 thunk, `analyze_performance` when you are measuring time or cost,
 `debug_ai_control` when a step or work item did the wrong thing, or `other`
-when none of those fit. Also say who you are: `agent` is `claude`, `codex`,
-`cursor` or `other` (with a few words in `agentDescription` when it is
-`other`, such as the product name), and `agentSurface` is the app you run in
-(`desktop_app`, `terminal`, `web`, `ide` or `other`). The instructions then
-include the guide for that purpose and the app you named. Start the session
+when none of those fit. Also say who you are: `agent` is `claude_code` (Claude
+Code in a terminal, an editor or the Code tab of the Claude desktop app),
+`claude_cowork` (the Cowork tab of the Claude desktop app), `codex`, `cursor`,
+`copilot` or `other` (with a few words in `agentDescription` when it is
+`other`, such as the product name; Claude chat is `other`), and `agentSurface`
+is the app you run in (`desktop_app`, `terminal`, `web`, `ide` or `other`). The
+instructions then include the guide for that purpose and the app you named. In
+Claude Cowork they first ask you to read the `thunk-guide` skill, and to stop
+if you can't. Start the session
 with those arguments, as the only Builder call in its turn, and wait for its
 result: you do not have its `sessionId` until it finishes. Read the
 instructions it returns and pass that `sessionId` to every other Builder call.
