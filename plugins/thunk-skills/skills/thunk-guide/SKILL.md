@@ -19,38 +19,40 @@ description: >-
 
 > Help articles bundled in this skill's folder: `analyze-a-thunk-with-the-builder-mcp` is `analyzing.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`; `show-a-thunk-in-the-codex-desktop-app` is `codex-desktop-app.md`.
 
-**Read all of this file before you act on it.** It is longer than one read may return. If what
-you read is cut short (a "truncated" notice), read the rest by line range, at most 150 lines at
-a time, using the contents below. Read each help article this skill names in its own call, all
-of it: not several in one call, and not only part of one.
+This file is longer than one read may return. A truncated read keeps the start and the end and
+drops the middle. If you see a "truncated" notice, you already have this guide and the end of
+the file: use the contents below to fetch only a dropped heading you still need. Each such read:
+150 lines max. Do not page the whole file, and do not fetch several ranges in one turn. Slug
+tables of help articles are an index — read 1–3 articles per task through the FDA MCP, one
+article per call, not the whole table.
 
 Contents (line numbers in this file):
-- Pick your path: lines 58-73
-- Common instructions: lines 74-347
-  - The FDA MCP and its tools: lines 78-93
-  - Start a session first: lines 94-128
-  - More than one tenant: lines 129-138
-  - The FDA MCP informs; the browser pane shows: lines 139-149
-  - Open the thunk in the browser pane: lines 150-260
-  - Files: lines 261-282
-  - Offer numbered choices when you stop: lines 283-289
-  - How to read an article: lines 290-301
-  - Rules: lines 302-311
-  - Before finishing: lines 312-347
-- Build or change a thunk: lines 348-880
-  - Keep the user in the loop while you build: lines 350-421
-  - Build order: lines 422-787
-  - Write readable directions and code: lines 788-880
-- Explain a thunk: lines 881-939
-- Troubleshoot or analyze a thunk: lines 940-951
-- Help articles for each task: lines 952-1048
-  - Start here (first thunk in a session): lines 954-962
-  - Design the workflow: lines 963-977
-  - Write step AI instructions: lines 978-989
-  - Tools, connections and content: lines 990-1005
-  - Kinds of thunk and how they are reached: lines 1006-1015
-  - Run and test: lines 1016-1031
-  - Diagnose a run: lines 1032-1048
+- Pick your path: lines 60-75
+- Common instructions: lines 76-349
+  - How to read an article: lines 80-91
+  - The FDA MCP and its tools: lines 92-107
+  - Start a session first: lines 108-142
+  - More than one tenant: lines 143-152
+  - The FDA MCP informs; the browser pane shows: lines 153-163
+  - Open the thunk in the browser pane: lines 164-274
+  - Files: lines 275-296
+  - Offer numbered choices when you stop: lines 297-303
+  - Rules: lines 304-313
+  - Before finishing: lines 314-349
+- Build or change a thunk: lines 350-882
+  - Keep the user in the loop while you build: lines 352-423
+  - Build order: lines 424-789
+  - Write readable directions and code: lines 790-882
+- Explain a thunk: lines 883-941
+- Troubleshoot or analyze a thunk: lines 942-953
+- Help articles for each task: lines 954-1050
+  - Start here (first thunk in a session): lines 956-964
+  - Design the workflow: lines 965-979
+  - Write step AI instructions: lines 980-991
+  - Tools, connections and content: lines 992-1007
+  - Kinds of thunk and how they are reached: lines 1008-1017
+  - Run and test: lines 1018-1033
+  - Diagnose a run: lines 1034-1050
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -68,12 +70,24 @@ If you can't tell which path the user wants, ask, with the paths as numbered cho
 chain (a health check often ends in a troubleshoot or a cleanup, and a troubleshoot in a
 change), so say when you switch.
 
-Every path follows the **Common instructions** first. The help articles to read for each task
-are listed at the end, under **Help articles for each task**.
+Every path follows the **Common instructions** first. The **Help articles for each task**
+table at the end is an index: read 1–3 articles for the current task, not the whole table.
 
 ## Common instructions
 
 These apply to every path.
+
+### How to read an article
+
+- Read the article by its **slug** through the FDA MCP (the slugs for
+  each task are under **Which articles for which task**).
+- Not sure which slug? Search the help center through the FDA MCP with
+  a short query.
+- When an FDA MCP tool or help page names articles for a task, those are the
+  articles for that task. Read them the first time you do that work in a
+  session.
+- Read 1–3 articles per task, not all of them. Where articles disagree,
+  the more specific one wins.
 
 ### The FDA MCP and its tools
 
@@ -286,18 +300,6 @@ Whenever you pause for the user's input (a question, a decision, a proposal
 to approve, the end of a stage), end your message with a few sensible next
 steps as a numbered list, the one you recommend first, so the user can reply
 with just a number. They can still answer in their own words.
-
-### How to read an article
-
-- Read the article by its **slug** through the FDA MCP (the slugs for
-  each task are under **Which articles for which task**).
-- Not sure which slug? Search the help center through the FDA MCP with
-  a short query.
-- When an FDA MCP tool or help page names articles for a task, those are the
-  articles for that task. Read them the first time you do that work in a
-  session.
-- Read 1–3 articles per task, not all of them. Where articles disagree,
-  the more specific one wins.
 
 ### Rules
 

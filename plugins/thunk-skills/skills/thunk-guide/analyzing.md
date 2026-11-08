@@ -2,43 +2,45 @@
 
 > Help articles bundled in this skill's folder: `build-thunks-with-the-builder-mcp` is `SKILL.md`; `show-a-thunk-in-the-claude-desktop-app` is `claude-desktop-app.md`; `show-a-thunk-in-the-codex-desktop-app` is `codex-desktop-app.md`.
 
-**Read all of this file before you act on it.** It is longer than one read may return. If what
-you read is cut short (a "truncated" notice), read the rest by line range, at most 150 lines at
-a time, using the contents below. Read each help article this skill names in its own call, all
-of it: not several in one call, and not only part of one.
+This file is longer than one read may return. A truncated read keeps the start and the end and
+drops the middle. If you see a "truncated" notice, you already have this guide and the end of
+the file: use the contents below to fetch only a dropped heading you still need. Each such read:
+150 lines max. Do not page the whole file, and do not fetch several ranges in one turn. Slug
+tables of help articles are an index — read 1–3 articles per task through the FDA MCP, one
+article per call, not the whole table.
 
 Contents (line numbers in this file):
-- Pick the scenario first: lines 55-66
-- Common ground (all scenarios): lines 67-234
-  - Target and window: lines 69-87
-  - Read the design: lines 88-94
-  - Design checklist: lines 95-156
-  - Reading a run: lines 157-179
-  - Counting: lines 180-217
-  - When the cause is the platform: lines 218-234
-- Scenario A — Troubleshoot a specific problem: lines 235-267
-- Scenario B — Health check: lines 268-389
-  - B1. Operational metrics: lines 275-281
-  - B2. Stuck work: lines 282-292
-  - B3. Error rates and error diagnosis: lines 293-312
-  - B4. Result quality: lines 313-328
-  - B5. Design review: lines 329-335
-  - B6. Time analysis: lines 336-347
-  - B7. Cost: lines 348-355
-  - B8. Security: lines 356-368
-  - B9. Report: lines 369-389
-- Scenario C — Cleanup / review / upgrade: lines 390-701
-  - C1. Review: lines 402-414
-  - C2. Sort the findings, propose, then stop: lines 415-438
-  - C3. Mock the external effects: lines 439-494
-  - C4. Copy and swap in the mock: lines 495-530
-  - C5. Tests from real data: lines 531-558
-  - C6. Fix in the copy: lines 559-606
-  - C7. Run, grade, and compare models: lines 607-643
-  - C8. The pre-production checklist, hand over and clean up: lines 644-666
-  - C9. The report (required): lines 667-701
-- Rules: lines 702-714
-- The method articles: lines 715-723
+- Pick the scenario first: lines 57-68
+- Common ground (all scenarios): lines 69-236
+  - Target and window: lines 71-89
+  - Read the design: lines 90-96
+  - Design checklist: lines 97-158
+  - Reading a run: lines 159-181
+  - Counting: lines 182-219
+  - When the cause is the platform: lines 220-236
+- Scenario A — Troubleshoot a specific problem: lines 237-269
+- Scenario B — Health check: lines 270-391
+  - B1. Operational metrics: lines 277-283
+  - B2. Stuck work: lines 284-294
+  - B3. Error rates and error diagnosis: lines 295-314
+  - B4. Result quality: lines 315-330
+  - B5. Design review: lines 331-337
+  - B6. Time analysis: lines 338-349
+  - B7. Cost: lines 350-357
+  - B8. Security: lines 358-370
+  - B9. Report: lines 371-391
+- Scenario C — Cleanup / review / upgrade: lines 392-703
+  - C1. Review: lines 404-416
+  - C2. Sort the findings, propose, then stop: lines 417-440
+  - C3. Mock the external effects: lines 441-496
+  - C4. Copy and swap in the mock: lines 497-532
+  - C5. Tests from real data: lines 533-560
+  - C6. Fix in the copy: lines 561-608
+  - C7. Run, grade, and compare models: lines 609-645
+  - C8. The pre-production checklist, hand over and clean up: lines 646-668
+  - C9. The report (required): lines 669-703
+- Rules: lines 704-716
+- The method articles: lines 717-725
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
