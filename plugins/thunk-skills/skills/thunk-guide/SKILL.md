@@ -27,32 +27,32 @@ tables of help articles are an index — read 1–3 articles per task through th
 article per call, not the whole table.
 
 Contents (line numbers in this file):
-- Pick your path: lines 60-75
-- Common instructions: lines 76-349
-  - How to read an article: lines 80-91
-  - The FDA MCP and its tools: lines 92-107
-  - Start a session first: lines 108-142
-  - More than one tenant: lines 143-152
-  - The FDA MCP informs; the browser pane shows: lines 153-163
-  - Open the thunk in the browser pane: lines 164-274
-  - Files: lines 275-296
-  - Offer numbered choices when you stop: lines 297-303
-  - Rules: lines 304-313
-  - Before finishing: lines 314-349
-- Build or change a thunk: lines 350-882
-  - Keep the user in the loop while you build: lines 352-423
-  - Build order: lines 424-789
-  - Write readable directions and code: lines 790-882
-- Explain a thunk: lines 883-941
-- Troubleshoot or analyze a thunk: lines 942-953
-- Help articles for each task: lines 954-1050
-  - Start here (first thunk in a session): lines 956-964
-  - Design the workflow: lines 965-979
-  - Write step AI instructions: lines 980-991
-  - Tools, connections and content: lines 992-1007
-  - Kinds of thunk and how they are reached: lines 1008-1017
-  - Run and test: lines 1018-1033
-  - Diagnose a run: lines 1034-1050
+- Pick your path: lines 60-76
+- Common instructions: lines 77-359
+  - How to read an article: lines 81-92
+  - The FDA MCP and its tools: lines 93-108
+  - Start a session first: lines 109-143
+  - More than one tenant: lines 144-153
+  - The FDA MCP informs; the browser pane shows: lines 154-164
+  - Open the thunk in the browser pane: lines 165-275
+  - Files: lines 276-306
+  - Offer numbered choices when you stop: lines 307-313
+  - Rules: lines 314-323
+  - Before finishing: lines 324-359
+- Build or change a thunk: lines 360-892
+  - Keep the user in the loop while you build: lines 362-433
+  - Build order: lines 434-799
+  - Write readable directions and code: lines 800-892
+- Explain a thunk: lines 893-951
+- Troubleshoot or analyze a thunk: lines 952-963
+- Help articles for each task: lines 964-1060
+  - Start here (first thunk in a session): lines 966-974
+  - Design the workflow: lines 975-989
+  - Write step AI instructions: lines 990-1001
+  - Tools, connections and content: lines 1002-1017
+  - Kinds of thunk and how they are reached: lines 1018-1027
+  - Run and test: lines 1028-1043
+  - Diagnose a run: lines 1044-1060
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -65,6 +65,7 @@ few different kinds of task, and each one has its own instructions.
 | Explain what a thunk does, or teach the platform through one | Explain | **Explain a thunk** |
 | Find out why a work item or step failed or did the wrong thing | Troubleshoot | **Troubleshoot or analyze a thunk**: `analyzing.md`, Scenario A |
 | Check a thunk over, or clean it up, review or upgrade it | Analyze | **Troubleshoot or analyze a thunk**: `analyzing.md`, Scenarios B and C |
+| Check whether a thunk is ready for production, or fix what stops it | Readiness | The **thunk-deployment-readiness** skill (built from `check-deployment-readiness-with-the-fda-mcp`), after the **Common instructions** here |
 
 If you can't tell which path the user wants, ask, with the paths as numbered choices. Paths
 chain (a health check often ends in a troubleshoot or a cleanup, and a troubleshoot in a
@@ -275,7 +276,16 @@ you discuss a specific step.
 ### Files
 
 For a FILE or IMAGE input, or a content folder, never send a file's
-contents as base64 in a tool argument. If the file is at a public URL, upload it through the FDA MCP. If it is on your machine (one you made, or one the
+contents as base64 in a tool argument.
+
+A file already stored on this thunk — a file URL the user gave you, or one
+an upload through the FDA MCP already returned — is used as-is. Put that
+URL on the work item, a content folder, or a document template. Do not
+download it and do not upload it again. Those URLs identify a file the
+thunk already holds; they are not a public download.
+
+If the file is at a public URL and is not already on this thunk, upload it
+through the FDA MCP. If it is on your machine (one you made, or one the
 user gave you), ask the FDA MCP for an upload link and send the file from your shell.
 It returns an `uploadUrl` and an `uploadToken`. PUT each file's raw bytes to
 `uploadUrl`, one file per request, with the token in the `X-Upload-Token`
@@ -1000,7 +1010,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Specific tool recipes | `how-to-build-a-custom-database-tool`, `how-to-build-a-spreadsheet-lookup-tool`, `how-to-build-a-tool-that-uses-a-conversation` |
 | Test a tool | `testing-custom-tools` |
 | Give a tool unit tests, run them, read graded results — test one tool without a work item; iterate on selected cases (not saved), then run the whole suite once (saved as its test status) | `testing-custom-tools`, `custom-tools` |
-| Save reports, set up the report automation (scheduled report emails / summaries), run a report (the design section `reports`) — saving reports is refused on Production; running a report works there | `how-to-save-a-report-from-your-work-items`, `send-reports-on-a-schedule-with-the-report-automation` |
+| Save reports, set up the report automation (scheduled report emails / summaries), run a report (the design section `reports`) — saving reports is refused on Production unless the organization allows changes there; running a report works there | `how-to-save-a-report-from-your-work-items`, `send-reports-on-a-schedule-with-the-report-automation` |
 | Connections | `connections-to-business-applications`, `connecting-to-external-systems-and-tools`, `reuse-thunk-interfaces-and-plug-in-connections` |
 | Content folders | `content-folders`, `spreadsheet-content-folders` |
 | Documents, PDFs, spreadsheets | `working-with-documents-and-pdfs`, `working-with-spreadsheets`, `generate-documents-from-templates` |
