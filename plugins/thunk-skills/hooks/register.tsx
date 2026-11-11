@@ -83,8 +83,10 @@ const guideRead = atom(
   false,
 );
 
-// The skill the gate waits for, as Claude names it from this plugin or as a bare skill name.
-const GUIDE_SKILL = /^(thunk-skills:)?thunk-guide$/;
+// The skill the gate waits for: bare, or under any plugin's prefix. This plugin's is
+// thunk-skills:, but the single-plugin upload edition bundles the skill into the tenant plugin
+// (<tenant plugin>:thunk-guide), and the export does not rewrite this pattern.
+const GUIDE_SKILL = /^([\w-]+:)?thunk-guide$/;
 
 // A Builder server: a tenant plugin's thunk-fda, or one added by hand under a name like it.
 // thunk-builder, the server's name until 2026-11-04, still counts: an install made before the
@@ -582,6 +584,22 @@ export const register: Register = (on) => {
     }
 
     const ran = await nextHook(e);
+    const isOk =
+      !("deny" in ran && ran.deny) && !("isError" in ran && ran.isError);
+
+    // The Skill tool loading the guide opens the gate too. Where an organization manages Claude
+    // Code, its policy can skip skill.prompt for a plugin the organization does not own, and
+    // then the hook above never fires and every Builder call would be refused for good.
+    if (
+      isOk &&
+      e.tool === "Skill" &&
+      GUIDE_SKILL.test(
+        String((e as unknown as Record<string, unknown>).skill ?? ""),
+      )
+    ) {
+      await update($, guideRead, () => true).catch(() => undefined);
+    }
+
     const match = BUILDER_TOOL.exec(e.tool);
     const followUp =
       match?.[1] && /thunk/i.test(match[1]) && match[2]
@@ -595,8 +613,6 @@ export const register: Register = (on) => {
       await update($, next, () => followUp).catch(() => undefined);
     }
 
-    const isOk =
-      !("deny" in ran && ran.deny) && !("isError" in ran && ran.isError);
     const thunks =
       isOk && match?.[2] === "list_thunks"
         ? listedThunks(e as unknown as Record<string, unknown>, ran.text)

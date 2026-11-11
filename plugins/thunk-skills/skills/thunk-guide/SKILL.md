@@ -39,20 +39,20 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 307-313
   - Rules: lines 314-323
   - Before finishing: lines 324-359
-- Build or change a thunk: lines 360-892
+- Build or change a thunk: lines 360-895
   - Keep the user in the loop while you build: lines 362-433
-  - Build order: lines 434-799
-  - Write readable directions and code: lines 800-892
-- Explain a thunk: lines 893-951
-- Troubleshoot or analyze a thunk: lines 952-963
-- Help articles for each task: lines 964-1060
-  - Start here (first thunk in a session): lines 966-974
-  - Design the workflow: lines 975-989
-  - Write step AI instructions: lines 990-1001
-  - Tools, connections and content: lines 1002-1017
-  - Kinds of thunk and how they are reached: lines 1018-1027
-  - Run and test: lines 1028-1043
-  - Diagnose a run: lines 1044-1060
+  - Build order: lines 434-802
+  - Write readable directions and code: lines 803-895
+- Explain a thunk: lines 896-954
+- Troubleshoot or analyze a thunk: lines 955-966
+- Help articles for each task: lines 967-1063
+  - Start here (first thunk in a session): lines 969-977
+  - Design the workflow: lines 978-992
+  - Write step AI instructions: lines 993-1004
+  - Tools, connections and content: lines 1005-1020
+  - Kinds of thunk and how they are reached: lines 1021-1030
+  - Run and test: lines 1031-1046
+  - Diagnose a run: lines 1047-1063
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -501,7 +501,8 @@ For a new workflow or chat-app thunk:
    Application") and `workItemListName` the plural ("Expense Receipts").
    The thunk's list, its steps and its plan all use these names, and they
    can't be changed later, so never pass a generic name such as "Work Item"
-   or "Item". Give each step its real title and a short paragraph of directions
+   or "Item". Give
+   each step its real title and a short paragraph of directions
    saying what the step is for (step 4 replaces it with full directions).
    Leave out `toolConfig`, and any binding to a property that doesn't exist
    yet. Check the `results` the response gives
@@ -726,7 +727,9 @@ For a new workflow or chat-app thunk:
 5. **Test the main path as soon as it is built**, without waiting to be
    asked. Create test data: a few work items for the typical cases the
    thunk will see most, with `tests` so each is a
-   test work item with assertions on its expected outputs. If the thunk
+   test work item with assertions on its expected outputs. To change a
+   work item's Name (the row title), including a test work item's, set
+   Name on that work item. If the thunk
    holds a conversation (a chat app, or a step that emails someone and waits
    for the reply), give each test work item a simulated user
    (`set_simulated_user`) so the run does not stop to

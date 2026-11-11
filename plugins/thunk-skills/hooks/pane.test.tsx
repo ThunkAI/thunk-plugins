@@ -712,6 +712,43 @@ test("the bare thunk-guide skill name opens the gate too", async ($, on) => {
   expect(ran.deny).toBeUndefined();
 });
 
+test("the Skill tool loading the guide opens the gate when skill.prompt never fires", async ($, on) => {
+  // A managed Claude Code whose policy skips this plugin's skill.prompt hook: only tool.call runs.
+  engine(on, [{ isPlaced: true, isShown: true }]);
+  let skillFails = true;
+  on("tool.call", (_, e) =>
+    e.tool === "Skill" && skillFails
+      ? { result: {}, isError: true, text: "no such skill" }
+      : { result: {} },
+  );
+  const getThunk = builderCall("get_thunk", { thunkId: "T1" });
+  const skillCall = (skill: string) => ({ tool: "Skill", skill }) as never;
+
+  await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+
+  // A Skill call that failed did not load the guide.
+  await $.tool.call(skillCall("thunk-skills:thunk-guide"));
+  expect((await $.tool.call(getThunk)).deny).toMatch(/thunk-guide/);
+
+  // Another skill does not open the gate.
+  skillFails = false;
+  await $.tool.call(skillCall("commit"));
+  expect((await $.tool.call(getThunk)).deny).toMatch(/thunk-guide/);
+
+  await $.tool.call(skillCall("thunk-skills:thunk-guide"));
+  expect((await $.tool.call(getThunk)).deny).toBeUndefined();
+});
+
+test("the guide under the upload edition's tenant prefix opens the gate", async ($, on) => {
+  engine(on, [{ isPlaced: true, isShown: true }]);
+  on("tool.call", () => ({ result: {} }));
+
+  await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
+  await $.skill.prompt({ skill: "tenant:thunk-guide", text: "the guide" });
+  const ran = await $.tool.call(builderCall("get_thunk", { thunkId: "T1" }));
+  expect(ran.deny).toBeUndefined();
+});
+
 test("the guide gate leaves other tools and other Thunk.AI servers alone", async ($, on) => {
   engine(on, [{ isPlaced: true, isShown: true }]);
   on("tool.call", () => ({ result: {} }));
