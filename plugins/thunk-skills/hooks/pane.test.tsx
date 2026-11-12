@@ -692,7 +692,8 @@ test("Builder tools are refused until the thunk-guide skill loads", async ($, on
 
   await $.session.start({ cwd: "/", surface: "desktop", isInteractive: true });
   const refused = await $.tool.call(getThunk);
-  expect(refused.deny).toMatch(/thunk-skills:thunk-guide/);
+  // No plugin prefix: the upload edition names the skill after the tenant plugin.
+  expect(refused.deny).toMatch(/Load the thunk-guide skill/);
 
   // Another skill does not open the gate.
   await $.skill.prompt({ skill: "commit", text: "commit" });

@@ -39,20 +39,20 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 307-313
   - Rules: lines 314-323
   - Before finishing: lines 324-359
-- Build or change a thunk: lines 360-895
+- Build or change a thunk: lines 360-899
   - Keep the user in the loop while you build: lines 362-433
-  - Build order: lines 434-802
-  - Write readable directions and code: lines 803-895
-- Explain a thunk: lines 896-954
-- Troubleshoot or analyze a thunk: lines 955-966
-- Help articles for each task: lines 967-1063
-  - Start here (first thunk in a session): lines 969-977
-  - Design the workflow: lines 978-992
-  - Write step AI instructions: lines 993-1004
-  - Tools, connections and content: lines 1005-1020
-  - Kinds of thunk and how they are reached: lines 1021-1030
-  - Run and test: lines 1031-1046
-  - Diagnose a run: lines 1047-1063
+  - Build order: lines 434-806
+  - Write readable directions and code: lines 807-899
+- Explain a thunk: lines 900-958
+- Troubleshoot or analyze a thunk: lines 959-970
+- Help articles for each task: lines 971-1068
+  - Start here (first thunk in a session): lines 973-981
+  - Design the workflow: lines 982-996
+  - Write step AI instructions: lines 997-1008
+  - Tools, connections and content: lines 1009-1024
+  - Kinds of thunk and how they are reached: lines 1025-1034
+  - Run and test: lines 1035-1051
+  - Diagnose a run: lines 1052-1068
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -632,14 +632,17 @@ For a new workflow or chat-app thunk:
    picks up the thunk's enabled tools only when it is added, not when a
    stub is changed into one. To change what an `ai` or `code` tool may
    call later, send `toolConfig` on its update, with the enable/disable
-   library and tool ops a step's `toolConfig` takes.    Map I/O
-   (`set_io_bindings`) is a step setting, and the same op on an `ai`
-   tool's nested `toolConfig` maps nested tools onto that AI tool's
+   library and tool ops a step's `toolConfig` takes. Map I/O
+   (`set_io_bindings`) is a setting on the caller. On a workflow step it
+   maps **any enabled tool**, including a `code` tool, onto that step's
+   properties. The same op on an `ai` tool's nested `toolConfig` maps
+   nested tools (including a nested `code` tool) onto that AI tool's
    own inputs and outputs
    (`map-a-tools-inputs-and-outputs-to-the-work-item`). The same
    property may fill a tool input and receive a tool output when it is
-   listed on both sides of the host. A `code` tool's nested
-   `toolConfig` does not take it.
+   listed on both sides of the host. A `code` tool's own nested
+   `toolConfig` does not take it: the code already passes values to the
+   tools it calls.
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
    - before you add any property, audit its type. List every fact this
      step, a later step or a tool needs, one property per fact, and give
@@ -707,7 +710,8 @@ For a new workflow or chat-app thunk:
    - when a large property should go into a tool as-is, or a large tool
      result should land on a step output without the agent copying it,
      map those fields with `set_io_bindings` on that step's `toolConfig`
-     (`map-a-tools-inputs-and-outputs-to-the-work-item`). Map only the
+     (`map-a-tools-inputs-and-outputs-to-the-work-item`). That includes
+     when the tool is a custom `code` tool. Map only the
      fields that are being copied; leave judgment arguments for the model.
      The same property can fill a tool input and receive a tool output
      when it is listed on both `inputProperties` and `outputProperties`
@@ -1007,7 +1011,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Task | Slugs |
 | --- | --- |
 | Pick / enable tools on a step (`toolConfig`) | `ai-tools`, `ai-tool-libraries`, `conditional-tool-availability` |
-| Map a tool's inputs/outputs onto the step (`set_io_bindings`) | `map-a-tools-inputs-and-outputs-to-the-work-item` |
+| Map a tool's inputs/outputs onto the step (`set_io_bindings`), including a `code` tool | `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Build custom tools | `custom-tools`, `how-custom-code-tools-work`, `how-to-build-a-tool-wrapper` |
 | Reuse a custom AI or code tool's result for identical lookups (opt in only when the tool reads and does not change anything; clear the cache after you change the tool) | `cache-results-of-a-custom-ai-or-code-tool` |
 | Specific tool recipes | `how-to-build-a-custom-database-tool`, `how-to-build-a-spreadsheet-lookup-tool`, `how-to-build-a-tool-that-uses-a-conversation` |
@@ -1034,6 +1038,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | --- | --- |
 | Create / run / rerun work items | `workflow-orchestration`, `manual-testing` |
 | Automated tests | `evals-automated-tests`, `building-a-test-plan` |
+| Skip a side-effect step (email, a CRM write) on test work items (`skipForTestWorkItems`). Do not add a test-flag property or a run condition for that | `evals-automated-tests`, `run-a-step-only-when-a-condition-matches` |
 | Test a conversation: a test work item whose end user is a simulated user, with assertions (`set_simulated_user` then rerun, or `copy_as_test` then run) | `test-a-conversation-with-a-simulated-user`, `evals-automated-tests` |
 | Mock external systems for testing | `improve-a-live-thunk-safely`, `evals-automated-tests` |
 | Production readiness | `shipping-enterprise-thunks-testing-and-quality-principles` |

@@ -284,7 +284,8 @@ async function guideRefusal($: EngineInterface, tool: string) {
   }
 
   return (
-    "Load the thunk-skills:thunk-guide skill (Skill tool) before using the Thunk.AI " +
+    // No plugin prefix: the upload edition bundles the skill under the tenant plugin's name.
+    "Load the thunk-guide skill (Skill tool) before using the Thunk.AI " +
     "FDA MCP tools, then retry this call."
   );
 }
