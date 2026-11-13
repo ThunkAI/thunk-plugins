@@ -29,18 +29,18 @@ Contents (line numbers in this file):
   - B7. Cost: lines 350-357
   - B8. Security: lines 358-370
   - B9. Report: lines 371-391
-- Scenario C — Cleanup / review / upgrade: lines 392-703
+- Scenario C — Cleanup / review / upgrade: lines 392-706
   - C1. Review: lines 404-416
   - C2. Sort the findings, propose, then stop: lines 417-440
-  - C3. Mock the external effects: lines 441-496
-  - C4. Copy and swap in the mock: lines 497-532
-  - C5. Tests from real data: lines 533-560
-  - C6. Fix in the copy: lines 561-608
-  - C7. Run, grade, and compare models: lines 609-645
-  - C8. The pre-production checklist, hand over and clean up: lines 646-668
-  - C9. The report (required): lines 669-703
-- Rules: lines 704-716
-- The method articles: lines 717-725
+  - C3. Mock the external effects: lines 441-499
+  - C4. Copy and swap in the mock: lines 500-535
+  - C5. Tests from real data: lines 536-563
+  - C6. Fix in the copy: lines 564-611
+  - C7. Run, grade, and compare models: lines 612-648
+  - C8. The pre-production checklist, hand over and clean up: lines 649-671
+  - C9. The report (required): lines 672-706
+- Rules: lines 707-719
+- The method articles: lines 720-728
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
@@ -466,8 +466,11 @@ customer data stays inside the mock thunk:
     output (`outputContains`). Substring filters scan stored calls in
     memory (no search index) and stop after 1000 rows with a note that
     the page may be incomplete (an empty page is not "no matches") and
-    `nextCursor` when more remain. Page with `nextCursor`. Owner or thunk
-    Admin only.
+    `nextCursor` when more remain. Page with `nextCursor`. Each call
+    includes a `url` that opens that call on the tool's **Call history**
+    tab when the tool is a custom-built tool of the thunk — hand that
+    link to a person. Connection and imported tools have no such page,
+    and `url` is then null. Owner or thunk Admin only.
   - **One call at a time:** the step history `depth: "full"` on the step
     that made the call shows its args, but **the result is cut off** after a
     few hundred characters. The full result is also in
