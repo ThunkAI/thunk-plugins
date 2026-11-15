@@ -28,7 +28,7 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick your path: lines 60-76
-- Common instructions: lines 77-359
+- Common instructions: lines 77-367
   - How to read an article: lines 81-92
   - The FDA MCP and its tools: lines 93-108
   - Start a session first: lines 109-143
@@ -38,21 +38,21 @@ Contents (line numbers in this file):
   - Files: lines 276-306
   - Offer numbered choices when you stop: lines 307-313
   - Rules: lines 314-323
-  - Before finishing: lines 324-359
-- Build or change a thunk: lines 360-907
-  - Keep the user in the loop while you build: lines 362-433
-  - Build order: lines 434-814
-  - Write readable directions and code: lines 815-907
-- Explain a thunk: lines 908-966
-- Troubleshoot or analyze a thunk: lines 967-978
-- Help articles for each task: lines 979-1076
-  - Start here (first thunk in a session): lines 981-989
-  - Design the workflow: lines 990-1004
-  - Write step AI instructions: lines 1005-1016
-  - Tools, connections and content: lines 1017-1032
-  - Kinds of thunk and how they are reached: lines 1033-1042
-  - Run and test: lines 1043-1059
-  - Diagnose a run: lines 1060-1076
+  - Before finishing: lines 324-367
+- Build or change a thunk: lines 368-968
+  - Keep the user in the loop while you build: lines 370-441
+  - Build order: lines 442-865
+  - Write readable directions and code: lines 866-968
+- Explain a thunk: lines 969-1027
+- Troubleshoot or analyze a thunk: lines 1028-1039
+- Help articles for each task: lines 1040-1138
+  - Start here (first thunk in a session): lines 1042-1050
+  - Design the workflow: lines 1051-1065
+  - Write step AI instructions: lines 1066-1077
+  - Tools, connections and content: lines 1078-1093
+  - Kinds of thunk and how they are reached: lines 1094-1103
+  - Run and test: lines 1104-1121
+  - Diagnose a run: lines 1122-1138
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -332,7 +332,15 @@ with just a number. They can still answer in their own words.
   specific type that fits, and in `requiredOutputProperties` of the step
   that produces it when the work cannot go on without it?
 - Do the directions and AI tool instructions I wrote open with an objective
-  and a numbered process, and is every code tool I wrote readable source?
+  and a numbered process, one action per item with its detail nested under
+  it, and does each action that uses an earlier result name it?
+- Is every code tool I wrote readable source, with no table of records in
+  its code (reference data in a Spreadsheets folder or a connection), no
+  guessing at what free text means, and comments about the business rule
+  rather than how the tool was written (`how-custom-code-tools-work`, "What
+  belongs in a code tool")?
+- Is every value with several parts, on a property or a tool output, a
+  Structure Type rather than `JSON_OBJECT`?
 - Does every value a step must record have a source it can reach (an input
   property, an enabled tool or a file), and do its directions agree with the
   output properties' descriptions (`how-to-write-effective-directions`,
@@ -539,7 +547,16 @@ For a new workflow or chat-app thunk:
    required. Add the
    connection to the thunk. These are the user's personal
    connections; a thunk assigned to a resource environment uses that
-   environment's connections instead. Otherwise, and whenever the user prefers, build a
+   environment's connections instead. Reach an outside system only through
+   a connection's tools: never build an API tool that makes its own HTTP
+   requests, and for a database prefer its MCP server or REST API over a
+   custom database tool, which is for a database that has neither. When
+   the workflow needs business-level operations on that system, put them
+   in a module with a business-level interface, the same shape a mock of
+   that system would have, and implement each
+   interface tool as a short code tool that calls the connection's tool
+   (`connections["<name>"].tools.<tool>`) and returns the interface's
+   output. Otherwise, and whenever the user prefers, build a
    **mock** of that system, shaped so that moving to the real system later
    is a rebind, not a rebuild:
    - **One MCP-server thunk per system, with a business-level interface.**
@@ -605,9 +622,13 @@ For a new workflow or chat-app thunk:
      the failure as text rather than as an object or a thrown error: treat
      any result that is not the declared object as a refused request.
 
-   Data the thunk itself owns, such as a policy table, a rate card or
-   thresholds, goes the same way: a Spreadsheets folder on this thunk, read by
-   its tools, never constants in code. The rules for good stand-ins are in
+   Data the thunk itself owns, such as a policy table, a rate card, a list of
+   product labels or a reference list of codes, goes the same way: a
+   Spreadsheets folder on this thunk, read by its tools, never constants in
+   code. This holds for every code tool you write, not only for mocks: a code
+   tool keeps only thresholds and short lists of allowed values as constants.
+   When a mock or a connection already holds the data, call its tools rather
+   than copying the data into this thunk. The rules for good stand-ins are in
    `improve-a-live-thunk-safely` and in `analyze-a-thunk-with-the-builder-mcp` (C3).
    Tell the user which systems are mocked.
 3. **Outline the tools.** Add each custom tool
@@ -615,7 +636,15 @@ For a new workflow or chat-app thunk:
    schema and output, and a stub implementation: a short `code` body that
    returns a "not implemented yet" message. Give the output as
    `outputProperties` (property types, with `constraints.required` on each
-   field the tool always returns) or `outputSchema`. A code tool that
+   field the tool always returns) or `outputSchema`. For an output field with
+   several parts, such as a record or a list of records, use a Structure Type
+   (`STRUCTURE_TYPE_REF`), as for a property, not `JSON_OBJECT`; when the tool's
+   result is recorded on a property, give both the same Structure Type. Give a
+   code tool only fixed computations over typed inputs: what free text means
+   (which product a misspelled name is, whether a description names a more
+   specific condition) is for the agent to decide from a lookup tool's
+   candidates, not for the code to guess with substring or spelling matches
+   (`how-custom-code-tools-work`, "What belongs in a code tool"). A code tool that
    returns one value can declare a bare value, such as
    `{"type":"string","enum":["Red","Amber","Green"]}`. An `ai` tool's output
    is an object of fields. A `classifier` needs at least one `YES_OR_NO`
@@ -800,6 +829,28 @@ For a new workflow or chat-app thunk:
    hardening tests, the second model and the review found, and what you
    fixed.
 
+   Hardening fixes the faults these tests find. It is not a pass to squeeze
+   out the last points of reliability by moving rules into code, adding
+   finish checks and rewording for each failed case. That deeper work fits
+   only a design that has stopped changing, and only when the user asks for
+   it (for example before a benchmark); done earlier, it makes a design that
+   is still changing hard to change. While the requirements and logic are
+   still moving, keep the design simple. When the user does ask for it,
+   follow `tuning-for-reliability-11834601` (*Harden a thunk for
+   reliability*).
+
+**When a step skips or reorders an action.** A step's directions can say
+do A, then B with what A produced, then C, and the agent should follow
+them in that order. If it calls a tool before it has the result that tool
+needs, or leaves an action out, fix the directions before you change the
+workflow (`how-to-write-effective-directions`, "Number the process" and
+"When the agent skips or reorders an action"): give the action its own
+numbered item at the same level as the others, name the earlier result it
+uses, move long example lists into the step's examples and definitions
+into property descriptions, and mark the result **Required to finish**.
+Don't add a step only to force an order; steps are coarse stages of the
+process (`use-modularity-effectively-when-building-a-thunk`).
+
 Don't run work items through a step whose tools are still stubs.
 
 For an MCP-server thunk, the interface is the outline: create it with its
@@ -863,6 +914,16 @@ the step decide which tool does the work (the "Say what should happen, not
 which tool to call" and "Describe the intent, not the mechanics" guidelines
 in `how-to-write-effective-directions`).
 
+This holds for every thunk you build, sample thunks and demos included, and
+for an AI tool's instructions as well as a step's directions. If a run shows
+the agent calling the wrong tool, don't fix it by naming the right one: turn
+off the tools the step should not use, and make the right tool's name and
+description say what it is for. Naming a tool in the directions is a last
+resort, only while hardening a finished design for reliability, and only
+when the step history shows the agent choosing the wrong tool after the
+tool set and descriptions were fixed (`tuning-for-reliability-11834601`,
+"Name a tool only on evidence").
+
 The design review reports instructions that name a tool, that break the
 first two rules, or that lack the Objective and Process shape.
 
@@ -870,7 +931,7 @@ After you save them, read the instructions back from the design and
 check them against the article's quick checklist, as an author would before
 pressing **Rewrite**. Fix what fails.
 
-**Code tools.** Write a code tool's `code` (and any `responseParser`) as
+**Code tools.** Write a code tool's `code` as
 readable source, by the **Write code people can read** section of
 `how-custom-code-tools-work`: one statement per line with two-space
 indents, a short opening comment on what the tool does and returns (the
@@ -1050,6 +1111,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Test a conversation: a test work item whose end user is a simulated user, with assertions (`set_simulated_user` then rerun, or `copy_as_test` then run) | `test-a-conversation-with-a-simulated-user`, `evals-automated-tests` |
 | Mock external systems for testing | `improve-a-live-thunk-safely`, `evals-automated-tests` |
 | Production readiness | `shipping-enterprise-thunks-testing-and-quality-principles` |
+| Harden a settled design for the most reliability (only when the user asks; not during early building) | `tuning-for-reliability-11834601` |
 | Design review | `workflow-review` |
 | Switch AI model (thunk options, a step, a custom AI tool, model definitions) | `move-a-thunk-to-a-new-ai-model`, `supported-ai-models-and-what-happens-when-they-change` |
 | Pause / resume | `pause-and-restart-a-thunk` |
