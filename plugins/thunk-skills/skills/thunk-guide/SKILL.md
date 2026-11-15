@@ -39,20 +39,20 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 307-313
   - Rules: lines 314-323
   - Before finishing: lines 324-359
-- Build or change a thunk: lines 360-899
+- Build or change a thunk: lines 360-907
   - Keep the user in the loop while you build: lines 362-433
-  - Build order: lines 434-806
-  - Write readable directions and code: lines 807-899
-- Explain a thunk: lines 900-958
-- Troubleshoot or analyze a thunk: lines 959-970
-- Help articles for each task: lines 971-1068
-  - Start here (first thunk in a session): lines 973-981
-  - Design the workflow: lines 982-996
-  - Write step AI instructions: lines 997-1008
-  - Tools, connections and content: lines 1009-1024
-  - Kinds of thunk and how they are reached: lines 1025-1034
-  - Run and test: lines 1035-1051
-  - Diagnose a run: lines 1052-1068
+  - Build order: lines 434-814
+  - Write readable directions and code: lines 815-907
+- Explain a thunk: lines 908-966
+- Troubleshoot or analyze a thunk: lines 967-978
+- Help articles for each task: lines 979-1076
+  - Start here (first thunk in a session): lines 981-989
+  - Design the workflow: lines 990-1004
+  - Write step AI instructions: lines 1005-1016
+  - Tools, connections and content: lines 1017-1032
+  - Kinds of thunk and how they are reached: lines 1033-1042
+  - Run and test: lines 1043-1059
+  - Diagnose a run: lines 1060-1076
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -746,6 +746,14 @@ For a new workflow or chat-app thunk:
    holds a simulated user that replays the conversation. Re-running it
    replays the conversation in the same thread and replaces the recorded
    messages and outputs; to keep the original, use `copy_as_test` instead.
+   A custom tool that takes a conversation is tested on its own as well:
+   each of its test cases gives the Conversation input a fixture,
+   `{ "kind": "toolTestConversation", "messages": [...], "simulation":
+   { "script": "...", "maxReplies": n } }`, never a link to a live
+   conversation. Add `simulation` whenever the tool waits for a reply,
+   and assert on what the run added to the conversation with
+   `$conversation`; read
+   `testing-custom-tools`.
    Leave edge cases
    and failure cases for hardening (step 6): while the design is still
    changing, they cost runs and fixes on behavior that may not last. Run
@@ -1016,7 +1024,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | Reuse a custom AI or code tool's result for identical lookups (opt in only when the tool reads and does not change anything; clear the cache after you change the tool) | `cache-results-of-a-custom-ai-or-code-tool` |
 | Specific tool recipes | `how-to-build-a-custom-database-tool`, `how-to-build-a-spreadsheet-lookup-tool`, `how-to-build-a-tool-that-uses-a-conversation` |
 | Test a tool | `testing-custom-tools` |
-| Give a tool unit tests, run them, read graded results — test one tool without a work item; iterate on selected cases (not saved), then run the whole suite once (saved as its test status) | `testing-custom-tools`, `custom-tools` |
+| Give a tool unit tests, run them, read graded results — test one tool without a work item; iterate on selected cases (not saved), then run the whole suite once (saved as its test status). A tool that takes a conversation gets a conversation fixture with a simulated user | `testing-custom-tools`, `custom-tools` |
 | Save reports, set up the report automation (scheduled report emails / summaries), run a report (the design section `reports`) — saving reports is refused on Production unless the organization allows changes there; running a report works there | `how-to-save-a-report-from-your-work-items`, `send-reports-on-a-schedule-with-the-report-automation` |
 | Connections | `connections-to-business-applications`, `connecting-to-external-systems-and-tools`, `reuse-thunk-interfaces-and-plug-in-connections` |
 | Content folders | `content-folders`, `spreadsheet-content-folders` |
