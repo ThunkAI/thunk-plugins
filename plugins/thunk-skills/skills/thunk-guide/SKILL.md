@@ -28,31 +28,31 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick your path: lines 60-76
-- Common instructions: lines 77-367
+- Common instructions: lines 77-368
   - How to read an article: lines 81-92
   - The FDA MCP and its tools: lines 93-108
-  - Start a session first: lines 109-143
-  - More than one tenant: lines 144-153
-  - The FDA MCP informs; the browser pane shows: lines 154-164
-  - Open the thunk in the browser pane: lines 165-275
-  - Files: lines 276-306
-  - Offer numbered choices when you stop: lines 307-313
-  - Rules: lines 314-323
-  - Before finishing: lines 324-367
-- Build or change a thunk: lines 368-968
-  - Keep the user in the loop while you build: lines 370-441
-  - Build order: lines 442-865
-  - Write readable directions and code: lines 866-968
-- Explain a thunk: lines 969-1027
-- Troubleshoot or analyze a thunk: lines 1028-1039
-- Help articles for each task: lines 1040-1138
-  - Start here (first thunk in a session): lines 1042-1050
-  - Design the workflow: lines 1051-1065
-  - Write step AI instructions: lines 1066-1077
-  - Tools, connections and content: lines 1078-1093
-  - Kinds of thunk and how they are reached: lines 1094-1103
-  - Run and test: lines 1104-1121
-  - Diagnose a run: lines 1122-1138
+  - Start a session first: lines 109-144
+  - More than one tenant: lines 145-154
+  - The FDA MCP informs; the browser pane shows: lines 155-165
+  - Open the thunk in the browser pane: lines 166-276
+  - Files: lines 277-307
+  - Offer numbered choices when you stop: lines 308-314
+  - Rules: lines 315-324
+  - Before finishing: lines 325-368
+- Build or change a thunk: lines 369-972
+  - Keep the user in the loop while you build: lines 371-442
+  - Build order: lines 443-869
+  - Write readable directions and code: lines 870-972
+- Explain a thunk: lines 973-1031
+- Troubleshoot or analyze a thunk: lines 1032-1043
+- Help articles for each task: lines 1044-1142
+  - Start here (first thunk in a session): lines 1046-1054
+  - Design the workflow: lines 1055-1069
+  - Write step AI instructions: lines 1070-1081
+  - Tools, connections and content: lines 1082-1097
+  - Kinds of thunk and how they are reached: lines 1098-1107
+  - Run and test: lines 1108-1125
+  - Diagnose a run: lines 1126-1142
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -119,12 +119,13 @@ Code in a terminal, an editor or the Code tab of the Claude desktop app),
 `copilot` or `other` (with a few words in `agentDescription` when it is
 `other`, such as the product name; Claude chat is `other`), and `agentSurface`
 is the app you run in (`desktop_app`, `terminal`, `web`, `ide` or `other`). The
-instructions then include the guide for that purpose and the app you named. In
-Claude Cowork they first ask you to read the `thunk-guide` skill, and to stop
-if you can't. Start the session
-with those arguments, as the only Builder call in its turn, and wait for its
-result: you do not have its `sessionId` until it finishes. Read the
+instructions then name the guide to read for that purpose and the guides for
+the app you named. In Claude Cowork they first ask you to read the
+`thunk-guide` skill, and to stop if you can't. Start the session with those
+arguments, as the only Builder call in its turn, and wait for its result: you do not have its `sessionId` until it finishes. Read the
 instructions it returns and pass that `sessionId` to every other Builder call.
+If your app saves a long result (such as a long help article) to a file instead
+of showing it, read it from that file.
 Where the server requires sessions, an FDA MCP call without a `sessionId` is
 refused with `session_required`. A `sessionId` that is not yours, or not a real
 one, is always refused with `session_not_found`. Either way, start a session
@@ -544,7 +545,10 @@ For a new workflow or chat-app thunk:
    if the provider needs one and click **Authorize**. Refresh the tools of
    the MCP connection that uses it once they say they are done; until the
    sign-in is complete the refresh reports that OAuth authorization is
-   required. Add the
+   required. A refresh that returns both `toolsReflectedAt` and `error` read
+   only part of the server's tool list in time: the tools it read were saved
+   and the connection's earlier tools were kept, so refresh again before you
+   rely on the list. Add the
    connection to the thunk. These are the user's personal
    connections; a thunk assigned to a resource environment uses that
    environment's connections instead. Reach an outside system only through
