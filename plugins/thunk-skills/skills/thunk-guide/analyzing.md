@@ -11,36 +11,36 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick the scenario first: lines 57-68
-- Common ground (all scenarios): lines 69-236
+- Common ground (all scenarios): lines 69-240
   - Target and window: lines 71-89
   - Read the design: lines 90-96
   - Design checklist: lines 97-158
-  - Reading a run: lines 159-181
-  - Counting: lines 182-219
-  - When the cause is the platform: lines 220-236
-- Scenario A — Troubleshoot a specific problem: lines 237-269
-- Scenario B — Health check: lines 270-391
-  - B1. Operational metrics: lines 277-283
-  - B2. Stuck work: lines 284-294
-  - B3. Error rates and error diagnosis: lines 295-314
-  - B4. Result quality: lines 315-330
-  - B5. Design review: lines 331-337
-  - B6. Time analysis: lines 338-349
-  - B7. Cost: lines 350-357
-  - B8. Security: lines 358-370
-  - B9. Report: lines 371-391
-- Scenario C — Cleanup / review / upgrade: lines 392-706
-  - C1. Review: lines 404-416
-  - C2. Sort the findings, propose, then stop: lines 417-440
-  - C3. Mock the external effects: lines 441-499
-  - C4. Copy and swap in the mock: lines 500-535
-  - C5. Tests from real data: lines 536-563
-  - C6. Fix in the copy: lines 564-611
-  - C7. Run, grade, and compare models: lines 612-648
-  - C8. The pre-production checklist, hand over and clean up: lines 649-671
-  - C9. The report (required): lines 672-706
-- Rules: lines 707-719
-- The method articles: lines 720-728
+  - Reading a run: lines 159-185
+  - Counting: lines 186-223
+  - When the cause is the platform: lines 224-240
+- Scenario A — Troubleshoot a specific problem: lines 241-273
+- Scenario B — Health check: lines 274-395
+  - B1. Operational metrics: lines 281-287
+  - B2. Stuck work: lines 288-298
+  - B3. Error rates and error diagnosis: lines 299-318
+  - B4. Result quality: lines 319-334
+  - B5. Design review: lines 335-341
+  - B6. Time analysis: lines 342-353
+  - B7. Cost: lines 354-361
+  - B8. Security: lines 362-374
+  - B9. Report: lines 375-395
+- Scenario C — Cleanup / review / upgrade: lines 396-716
+  - C1. Review: lines 408-420
+  - C2. Sort the findings, propose, then stop: lines 421-444
+  - C3. Mock the external effects: lines 445-503
+  - C4. Copy and swap in the mock: lines 504-539
+  - C5. Tests from real data: lines 540-567
+  - C6. Fix in the copy: lines 568-615
+  - C7. Run, grade, and compare models: lines 616-658
+  - C8. The pre-production checklist, hand over and clean up: lines 659-681
+  - C9. The report (required): lines 682-716
+- Rules: lines 717-729
+- The method articles: lines 730-738
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
@@ -158,7 +158,11 @@ plus:
 
 ### Reading a run
 
-- The work item's state — where the item is, step by step.
+- The work item's state — where the item is, step by step. It lists the
+  latest attempt of each step (and every visit, when the workflow loops
+  back to a step) and counts the earlier attempts in `olderStepCount`; ask for `returnSteps: "all"` to see every re-run.
+  A test's simulated-user script is left out (its length is in
+  `scriptChars`) unless you ask for `includeTestScript: true`.
 - The step history — `summary` for the user-facing conversation and how
   each run concluded (`waitForConvo` vs `stepFinished`); `full` for the
   tool-by-tool trace.
@@ -615,6 +619,12 @@ exists, then check the returned step.
   first run, so a human-approval step still parks it: finish it with
   a work-item step `finish`, or re-run from that step
   (`fromStepTitle`) after fixing its condition.
+- **Run a set of tests in one call:** start one test run with a `filter`
+  (for example, the name contains "CORE"), or with `workItemIds`; it re-runs
+  each matching test work item. Then read the test run every
+  `pollIntervalMs` until it is `completed`: it returns one row per test with
+  passed, failed (with the failing assertions and why) or did not finish
+  (with where it stopped). Don't re-run the tests one by one while it runs.
 - Tests grade when the workflow finishes. Read results from the `Tests`
   property (a work-item query projection) or the work item's state. Count
   passes in **assertions**, not just items (e.g. 120 of 124 checks on 23

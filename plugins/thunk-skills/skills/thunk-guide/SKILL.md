@@ -28,7 +28,7 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick your path: lines 60-76
-- Common instructions: lines 77-368
+- Common instructions: lines 77-371
   - How to read an article: lines 81-92
   - The FDA MCP and its tools: lines 93-108
   - Start a session first: lines 109-144
@@ -38,21 +38,21 @@ Contents (line numbers in this file):
   - Files: lines 277-307
   - Offer numbered choices when you stop: lines 308-314
   - Rules: lines 315-324
-  - Before finishing: lines 325-368
-- Build or change a thunk: lines 369-972
-  - Keep the user in the loop while you build: lines 371-442
-  - Build order: lines 443-869
-  - Write readable directions and code: lines 870-972
-- Explain a thunk: lines 973-1031
-- Troubleshoot or analyze a thunk: lines 1032-1043
-- Help articles for each task: lines 1044-1142
-  - Start here (first thunk in a session): lines 1046-1054
-  - Design the workflow: lines 1055-1069
-  - Write step AI instructions: lines 1070-1081
-  - Tools, connections and content: lines 1082-1097
-  - Kinds of thunk and how they are reached: lines 1098-1107
-  - Run and test: lines 1108-1125
-  - Diagnose a run: lines 1126-1142
+  - Before finishing: lines 325-371
+- Build or change a thunk: lines 372-1006
+  - Keep the user in the loop while you build: lines 374-445
+  - Build order: lines 446-872
+  - Write readable directions and code: lines 873-1006
+- Explain a thunk: lines 1007-1065
+- Troubleshoot or analyze a thunk: lines 1066-1077
+- Help articles for each task: lines 1078-1176
+  - Start here (first thunk in a session): lines 1080-1088
+  - Design the workflow: lines 1089-1103
+  - Write step AI instructions: lines 1104-1115
+  - Tools, connections and content: lines 1116-1131
+  - Kinds of thunk and how they are reached: lines 1132-1141
+  - Run and test: lines 1142-1159
+  - Diagnose a run: lines 1160-1176
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -355,6 +355,9 @@ with just a number. They can still answer in their own words.
 - Does a code tool that looks up a value from outside the system return "not
   found" as a result, and do the directions say what to do with it
   (`how-custom-code-tools-work`)?
+- Does every code tool I wrote check structured values only, with no word
+  lists or regular expressions that decide what free text means
+  (`how-custom-code-tools-work`, "Leave language to AI")?
 - Is every content-folder file stored on this thunk, not linked from
   another thunk (`content-folders`)?
 - If I'm waiting for the user, did I end with numbered choices?
@@ -928,6 +931,28 @@ when the step history shows the agent choosing the wrong tool after the
 tool set and descriptions were fixed (`tuning-for-reliability-11834601`,
 "Name a tool only on evidence").
 
+To change part of a step's long directions, update the step with
+`directionsEdits` instead of `directions`: a list of `find` and `replace`
+texts, applied in order to the saved directions. Each `find` must appear
+exactly once, or nothing is saved and the error says how many times it
+matched. Read the step's current directions first, and send `directions`
+only when you rewrite them whole.
+
+Write with how the agent runs in mind. Every agent run, a step's or a
+custom AI tool's, is a loop of tool calls (`how-an-ai-agent-ends-a-run`):
+
+- The agent starts with its instructions and its inputs: a step's input
+  properties and the outputs recorded so far, or the values an AI tool
+  was called with.
+- It acts by calling tools. A step usually records its outputs with
+  `update_item`.
+- It ends the run with a tool call too: conclude, ask for help, or report
+  an error. An AI tool returns its result by concluding with a value for
+  each declared output.
+
+A run that ends on a plain-text reply ends without its results, and an AI
+tool's caller then gets an error.
+
 The design review reports instructions that name a tool, that break the
 first two rules, or that lack the Objective and Process shape.
 
@@ -954,6 +979,15 @@ instead of `tool`: a list of `find` and `replace` texts, applied in
 order to the saved code. Each `find` must appear exactly once in the
 code, or nothing is saved and the error says how many times it matched.
 Read the current code first, asking for the tool's definition with its implementation included.
+
+**Leave language to AI.** A code tool checks structured values only.
+Never have it decide what free text means with word lists, keyword checks
+or regular expressions, for example to tell whether an answer on a form
+is complete or a reply is a yes. That code breaks on wording, negation and
+other languages, and it fails without an error. Have an AI step or a custom
+AI tool read the text and record a structured value, such as a property
+with an `enum` constraint, and let the code tool check that value
+(`how-custom-code-tools-work`, "Leave language to AI").
 
 **Partial updates.** To change part of a tool without resending it, send
 an `update` with a patch instead of `tool`. `intent`, `description`, and
