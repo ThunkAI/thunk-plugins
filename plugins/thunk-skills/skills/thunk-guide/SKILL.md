@@ -27,32 +27,33 @@ tables of help articles are an index — read 1–3 articles per task through th
 article per call, not the whole table.
 
 Contents (line numbers in this file):
-- Pick your path: lines 60-76
-- Common instructions: lines 77-371
-  - How to read an article: lines 81-92
-  - The FDA MCP and its tools: lines 93-108
-  - Start a session first: lines 109-144
-  - More than one tenant: lines 145-154
-  - The FDA MCP informs; the browser pane shows: lines 155-165
-  - Open the thunk in the browser pane: lines 166-276
-  - Files: lines 277-307
-  - Offer numbered choices when you stop: lines 308-314
-  - Rules: lines 315-324
-  - Before finishing: lines 325-371
-- Build or change a thunk: lines 372-1006
-  - Keep the user in the loop while you build: lines 374-445
-  - Build order: lines 446-872
-  - Write readable directions and code: lines 873-1006
-- Explain a thunk: lines 1007-1065
-- Troubleshoot or analyze a thunk: lines 1066-1077
-- Help articles for each task: lines 1078-1176
-  - Start here (first thunk in a session): lines 1080-1088
-  - Design the workflow: lines 1089-1103
-  - Write step AI instructions: lines 1104-1115
-  - Tools, connections and content: lines 1116-1131
-  - Kinds of thunk and how they are reached: lines 1132-1141
-  - Run and test: lines 1142-1159
-  - Diagnose a run: lines 1160-1176
+- Pick your path: lines 61-77
+- Common instructions: lines 78-374
+  - How to read an article: lines 82-93
+  - The FDA MCP and its tools: lines 94-109
+  - Start a session first: lines 110-147
+  - More than one tenant: lines 148-157
+  - The FDA MCP informs; the browser pane shows: lines 158-168
+  - Open the thunk in the browser pane: lines 169-279
+  - Files: lines 280-310
+  - Offer numbered choices when you stop: lines 311-317
+  - Rules: lines 318-327
+  - Before finishing: lines 328-374
+- Build or change a thunk: lines 375-1026
+  - Keep the user in the loop while you build: lines 377-448
+  - Build order: lines 449-875
+  - See what changed, and undo a change: lines 876-892
+  - Write readable directions and code: lines 893-1026
+- Explain a thunk: lines 1027-1085
+- Troubleshoot or analyze a thunk: lines 1086-1097
+- Help articles for each task: lines 1098-1197
+  - Start here (first thunk in a session): lines 1100-1108
+  - Design the workflow: lines 1109-1123
+  - Write step AI instructions: lines 1124-1135
+  - Tools, connections and content: lines 1136-1151
+  - Kinds of thunk and how they are reached: lines 1152-1161
+  - Run and test: lines 1162-1179
+  - Diagnose a run: lines 1180-1197
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -118,7 +119,9 @@ Code in a terminal, an editor or the Code tab of the Claude desktop app),
 `claude_cowork` (the Cowork tab of the Claude desktop app), `codex`, `cursor`,
 `copilot` or `other` (with a few words in `agentDescription` when it is
 `other`, such as the product name; Claude chat is `other`), and `agentSurface`
-is the app you run in (`desktop_app`, `terminal`, `web`, `ide` or `other`). The
+is the app you run in (`desktop_app`, `terminal`, `web`, `ide` or `other`).
+`model` is the exact ID of the AI model you run on, as your system prompt or
+app names it; leave it out if you don't know it. The
 instructions then name the guide to read for that purpose and the guides for
 the app you named. In Claude Cowork they first ask you to read the
 `thunk-guide` skill, and to stop if you can't. Start the session with those
@@ -870,6 +873,23 @@ when they work.
 When you change an existing thunk, apply the same idea: add any new steps and
 tool outlines first, then fill them in one at a time.
 
+### See what changed, and undo a change
+
+Thunk.AI keeps earlier versions of a thunk's settings, its steps, properties,
+structure types, custom tools, step schedules and README. The thunk's Owner
+and Admins can read them with the FDA MCP's version history tool. It lists the
+versions newest first and says who made each change, when, and which fields
+changed. Ask for one version to get its full
+content and a line-by-line diff against the version before it.
+
+Use it when a run starts failing after a change: find the change that came
+just before the first failure.
+
+There is no restore tool. To undo a change, read the version you want back
+and write its values again with the usual tools for that part of the thunk.
+Then check the result in the latest version. Stored field names can differ from
+the names the write tools take.
+
 ### Write readable directions and code
 
 The thunk's owners read and maintain what you write: step directions, an AI
@@ -1165,6 +1185,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | A run failed / errored — find which workitems | **`reading-a-failed-run`**, `troubleshooting-errors` |
 | Agent did the wrong thing / unreliable | `troubleshooting-ai-reliability-issues`, `ai-reliability-mechanisms`, then `how-to-write-effective-directions` to fix the instructions |
 | Inspect what happened | `step-diagnostics`, `tool-call-history-and-performance` |
+| It worked before a change, or an edit needs undoing | `versioning-support-for-your-thunk` |
 | What a tool really received and returned, across work items | `tool-call-history-and-performance`, `testing-custom-tools` |
 | A custom AI or code tool skipped nested work, or reused an answer you expected to change | `cache-results-of-a-custom-ai-or-code-tool`, `tool-call-history-and-performance` |
 | Too slow | **`time-analysis-how-long-your-thunk-takes`**, `what-working-waiting-and-waiting-for-tool-mean`, `map-a-tools-inputs-and-outputs-to-the-work-item` |
