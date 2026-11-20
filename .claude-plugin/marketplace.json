@@ -14,7 +14,7 @@
     {
       "name": "thunk-prod",
       "source": "./plugins/thunk-prod",
-      "description": "Thunk.AI FDA MCP on the public production tenant (postern.thunk.ai), with the thunk-guide skill."
+      "description": "Lets Claude build, test and fix your Thunk.AI thunks, signed in with your own Thunk.AI account."
     }
   ],
   "renames": {

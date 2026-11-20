@@ -1,6 +1,6 @@
 {
   "name": "thunk-prod",
-  "description": "The Thunk.AI FDA MCP on the public production tenant (postern.thunk.ai). Install thunk-skills too, for the skill.",
+  "description": "Lets Codex build, test and fix your Thunk.AI thunks, signed in with your own Thunk.AI account. Add thunk-skills too.",
   "author": {
     "name": "Thunk.AI",
     "url": "https://thunk.ai"
@@ -10,8 +10,8 @@
   "mcpServers": "./mcp.json",
   "interface": {
     "displayName": "Thunk.AI FDA (prod)",
-    "shortDescription": "Thunk.AI FDA MCP on postern.thunk.ai",
-    "longDescription": "Tools to create, edit, run and inspect thunks on the public production tenant (postern.thunk.ai), as your own Thunk.AI account. Install thunk-skills too, for the skill that says how to use them.",
+    "shortDescription": "Build and test your Thunk.AI thunks",
+    "longDescription": "Tools to create, change, run and check your Thunk.AI thunks, signed in with your own Thunk.AI account. Add thunk-skills too: it teaches Codex how to use these tools well.",
     "developerName": "Thunk.AI",
     "category": "Productivity",
     "websiteURL": "https://info.thunk.ai"

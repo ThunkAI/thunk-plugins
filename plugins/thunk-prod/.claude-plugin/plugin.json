@@ -1,7 +1,7 @@
 {
   "name": "thunk-prod",
   "displayName": "Thunk.AI FDA (prod)",
-  "description": "The Thunk.AI FDA MCP on the public production tenant (postern.thunk.ai), plus the thunk-guide skill.",
+  "description": "Lets Claude build, test and fix your Thunk.AI thunks, signed in with your own Thunk.AI account. Add Thunk.AI Skills too.",
   "author": { "name": "Thunk.AI", "url": "https://thunk.ai" },
   "homepage": "https://info.thunk.ai",
   "keywords": ["thunk", "workflow", "mcp"],

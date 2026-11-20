@@ -1,14 +1,34 @@
 # Thunk.AI plugins for Claude and Codex
 
 Build, test and analyze [Thunk.AI](https://thunk.ai) thunks (AI workflow automations) from
-Claude Code and from Codex. This repository is the `thunk-ai` plugin marketplace.
+Claude (the desktop app or Claude Code) and from Codex.
+This repository is the `thunk-ai` plugin marketplace.
+
+For Claude, you need a paid plan (Pro or above).
 
 | Plugin | What it adds |
 | --- | --- |
 | `thunk-skills` | The thunk-guide skill: which [Thunk.AI help articles](https://info.thunk.ai) to read for a task, the order to build a thunk in, and how to test, troubleshoot and clean up a thunk. |
 | `thunk-prod` | The Thunk.AI FDA MCP server (`https://postern.thunk.ai/api/builder/mcp`): tools to create, edit, run and inspect thunks as your own Thunk.AI account. |
 
-## Claude Code
+## Claude desktop app
+
+Set it up by clicking through **Customize**, which looks the same in the desktop app and on
+claude.ai in a browser. Then build thunks in the desktop app's **Code** tab.
+
+1. **Customize → Plugins → + Add → Add marketplace**. Choose **Add from a repository** if it's
+   offered. Under **URL**, choose `ThunkAI/thunk-plugins`, then **Sync**.
+2. Click **Add** next to **Thunk.AI FDA (prod)** (`thunk-prod`), then **Add** next to
+   **Thunk.AI Skills** (`thunk-skills`), and **Continue** on the warning. Add both: here, adding
+   one doesn't add the other.
+3. Open **Thunk.AI FDA (prod) → Connectors** and click **Connect** next to **thunk-fda**. Click
+   **Continue**, then **Add** (keep the default sign-in options), then **Connect** again. Sign in
+   to Thunk.AI and click **Allow access**.
+
+## Claude Code in a terminal
+
+ Update first (`claude update`), and run `/login` if
+Claude Code says **Not logged in**.
 
 ```bash
 claude plugin marketplace add ThunkAI/thunk-plugins
@@ -50,10 +70,10 @@ The MCP server was called `thunk-builder` until 2026-11-04 and is now `thunk-fda
 kept per server name, so after the update sign in once more: in Claude Code, `/mcp` →
 `plugin:thunk-prod:thunk-fda` → **Authenticate**; in Codex, `codex mcp login thunk-fda-prod`.
 
-## Claude and ChatGPT chat
+## ChatGPT and other chat apps
 
-Chat apps don't install plugins. Add the FDA MCP as a custom connector instead, with the
-URL `https://postern.thunk.ai/api/builder/mcp`, and sign in with your Thunk.AI account.
+Apps that don't install these plugins, including Claude chat, can still connect. Add the FDA
+MCP as a custom connector, with the URL `https://postern.thunk.ai/api/builder/mcp`, and sign in with your Thunk.AI account.
 
 ## About this repository
 
