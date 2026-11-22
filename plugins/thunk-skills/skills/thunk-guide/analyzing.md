@@ -18,29 +18,29 @@ Contents (line numbers in this file):
   - Reading a run: lines 176-202
   - Counting: lines 203-240
   - When the cause is the platform: lines 241-257
-- Scenario A — Troubleshoot a specific problem: lines 258-290
-- Scenario B — Health check: lines 291-412
-  - B1. Operational metrics: lines 298-304
-  - B2. Stuck work: lines 305-315
-  - B3. Error rates and error diagnosis: lines 316-335
-  - B4. Result quality: lines 336-351
-  - B5. Design review: lines 352-358
-  - B6. Time analysis: lines 359-370
-  - B7. Cost: lines 371-378
-  - B8. Security: lines 379-391
-  - B9. Report: lines 392-412
-- Scenario C — Cleanup / review / upgrade: lines 413-733
-  - C1. Review: lines 425-437
-  - C2. Sort the findings, propose, then stop: lines 438-461
-  - C3. Mock the external effects: lines 462-520
-  - C4. Copy and swap in the mock: lines 521-556
-  - C5. Tests from real data: lines 557-584
-  - C6. Fix in the copy: lines 585-632
-  - C7. Run, grade, and compare models: lines 633-675
-  - C8. The pre-production checklist, hand over and clean up: lines 676-698
-  - C9. The report (required): lines 699-733
-- Rules: lines 734-746
-- The method articles: lines 747-755
+- Scenario A — Troubleshoot a specific problem: lines 258-299
+- Scenario B — Health check: lines 300-422
+  - B1. Operational metrics: lines 307-313
+  - B2. Stuck work: lines 314-324
+  - B3. Error rates and error diagnosis: lines 325-345
+  - B4. Result quality: lines 346-361
+  - B5. Design review: lines 362-368
+  - B6. Time analysis: lines 369-380
+  - B7. Cost: lines 381-388
+  - B8. Security: lines 389-401
+  - B9. Report: lines 402-422
+- Scenario C — Cleanup / review / upgrade: lines 423-743
+  - C1. Review: lines 435-447
+  - C2. Sort the findings, propose, then stop: lines 448-471
+  - C3. Mock the external effects: lines 472-530
+  - C4. Copy and swap in the mock: lines 531-566
+  - C5. Tests from real data: lines 567-594
+  - C6. Fix in the copy: lines 595-642
+  - C7. Run, grade, and compare models: lines 643-685
+  - C8. The pre-production checklist, hand over and clean up: lines 686-708
+  - C9. The report (required): lines 709-743
+- Rules: lines 744-756
+- The method articles: lines 757-765
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
@@ -264,11 +264,20 @@ item, `how-an-ai-agent-ends-a-run`.
 1. **Locate the run.** From the work item id (or, for a step, a few recent
    items that went through it — find them with a work-item query or
    the errors list's `workItems`): read the work item's state, then the
-   step history on the step, `summary` first, then `full`.
+   step history on the step, `summary` first, then `full`. Then check
+   whether it is this run or every run (`reading-a-failed-run`, Details →
+   Check whether every run fails the same way): read the failing tool's call history
+   across work items, or the same step on a few other items. When every call
+   fails alike whatever its input, the cause is something every run shares —
+   the step's design (A3), what the tool reads from (a folder, a
+   connection, a credential) or a recent change — not this run's turns: say
+   so, and go to those instead of walking the trace.
 2. **Find the turn where it went wrong.** Walk the trace turn by turn. The
    error or bad output you were shown is often not where the failure started:
    an earlier tool result, a missing input, or a wrong decision usually is.
-   Open that turn's tool run or LLM exchange.
+   Open that turn's tool run or LLM exchange. When the step used to work,
+   also check what changed before the first failure: the version history of
+   the step and of the custom tools it calls, and the work log.
 3. **Read the step's design** — its directions, input and output properties,
    enabled tools and the properties' types — against what the model saw in
    that request.
@@ -326,8 +335,9 @@ Read errors over the window:
   A null `workItemId` is a run outside workflow steps (automation, intake,
   planning) or on a deleted step.
 - **Diagnose each distinct error group** with a short Scenario A pass on one
-  representative item (steps A1–A4). A health check that lists errors
-  without their causes is not done.
+  representative item (steps A1–A4), starting with its two checks: is it
+  this run or every run, and what changed before the first error. A health
+  check that lists errors without their causes is not done.
 - **Tool failures that do not error the run** (the step recovers, or records
   a hand-off) do not show in the errors list. For each tool that writes to or
   reads from an outside system, the tool call history with
@@ -750,6 +760,6 @@ Read these for each scenario:
 
 | Scenario | Read |
 |---|---|
-| A | `reading-a-failed-run` (especially Details → Confirm the fix), `step-diagnostics`, `troubleshooting-ai-reliability-issues` |
+| A | `reading-a-failed-run` (especially Details → Check whether every run fails the same way, Check what changed, Confirm the fix), `step-diagnostics`, `troubleshooting-ai-reliability-issues` |
 | B | `check-a-thunks-health-where-to-start` (the order, the sampling rule, the design checklist, the security check) |
 | C | `improve-a-live-thunk-safely` (fixes vs. owner decisions, the owner checklist, stand-ins, tests, the undo list, the hand-over), `how-to-copy-a-thunk` |

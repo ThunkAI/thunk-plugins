@@ -39,21 +39,21 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 311-317
   - Rules: lines 318-327
   - Before finishing: lines 328-374
-- Build or change a thunk: lines 375-1026
+- Build or change a thunk: lines 375-1050
   - Keep the user in the loop while you build: lines 377-448
   - Build order: lines 449-875
-  - See what changed, and undo a change: lines 876-892
-  - Write readable directions and code: lines 893-1026
-- Explain a thunk: lines 1027-1085
-- Troubleshoot or analyze a thunk: lines 1086-1097
-- Help articles for each task: lines 1098-1197
-  - Start here (first thunk in a session): lines 1100-1108
-  - Design the workflow: lines 1109-1123
-  - Write step AI instructions: lines 1124-1135
-  - Tools, connections and content: lines 1136-1151
-  - Kinds of thunk and how they are reached: lines 1152-1161
-  - Run and test: lines 1162-1179
-  - Diagnose a run: lines 1180-1197
+  - See what changed, and undo a change: lines 876-916
+  - Write readable directions and code: lines 917-1050
+- Explain a thunk: lines 1051-1109
+- Troubleshoot or analyze a thunk: lines 1110-1121
+- Help articles for each task: lines 1122-1221
+  - Start here (first thunk in a session): lines 1124-1132
+  - Design the workflow: lines 1133-1147
+  - Write step AI instructions: lines 1148-1159
+  - Tools, connections and content: lines 1160-1175
+  - Kinds of thunk and how they are reached: lines 1176-1185
+  - Run and test: lines 1186-1203
+  - Diagnose a run: lines 1204-1221
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -885,10 +885,34 @@ content and a line-by-line diff against the version before it.
 Use it when a run starts failing after a change: find the change that came
 just before the first failure.
 
-There is no restore tool. To undo a change, read the version you want back
-and write its values again with the usual tools for that part of the thunk.
-Then check the result in the latest version. Stored field names can differ from
-the names the write tools take.
+To undo a change to a step or a custom tool, restore the version you want back
+with the FDA MCP's restore tool. You need the same access as for any other
+change to the thunk: the thunk's Owner or an Admin, with permission to edit it
+from the FDA MCP. Pass the current version you looked at as well: if the step
+or tool changed since, nothing is restored, so read its versions again and
+decide again.
+
+The step's or tool's definition comes back in full, including settings the
+other tools cannot set. Where it sits does not change: a step keeps its place
+in the workflow and stays linked to its schedule, which follows the restored
+settings, and a tool keeps its place in the tool list. The restore is itself a
+new version, so you can undo it the same way.
+
+The restore is refused when the step or tool was deleted, when the version you
+picked is a deleted state, when it would make a step run a tool that is gone or
+belongs to another step, when it would change which step a tool runs as or
+which interface it serves, or when another tool now has the name that version
+used. Read the warnings it returns: a tool that no longer fits the step it runs
+as, a step whose inputs or outputs name properties the thunk no longer has,
+statuses to check, or a tool's tests that went back with its code. A restore
+does not re-check everything a normal change would, such as a model that is no
+longer available or code that does not parse, so review the thunk's design
+afterwards.
+
+For the thunk's settings, properties, structure types and README, read the
+version you want back and write its values again with the usual tools for that
+part of the thunk. Stored field names can differ from the names the write tools
+take. Then check the result in the latest version.
 
 ### Write readable directions and code
 
