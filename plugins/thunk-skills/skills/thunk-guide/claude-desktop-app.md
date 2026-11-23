@@ -15,7 +15,8 @@ instead.
 ## At the start of a session
 
 Open the tenant's Thunk.AI app in the browser pane and complete steps 3–5 of
-**Open and keep the pane** (site approval, sign-in, a visible pane) before
+**Open and keep the pane** (site approval, sign-in, telling the user how to
+open the browser) before
 building, so the user approves and signs in once, up front. The tenant's app
 is the site of any thunk `url` the FDA MCP returns (for example from
 the thunk list).
@@ -55,10 +56,13 @@ to the user's computer. This guide names them by the part after that prefix.
      tool output. Say that the panel beside the chat is asking them to sign
      in to Thunk.AI with Google or Microsoft, that they need to do it once
      (the pane keeps its own sign-ins, separate from their regular browser),
-     and that you carry on building in the meantime. For example: "The panel
-     on the right is asking you to sign in to Thunk.AI. Sign in once with
-     Google or Microsoft and you'll see the thunk there. I'll keep building
-     meanwhile."
+     and that you carry on building in the meantime. Include how to open the
+     browser (see step 5), because the user can't see the sign-in screen
+     while the browser is hidden. For example: "The browser beside the chat
+     is asking you to sign in to Thunk.AI. If it isn't showing, press
+     Cmd+Shift+B (Mac) or Ctrl+Shift+B (Windows), or close what's in the
+     side panel and click the globe icon. Sign in once with Google or Microsoft and you'll see the thunk there.
+     I'll keep building meanwhile."
    - Until the user is signed in, don't say "open it in the pane", "watch it
      in the pane" or "click … in the pane". Repeat the one-line sign-in ask
      in the closing message (or next-step box) of each turn that points at
@@ -68,10 +72,19 @@ to the user's computer. This guide names them by the part after that prefix.
      the tool), show what the pane would have shown as text in the chat
      instead: the steps, the test results, the output. Don't point at the
      app again unless they ask.
-5. **Make sure they can see it.** If `tabs_context` reports the pane as
-   hidden, tell the user to press Cmd+Shift+B (Mac) or Ctrl+Shift+B
-   (Windows), or to close what's in the side panel and click the globe icon.
-   Opening a page does not bring a hidden pane forward on its own.
+5. **Tell the user how to open the browser.** Opening a page does not bring
+   the browser forward: the side panel shows one thing at a time, and if it
+   is showing something else or is closed, the thunk loads out of sight. You
+   can't change that, so always tell the user how to open it. The first time
+   you open a thunk in a session, put one line in your reply, next to the
+   thunk's link. For example: "I've opened the thunk in the Claude app's
+   browser. If you don't see it beside the chat, press Cmd+Shift+B (Mac) or
+   Ctrl+Shift+B (Windows), or close what's in the side panel and click the
+   globe icon." Repeat that line in any later message that asks the user to
+   look at or do something in the browser, but not in every message. While
+   the sign-in screen shows, the sign-in ask in step 4 carries this line
+   instead. In a cloud session linked to the user's computer, add that the shortcut and the globe icon work in the
+   Claude desktop app on that computer.
 6. **If the pane can't be reached** (no browser tools after the load, or calls
    error or time out), tell the user in one line that the Claude app's browser
    isn't reachable and that they can open the thunk link themselves. Don't

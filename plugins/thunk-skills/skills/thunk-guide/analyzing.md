@@ -44,12 +44,12 @@ Contents (line numbers in this file):
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
-It follows on from `build-thunks-with-the-builder-mcp`, which says which help articles to read
-before each kind of work (directions, schema, tools, tests, diagnosis) and
+It follows on from `build-thunks-with-the-builder-mcp`, which says which help articles cover
+each kind of work (directions, schema, tools, tests, diagnosis) and
 how to open the thunk beside the conversation; those instructions apply here too. This guide is the procedure for analyzing a
 thunk through the FDA MCP; the help articles hold the method itself (what
-to look for and why) and are the reference. Read the articles a step names
-when you reach it — do not work from memory. Each pointer in this guide carries a
+to look for and why) and are the reference. When you are unsure how to do a step,
+read the articles it names when you reach it, instead of guessing. Each pointer in this guide carries a
 one-line summary so the procedure still works if an article is not yet
 readable (a new article becomes readable only after the next
 Thunk.AI release).

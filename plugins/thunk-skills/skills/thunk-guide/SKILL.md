@@ -28,32 +28,32 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick your path: lines 61-77
-- Common instructions: lines 78-374
-  - How to read an article: lines 82-93
-  - The FDA MCP and its tools: lines 94-109
-  - Start a session first: lines 110-147
-  - More than one tenant: lines 148-157
-  - The FDA MCP informs; the browser pane shows: lines 158-168
-  - Open the thunk in the browser pane: lines 169-279
-  - Files: lines 280-310
-  - Offer numbered choices when you stop: lines 311-317
-  - Rules: lines 318-327
-  - Before finishing: lines 328-374
-- Build or change a thunk: lines 375-1050
-  - Keep the user in the loop while you build: lines 377-448
-  - Build order: lines 449-875
-  - See what changed, and undo a change: lines 876-916
-  - Write readable directions and code: lines 917-1050
-- Explain a thunk: lines 1051-1109
-- Troubleshoot or analyze a thunk: lines 1110-1121
-- Help articles for each task: lines 1122-1221
-  - Start here (first thunk in a session): lines 1124-1132
-  - Design the workflow: lines 1133-1147
-  - Write step AI instructions: lines 1148-1159
-  - Tools, connections and content: lines 1160-1175
-  - Kinds of thunk and how they are reached: lines 1176-1185
-  - Run and test: lines 1186-1203
-  - Diagnose a run: lines 1204-1221
+- Common instructions: lines 78-378
+  - How to read an article: lines 82-96
+  - The FDA MCP and its tools: lines 97-113
+  - Start a session first: lines 114-151
+  - More than one tenant: lines 152-161
+  - The FDA MCP informs; the browser pane shows: lines 162-172
+  - Open the thunk in the browser pane: lines 173-283
+  - Files: lines 284-314
+  - Offer numbered choices when you stop: lines 315-321
+  - Rules: lines 322-331
+  - Before finishing: lines 332-378
+- Build or change a thunk: lines 379-1055
+  - Keep the user in the loop while you build: lines 381-452
+  - Build order: lines 453-880
+  - See what changed, and undo a change: lines 881-921
+  - Write readable directions and code: lines 922-1055
+- Explain a thunk: lines 1056-1114
+- Troubleshoot or analyze a thunk: lines 1115-1126
+- Help articles for each task: lines 1127-1233
+  - Start here (first thunk in a session): lines 1129-1142
+  - Design the workflow: lines 1143-1157
+  - Write step AI instructions: lines 1158-1170
+  - Tools, connections and content: lines 1171-1186
+  - Kinds of thunk and how they are reached: lines 1187-1197
+  - Run and test: lines 1198-1215
+  - Diagnose a run: lines 1216-1233
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -86,10 +86,13 @@ These apply to every path.
 - Not sure which slug? Search the help center through the FDA MCP with
   a short query.
 - When an FDA MCP tool or help page names articles for a task, those are the
-  articles for that task. Read them the first time you do that work in a
-  session.
+  ones to read when you need guidance on it, once per session.
 - Read 1–3 articles per task, not all of them. Where articles disagree,
   the more specific one wins.
+- Read a design article when you have that design decision to make. When
+  the user's request already says what a thunk needs (its properties, steps
+  and outputs), skip the articles about choosing them and build what was
+  asked.
 
 ### The FDA MCP and its tools
 
@@ -105,7 +108,8 @@ whose server is named `thunk-fda-<tenant>`. Installs made before
 2026-11-04 use the old name, `thunk-builder`, in place of `thunk-fda`. Discover the tools this session
 lists and use those; this guide names the product task, not a particular
 tool. This guide tells you **which articles to read** for
-the task in front of you. Read them before you act; do not work from memory.
+the task in front of you. When you are unsure how something works, read its
+article instead of guessing.
 
 ### Start a session first
 
@@ -455,8 +459,9 @@ it is built, create realistic test data for the main path and run it. Edge
 cases, failure cases and the design review come later, when you harden the
 nearly finished design.
 
-**Design in modules.** Read `use-modularity-effectively-when-building-a-thunk`
-before you lay out the steps. In short: make each step a meaningful part of
+**Design in modules.** When you choose the steps yourself, read
+`use-modularity-effectively-when-building-a-thunk` before you lay them out.
+In short: make each step a meaningful part of
 the business process, small enough to finish within the step time limit
 (by default, about five minutes of active working time per run,
 counting the model's work and its tool calls); give each step
@@ -921,11 +926,11 @@ tool's `userGuidance` and a code tool's script. Write them so a person can
 review them, and so they look like what the rest of the platform produces.
 
 **Directions and AI tool instructions.** Write a step's `directions`,
-`scheduledDirections` and a custom AI tool's `userGuidance` by the
-guidelines in `how-to-write-effective-directions`. These are the guidelines
-the **Rewrite** button in the app applies, so text written by them survives
-a Rewrite with few changes. Give every full set of instructions the same
-shape:
+`scheduledDirections` and a custom AI tool's `userGuidance` in the shape
+below. For long or tricky ones, also follow the guidelines in
+`how-to-write-effective-directions`: they are what the **Rewrite** button in
+the app applies, so text written by them survives a Rewrite with few changes.
+Give every full set of instructions the same shape:
 
 - An **Objective**: one or two sentences on what the step or tool is for.
 - A **Process**: a numbered list in the order the work happens, one action
@@ -1123,6 +1128,11 @@ In this skill that article is `analyzing.md`, in this folder: read it there. Tro
 
 ### Start here (first thunk in a session)
 
+When you design a thunk from a goal, read `thunk-application-model` first,
+and `use-modularity-effectively-when-building-a-thunk` before you choose the
+steps (see **Build order**). When the request already names the properties
+and steps, skip both.
+
 | Slug | Why |
 | --- | --- |
 | `thunk-application-model` | The parts of a thunk and how they fit together |
@@ -1147,9 +1157,10 @@ In this skill that article is `analyzing.md`, in this folder: read it there. Tro
 
 ### Write step AI instructions
 
-Read **`how-to-write-effective-directions`** before writing or rewriting any
-step instructions. It says what the platform already supplies (so you don't
-restate it) and gives the guidelines for the logic that is left. Then:
+For long or tricky step instructions, or when you are unsure how to write
+them, read **`how-to-write-effective-directions`** before writing or rewriting
+them. It says what the platform already supplies (so you don't restate it)
+and gives the guidelines for the logic that is left. These go further:
 
 | Slug | Why |
 | --- | --- |
@@ -1181,6 +1192,7 @@ restate it) and gives the guidelines for the logic that is left. Then:
 | MCP server (`kind:"mcpServer"`) | `publish-your-thunk-as-an-mcp-server-for-ai-agents`, `modular-reuse-of-tools` |
 | Inbound requests: add, change or remove webhooks; change the email channel and who may send email to it; let a channel update existing work items instead of adding new ones | `inbound-requests`, `receive-requests-through-a-webhook-or-a-shared-form`, `send-requests-to-your-thunk-by-email` |
 | Copy a thunk | `how-to-copy-a-thunk` |
+| Delete a thunk you made, such as a copy or an experiment. It cannot be restored from the app. Ask the user before deleting a thunk you did not make in this session. The thunk must be on the user's allowed thunks by itself, not through a phase, and a thunk in Production is never deleted this way | `users-and-access-controls`, `control-what-forward-deployed-agents-can-do` |
 | Clean up or upgrade a live thunk in a copy, with stand-in tools | `improve-a-live-thunk-safely` |
 
 ### Run and test
