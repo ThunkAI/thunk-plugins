@@ -39,21 +39,21 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 315-321
   - Rules: lines 322-331
   - Before finishing: lines 332-378
-- Build or change a thunk: lines 379-1055
+- Build or change a thunk: lines 379-1064
   - Keep the user in the loop while you build: lines 381-452
   - Build order: lines 453-880
   - See what changed, and undo a change: lines 881-921
-  - Write readable directions and code: lines 922-1055
-- Explain a thunk: lines 1056-1114
-- Troubleshoot or analyze a thunk: lines 1115-1126
-- Help articles for each task: lines 1127-1233
-  - Start here (first thunk in a session): lines 1129-1142
-  - Design the workflow: lines 1143-1157
-  - Write step AI instructions: lines 1158-1170
-  - Tools, connections and content: lines 1171-1186
-  - Kinds of thunk and how they are reached: lines 1187-1197
-  - Run and test: lines 1198-1215
-  - Diagnose a run: lines 1216-1233
+  - Write readable directions and code: lines 922-1064
+- Explain a thunk: lines 1065-1123
+- Troubleshoot or analyze a thunk: lines 1124-1135
+- Help articles for each task: lines 1136-1242
+  - Start here (first thunk in a session): lines 1138-1151
+  - Design the workflow: lines 1152-1166
+  - Write step AI instructions: lines 1167-1179
+  - Tools, connections and content: lines 1180-1195
+  - Kinds of thunk and how they are reached: lines 1196-1206
+  - Run and test: lines 1207-1224
+  - Diagnose a run: lines 1225-1242
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -986,6 +986,15 @@ texts, applied in order to the saved directions. Each `find` must appear
 exactly once, or nothing is saved and the error says how many times it
 matched. Read the step's current directions first, and send `directions`
 only when you rewrite them whole.
+
+**Keep the history out of the instructions.** The agent reads every sentence
+of a step's directions or an AI tool's instructions as part of its work.
+Write only what it should do now. Never add what you changed, why you
+changed it, who asked for it, what the earlier version did, or which run
+showed the problem. Put that in the work-log note you began for the unit of
+edits (`thunk-work-log`). A reason that changes what the agent decides stays
+in the instructions, because it is part of the work ("Keep the history out
+of the instructions" in `how-to-write-effective-directions`).
 
 Write with how the agent runs in mind. Every agent run, a step's or a
 custom AI tool's, is a loop of tool calls (`how-an-ai-agent-ends-a-run`):
