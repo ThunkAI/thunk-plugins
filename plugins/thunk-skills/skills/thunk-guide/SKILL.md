@@ -39,21 +39,21 @@ Contents (line numbers in this file):
   - Offer numbered choices when you stop: lines 315-321
   - Rules: lines 322-331
   - Before finishing: lines 332-378
-- Build or change a thunk: lines 379-1064
+- Build or change a thunk: lines 379-1067
   - Keep the user in the loop while you build: lines 381-452
   - Build order: lines 453-880
   - See what changed, and undo a change: lines 881-921
-  - Write readable directions and code: lines 922-1064
-- Explain a thunk: lines 1065-1123
-- Troubleshoot or analyze a thunk: lines 1124-1135
-- Help articles for each task: lines 1136-1242
-  - Start here (first thunk in a session): lines 1138-1151
-  - Design the workflow: lines 1152-1166
-  - Write step AI instructions: lines 1167-1179
-  - Tools, connections and content: lines 1180-1195
-  - Kinds of thunk and how they are reached: lines 1196-1206
-  - Run and test: lines 1207-1224
-  - Diagnose a run: lines 1225-1242
+  - Write readable directions and code: lines 922-1067
+- Explain a thunk: lines 1068-1126
+- Troubleshoot or analyze a thunk: lines 1127-1138
+- Help articles for each task: lines 1139-1245
+  - Start here (first thunk in a session): lines 1141-1154
+  - Design the workflow: lines 1155-1169
+  - Write step AI instructions: lines 1170-1182
+  - Tools, connections and content: lines 1183-1198
+  - Kinds of thunk and how they are reached: lines 1199-1209
+  - Run and test: lines 1210-1227
+  - Diagnose a run: lines 1228-1245
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -1041,8 +1041,11 @@ Read the current code first, asking for the tool's definition with its implement
 **Leave language to AI.** A code tool checks structured values only.
 Never have it decide what free text means with word lists, keyword checks
 or regular expressions, for example to tell whether an answer on a form
-is complete or a reply is a yes. That code breaks on wording, negation and
-other languages, and it fails without an error. Have an AI step or a custom
+is complete or a reply is a yes. The same goes for finding a record by its
+name, telling what kind of question a field is from its wording, and
+searching an AI tool's explanation for words to overrule its verdict. That
+code breaks on wording, negation and other languages, and it fails without
+an error. Have an AI step or a custom
 AI tool read the text and record a structured value, such as a property
 with an `enum` constraint, and let the code tool check that value
 (`how-custom-code-tools-work`, "Leave language to AI").
