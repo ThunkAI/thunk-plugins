@@ -307,17 +307,19 @@ type Shown = {
 const SHOWN = 8;
 
 // The thunks in a list_thunks result, or undefined when the call was filtered (a search, a
-// folder, a tag, a later page, shared or samples only), so the pane never shows a partial list
-// as "your thunks".
+// folder, a tag, a later page, a page smaller than the pane shows, shared or samples only), so
+// the pane never shows a partial list as "your thunks".
 function listedThunks(
   input: Record<string, unknown>,
   text: string | undefined,
 ) {
   const isFiltered =
-    // `folder` too: a server older than this plugin still takes the old folder filter name.
-    ["search", "folderPath", "folder", "tag", "after"].some(
+    // `folder` and `after` too: a server older than this plugin still takes the old folder
+    // filter and paging names.
+    ["search", "folderPath", "folder", "tag", "pageToken", "after"].some(
       (key) => input[key] !== undefined,
     ) ||
+    (typeof input.limit === "number" && input.limit < SHOWN) ||
     (input.access !== undefined &&
       input.access !== "owned" &&
       input.access !== "all");

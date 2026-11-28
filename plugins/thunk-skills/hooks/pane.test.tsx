@@ -356,7 +356,16 @@ test("Claude's unfiltered list_thunks is kept for the next session, not listed i
   await $.tool.call(builderCall("list_thunks", { folder: "/finance" }));
   expect(stored.get("thunks")).toBeUndefined();
 
-  await $.tool.call(builderCall("list_thunks", { access: "owned", first: 8 }));
+  // A later page is a partial list, whatever the server calls its token.
+  await $.tool.call(builderCall("list_thunks", { pageToken: "c1" }));
+  expect(stored.get("thunks")).toBeUndefined();
+  await $.tool.call(builderCall("list_thunks", { after: "c1" }));
+  expect(stored.get("thunks")).toBeUndefined();
+  // A page smaller than the pane shows is a partial list too.
+  await $.tool.call(builderCall("list_thunks", { limit: 3 }));
+  expect(stored.get("thunks")).toBeUndefined();
+
+  await $.tool.call(builderCall("list_thunks", { access: "owned", limit: 8 }));
   expect(stored.get("thunks")).toMatchObject({ thunks: [{ id: "T1" }] });
   const ui = await $.ui.mount({ ...PANE, surface: "desktop" });
   expect(

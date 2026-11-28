@@ -28,32 +28,32 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick your path: lines 61-77
-- Common instructions: lines 78-378
+- Common instructions: lines 78-379
   - How to read an article: lines 82-96
   - The FDA MCP and its tools: lines 97-113
-  - Start a session first: lines 114-151
-  - More than one tenant: lines 152-161
-  - The FDA MCP informs; the browser pane shows: lines 162-172
-  - Open the thunk in the browser pane: lines 173-283
-  - Files: lines 284-314
-  - Offer numbered choices when you stop: lines 315-321
-  - Rules: lines 322-331
-  - Before finishing: lines 332-378
-- Build or change a thunk: lines 379-1067
-  - Keep the user in the loop while you build: lines 381-452
-  - Build order: lines 453-880
-  - See what changed, and undo a change: lines 881-921
-  - Write readable directions and code: lines 922-1067
-- Explain a thunk: lines 1068-1126
-- Troubleshoot or analyze a thunk: lines 1127-1138
-- Help articles for each task: lines 1139-1245
-  - Start here (first thunk in a session): lines 1141-1154
-  - Design the workflow: lines 1155-1169
-  - Write step AI instructions: lines 1170-1182
-  - Tools, connections and content: lines 1183-1198
-  - Kinds of thunk and how they are reached: lines 1199-1209
-  - Run and test: lines 1210-1227
-  - Diagnose a run: lines 1228-1245
+  - Start a session first: lines 114-152
+  - More than one tenant: lines 153-162
+  - The FDA MCP informs; the browser pane shows: lines 163-173
+  - Open the thunk in the browser pane: lines 174-284
+  - Files: lines 285-315
+  - Offer numbered choices when you stop: lines 316-322
+  - Rules: lines 323-332
+  - Before finishing: lines 333-379
+- Build or change a thunk: lines 380-1104
+  - Keep the user in the loop while you build: lines 382-459
+  - Build order: lines 460-917
+  - See what changed, and undo a change: lines 918-958
+  - Write readable directions and code: lines 959-1104
+- Explain a thunk: lines 1105-1165
+- Troubleshoot or analyze a thunk: lines 1166-1177
+- Help articles for each task: lines 1178-1284
+  - Start here (first thunk in a session): lines 1180-1193
+  - Design the workflow: lines 1194-1208
+  - Write step AI instructions: lines 1209-1221
+  - Tools, connections and content: lines 1222-1237
+  - Kinds of thunk and how they are reached: lines 1238-1248
+  - Run and test: lines 1249-1266
+  - Diagnose a run: lines 1267-1284
 
 This skill is for working on Thunk.AI thunks through the **Thunk.AI FDA MCP**. It covers a
 few different kinds of task, and each one has its own instructions.
@@ -124,11 +124,12 @@ Code in a terminal, an editor or the Code tab of the Claude desktop app),
 `copilot` or `other` (with a few words in `agentDescription` when it is
 `other`, such as the product name; Claude chat is `other`), and `agentSurface`
 is the app you run in (`desktop_app`, `terminal`, `web`, `ide` or `other`).
-`model` is the exact ID of the AI model you run on, as your system prompt or
-app names it; leave it out if you don't know it. The
+`model` is the AI model you run on, as your system prompt or app names it:
+its exact ID if one is given, else its name. Leave it out only if neither
+names a model. The
 instructions then name the guide to read for that purpose and the guides for
-the app you named. In Claude Cowork they first ask you to read the
-`thunk-guide` skill, and to stop if you can't. Start the session with those
+the app you named. In Claude Cowork they also ask you to read the
+`thunk-guide` skill if you can; if you can't, carry on without it. Start the session with those
 arguments, as the only Builder call in its turn, and wait for its result: you do not have its `sessionId` until it finishes. Read the
 instructions it returns and pass that `sessionId` to every other Builder call.
 If your app saves a long result (such as a long help article) to a file instead
@@ -436,6 +437,12 @@ guess how long it will take and wait for that long. Fixed waits of one to
 two minutes usually overshoot a run that finished in 30 seconds, and leave
 the user with nothing to read while you wait.
 
+- If the FDA MCP has a tool that waits for a work item, wait with it
+  instead of sleeping. Ask it to return when the status changes, with a
+  timeout of about 30 seconds, so it comes back when a step starts or ends,
+  the work item waits for a person, or it finishes. Post a status line,
+  then call it again until the work item finishes, fails, waits for a
+  person or is blocked.
 - Any wait of a set length is a fixed wait, however it is written: a sleep,
   a loop that runs until a clock time, or a background timer that wakes you
   later. Don't use any of them for longer than about 20 seconds.
@@ -451,6 +458,33 @@ the user with nothing to read while you wait.
   read `blocked` and the step history to see why.
 
 ### Build order
+
+**Open the Thunk.AI app beside the chat before you build.** Do this in the
+first turn where you will create, change or run a thunk, before the first
+create call. A turn that only explains Thunk.AI doesn't need it. It takes
+under a minute, and it is how the user sees what you build: agents that left
+it for later never got to it, and the user only ever saw a link. In the
+Claude desktop app (tools named `mcp__Claude_Browser__*` or
+`mcp__remote-devices__Claude_Browser__*`):
+
+1. Load the browser-pane tools in one ToolSearch, with the tool-name prefix
+   as the query and `max_results: 64`.
+2. Open the tenant's Thunk.AI app with `preview_start` and its `url`: the
+   site of any thunk `url` the FDA MCP returns, such as
+   `https://app.thunk.ai/`. Read the page with `get_page_text`.
+3. If it shows the sign-in screen, ask the user to sign in there. Never sign
+   in for them. Keep building while they do.
+4. Tell the user, in plain words: "The Thunk.AI app is open in the browser
+   panel on the right. If you don't see it, press Cmd+Shift+B (Ctrl+Shift+B
+   on Windows)." Give the app's link too.
+5. When the first create call returns the thunk's `url`, navigate that same
+   tab to it (**Open the thunk in the browser pane**).
+
+`show-a-thunk-in-the-claude-desktop-app` has the details: site approval,
+reusing one tab, and keeping the pane on the change you are making. In the
+Codex desktop app, follow `show-a-thunk-in-the-codex-desktop-app` instead.
+With no side-panel browser, give the app's link and follow **With no
+side-panel browser**.
 
 **Build skeleton first, then test it right away.** Lay out the whole thunk
 early (its steps, and an outline of its tools), breadth first, then fill it
@@ -684,7 +718,10 @@ For a new workflow or chat-app thunk:
    own inputs and outputs
    (`map-a-tools-inputs-and-outputs-to-the-work-item`). The same
    property may fill a tool input and receive a tool output when it is
-   listed on both sides of the host. A `code` tool's own nested
+   listed on both sides of the host. Its `constants` list fixes a tool
+   input to a value instead (`{ fieldName, value }`, a value that fits
+   the input's type); the step's agent is told the value and cannot
+   change it. A `code` tool's own nested
    `toolConfig` does not take it: the code already passes values to the
    tools it calls.
 4. **Fill in each step, depth first, in plan order.** For one step at a time:
@@ -1104,8 +1141,10 @@ numbered choices.
 5. **After a deep dive, stay at the same place in the tour** and offer
    numbered choices again, with **1. Continue the tour** first.
 
-**Explaining a sample.** Every sample already has test work items that
-have run. Show how a sample works through one of those runs: list its work
+**Explaining a sample.** To find a sample, list thunks with
+`access: "samples"` rather than a name search, which also matches the
+user's own thunks and their copies of the sample. Every sample already has
+test work items that have run. Show how a sample works through one of those runs: list its work
 items, pick one that finished, and show it and its step runs in the pane.
 That is quicker and clearer than copying the sample and running a new work
 item, so don't do that just to explain it. Offer a copy only when the user
@@ -1185,7 +1224,7 @@ and gives the guidelines for the logic that is left. These go further:
 | Task | Slugs |
 | --- | --- |
 | Pick / enable tools on a step (`toolConfig`) | `ai-tools`, `ai-tool-libraries`, `conditional-tool-availability` |
-| Map a tool's inputs/outputs onto the step (`set_io_bindings`), including a `code` tool | `map-a-tools-inputs-and-outputs-to-the-work-item` |
+| Map a tool's inputs/outputs onto the step, or fix an input to a value (`set_io_bindings`), including a `code` tool | `map-a-tools-inputs-and-outputs-to-the-work-item` |
 | Build custom tools | `custom-tools`, `how-custom-code-tools-work`, `how-to-build-a-tool-wrapper` |
 | Reuse a custom AI or code tool's result for identical lookups (opt in only when the tool reads and does not change anything; clear the cache after you change the tool) | `cache-results-of-a-custom-ai-or-code-tool` |
 | Specific tool recipes | `how-to-build-a-custom-database-tool`, `how-to-build-a-spreadsheet-lookup-tool`, `how-to-build-a-tool-that-uses-a-conversation` |

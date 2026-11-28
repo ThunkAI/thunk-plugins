@@ -11,36 +11,36 @@ article per call, not the whole table.
 
 Contents (line numbers in this file):
 - Pick the scenario first: lines 57-85
-- Common ground (all scenarios): lines 86-257
+- Common ground (all scenarios): lines 86-259
   - Target and window: lines 88-106
   - Read the design: lines 107-113
   - Design checklist: lines 114-175
   - Reading a run: lines 176-202
-  - Counting: lines 203-240
-  - When the cause is the platform: lines 241-257
-- Scenario A — Troubleshoot a specific problem: lines 258-299
-- Scenario B — Health check: lines 300-422
-  - B1. Operational metrics: lines 307-313
-  - B2. Stuck work: lines 314-324
-  - B3. Error rates and error diagnosis: lines 325-345
-  - B4. Result quality: lines 346-361
-  - B5. Design review: lines 362-368
-  - B6. Time analysis: lines 369-380
-  - B7. Cost: lines 381-388
-  - B8. Security: lines 389-401
-  - B9. Report: lines 402-422
-- Scenario C — Cleanup / review / upgrade: lines 423-743
-  - C1. Review: lines 435-447
-  - C2. Sort the findings, propose, then stop: lines 448-471
-  - C3. Mock the external effects: lines 472-530
-  - C4. Copy and swap in the mock: lines 531-566
-  - C5. Tests from real data: lines 567-594
-  - C6. Fix in the copy: lines 595-642
-  - C7. Run, grade, and compare models: lines 643-685
-  - C8. The pre-production checklist, hand over and clean up: lines 686-708
-  - C9. The report (required): lines 709-743
-- Rules: lines 744-756
-- The method articles: lines 757-765
+  - Counting: lines 203-242
+  - When the cause is the platform: lines 243-259
+- Scenario A — Troubleshoot a specific problem: lines 260-301
+- Scenario B — Health check: lines 302-424
+  - B1. Operational metrics: lines 309-315
+  - B2. Stuck work: lines 316-326
+  - B3. Error rates and error diagnosis: lines 327-347
+  - B4. Result quality: lines 348-363
+  - B5. Design review: lines 364-370
+  - B6. Time analysis: lines 371-382
+  - B7. Cost: lines 383-390
+  - B8. Security: lines 391-403
+  - B9. Report: lines 404-424
+- Scenario C — Cleanup / review / upgrade: lines 425-745
+  - C1. Review: lines 437-449
+  - C2. Sort the findings, propose, then stop: lines 450-473
+  - C3. Mock the external effects: lines 474-532
+  - C4. Copy and swap in the mock: lines 533-568
+  - C5. Tests from real data: lines 569-596
+  - C6. Fix in the copy: lines 597-644
+  - C7. Run, grade, and compare models: lines 645-687
+  - C8. The pre-production checklist, hand over and clean up: lines 688-710
+  - C9. The report (required): lines 711-745
+- Rules: lines 746-758
+- The method articles: lines 759-767
 
 This guide is for AI agents (such as Claude, Codex, Cursor, or Copilot) that analyze thunks through the **Thunk.AI FDA MCP**.
 
@@ -205,7 +205,9 @@ plus:
 Work-item queries filter on the thunk's own properties only (not on step
 status or errors), oldest first unless `order: "desc"`. Read every page of
 the window, not just the first, with a projection of the fields you need.
-Never page by hand-editing `pageToken` — it is opaque. **Count every problem
+Every paged list works the same way: while `hasMore` is true, call again
+with `pageToken` set to the response's `nextPageToken` and the same other
+arguments. Never page by hand-editing `pageToken` — it is opaque. **Count every problem
 across the window**, not just the example you opened: a finding without a
 count is an anecdote.
 
@@ -497,7 +499,7 @@ customer data stays inside the mock thunk:
     output (`outputContains`). Substring filters scan stored calls in
     memory (no search index) and stop after 1000 rows with a note that
     the page may be incomplete (an empty page is not "no matches") and
-    `nextCursor` when more remain. Page with `nextCursor`. Each call
+    `hasMore: true` when more remain. Page with `nextPageToken`. Each call
     includes a `url` that opens that call on the tool's **Call history**
     tab when the tool is a custom-built tool of the thunk — hand that
     link to a person. Connection and imported tools have no such page,
